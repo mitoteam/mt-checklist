@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "bierner.markdown-preview-github-styles",
+    "DavidAnson.vscode-markdownlint",
+    "donjayamanne.githistory",
+    "EditorConfig.EditorConfig",
+    "golang.go",
+    "mdickin.markdown-shortcuts",
+    "streetsidesoftware.code-spell-checker-russian",
+    "zeithaste.cursorcharcode",
+  ]
+}
