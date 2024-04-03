@@ -1,4 +1,5 @@
 go 1.22
 
 use .
+use ./goappbase
 use ./mttools

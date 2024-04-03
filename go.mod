@@ -1,4 +1,4 @@
-module mito-team.com/tws/twsbot
+module github.com/mitoteam/mt-checklist
 
 go 1.22
 

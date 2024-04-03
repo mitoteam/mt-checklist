@@ -1,11 +1,7 @@
 package main
 
-import (
-	"log"
-
-	"github.com/mitoteam/mttools"
-)
+import "github.com/mitoteam/goappbase"
 
 func main() {
-	log.Println("It works! " + mttools.RandomString(5))
+	goappbase.Do()
 }
