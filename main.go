@@ -3,5 +3,11 @@ package main
 import "github.com/mitoteam/goappbase"
 
 func main() {
-	goappbase.Do()
+	app := goappbase.NewAppBase()
+
+	app.AppName = "MiTo Team Checklist"
+	app.ExecutableName = "mt-checklist"
+	app.LongDescription = `Checklists management system`
+
+	app.Run()
 }
