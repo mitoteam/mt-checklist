@@ -1,6 +1,8 @@
 package main
 
-import "github.com/mitoteam/goappbase"
+import (
+	"github.com/mitoteam/goappbase"
+)
 
 func main() {
 	app := goappbase.NewAppBase()
