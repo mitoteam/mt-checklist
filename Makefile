@@ -1,5 +1,5 @@
 # Set up variables
-EXECUTABLE_NAME1 := mt-checklist
+EXECUTABLE_NAME := mt-checklist
 
 #do the job
 include goappbase/Makefile.inc.mk
