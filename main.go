@@ -2,14 +2,17 @@ package main
 
 import (
 	"github.com/mitoteam/goappbase"
+	"github.com/mitoteam/mt-checklist/app"
 )
 
 func main() {
-	app := goappbase.NewAppBase()
+	application := goappbase.NewAppBase()
 
-	app.AppName = "MiTo Team Checklist"
-	app.ExecutableName = "mt-checklist"
-	app.LongDescription = `Checklists management system`
+	application.AppName = "MiTo Team Checklist"
+	application.ExecutableName = "mt-checklist"
+	application.LongDescription = `Checklists management system`
 
-	app.Run()
+	application.AppSettings = &app.AppSettingsType{}
+
+	application.Run()
 }
