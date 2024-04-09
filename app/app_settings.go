@@ -7,5 +7,5 @@ import (
 type AppSettingsType struct {
 	goappbase.AppSettingsBase `yaml:",inline"`
 
-	BotToken string `yaml:"bot_token" yaml_comment:"Bot authorization token"`
+	ExampleOption string `yaml:"example_option" yaml_comment:"TODO: remove"`
 }

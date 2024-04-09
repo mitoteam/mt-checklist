@@ -1,16 +1,15 @@
 package main
 
 import (
-	"net/http"
-
-	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/goappbase"
 	"github.com/mitoteam/mt-checklist/app"
+	"github.com/mitoteam/mt-checklist/web"
 )
 
 func main() {
 	settings := &app.AppSettingsType{}
 	settings.WebserverPort = 15119
+	settings.ServiceAutostart = true
 
 	application := goappbase.NewAppBase(settings)
 
@@ -18,9 +17,7 @@ func main() {
 	application.ExecutableName = "mt-checklist"
 	application.LongDescription = `Checklists management system`
 
-	application.BuildWebRouterF = func(r *gin.Engine) {
-		r.GET("/", func(c *gin.Context) { c.String(http.StatusOK, "index.html") })
-	}
+	application.BuildWebRouterF = web.BuildWebRouter
 
 	application.Run()
 }
