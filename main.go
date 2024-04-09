@@ -9,7 +9,6 @@ import (
 func main() {
 	settings := &app.AppSettingsType{}
 	settings.WebserverPort = 15119
-	settings.ServiceAutostart = true
 
 	application := goappbase.NewAppBase(settings)
 
