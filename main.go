@@ -9,13 +9,14 @@ import (
 )
 
 func main() {
-	application := goappbase.NewAppBase()
+	settings := &app.AppSettingsType{}
+	settings.WebserverPort = 15119
+
+	application := goappbase.NewAppBase(settings)
 
 	application.AppName = "MiTo Team Checklist"
 	application.ExecutableName = "mt-checklist"
 	application.LongDescription = `Checklists management system`
-
-	application.AppSettings = &app.AppSettingsType{}
 
 	application.BuildWebRouterF = func(r *gin.Engine) {
 		r.GET("/", func(c *gin.Context) { c.String(http.StatusOK, "index.html") })
