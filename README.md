@@ -6,4 +6,5 @@ Project Status: **Development**
 
 ## Dependencies
 
-https://github.com/mitoteam/mttools
+* https://github.com/mitoteam/mttools
+* https://github.com/mitoteam/goappbase
