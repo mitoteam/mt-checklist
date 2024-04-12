@@ -15,5 +15,25 @@ func main() {
 
 	application.BuildWebRouterF = web.BuildWebRouter
 
+	application.PreRunF = doPreRun
+	application.PostRunF = doPostRun
+
 	application.Run()
+}
+
+func doPreRun() error {
+	var err error
+
+	// open database and migrate schema
+	if app.Db, err = goappbase.DbSchema.Open(); err != nil {
+		return err
+	}
+
+	return nil //no errors
+}
+
+func doPostRun() error {
+	goappbase.DbSchema.Close()
+
+	return nil //no errors
 }
