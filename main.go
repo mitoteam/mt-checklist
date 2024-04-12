@@ -7,10 +7,7 @@ import (
 )
 
 func main() {
-	settings := &app.AppSettingsType{}
-	settings.WebserverPort = 15119
-
-	application := goappbase.NewAppBase(settings)
+	application := goappbase.NewAppBase(app.Settings)
 
 	application.AppName = "MiTo Team Checklist"
 	application.ExecutableName = "mt-checklist"
