@@ -7,18 +7,18 @@ import (
 )
 
 func main() {
-	application := goappbase.NewAppBase(app.Settings)
+	app.App = goappbase.NewAppBase(app.Settings)
 
-	application.AppName = "MiTo Team Checklist"
-	application.ExecutableName = "mt-checklist"
-	application.LongDescription = `Checklists management system`
+	app.App.AppName = "MiTo Team Checklist"
+	app.App.ExecutableName = "mt-checklist"
+	app.App.LongDescription = `Checklists management system`
 
-	application.BuildWebRouterF = web.BuildWebRouter
+	app.App.BuildWebRouterF = web.BuildWebRouter
 
-	application.PreRunF = doPreRun
-	application.PostRunF = doPostRun
+	app.App.PreRunF = doPreRun
+	app.App.PostRunF = doPostRun
 
-	application.Run()
+	app.App.Run()
 }
 
 func doPreRun() error {
