@@ -18,5 +18,13 @@
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
     "files.trimTrailingWhitespace": true,
-    "editor.rulers": [120,200]
+    "editor.rulers": [120,200],
+    "filewatcher.commands": [
+      {
+        "match": "\\.scss$",
+        "isAsync": true,
+        "cmd": "sass --stop-on-error --no-source-map --style=compressed \"${file}:${fileDirname}/${fileBasenameNoExt}.css\"",
+        "event": "onFileChange"
+      }
+    ]
 }
