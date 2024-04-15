@@ -10,11 +10,13 @@
     <link href="/assets/css/style.css" rel="stylesheet" />
   </head>
   <body>
-    <div>{{.App.AppName}}</div>
+    <div class="container my-3">
+      <div class="border bg-light p-3">
+        APP {{.App.AppName}}
+      </div>
 
-    {{template "auth"}}
-
-    {{template "footer"}}
+      {{template "footer" .}}
+    </div>
 
     <script src="/assets/vendor/bootstrap.bundle.min.js"></script>
     <script src="/assets/vendor/vue.global.prod.js"></script>
