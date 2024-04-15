@@ -1,0 +1,12 @@
+{{template "inc/base.html" .}}
+
+{{define "title"}}Login{{end}}
+
+{{define "content"}}
+  <div>
+    Login
+    <form class="" method="post" action="/account/login">
+        <button type="submit" class="btn btn-success">Login</button>
+    </form>
+  </div>
+{{end}}

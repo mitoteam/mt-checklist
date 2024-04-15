@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/mt-checklist/app"
 )
@@ -15,9 +16,17 @@ func BuildWebRouter(r *gin.Engine) {
 	r.StaticFS("/assets", webAssetsHttpFS)
 
 	//serve HTML from templates
-	t := template.Must(template.New("index").ParseFS(templatesFS, "*.html"))
-	r.SetHTMLTemplate(t)
+	inc_templates := []string{"inc/base.html", "inc/footer.html"}
+
+	render := multitemplate.NewRenderer()
+	render.Add("index", template.Must(template.ParseFS(templatesFS, append(inc_templates, "index.html")...)))
+	render.Add("login", template.Must(template.ParseFS(templatesFS, append(inc_templates, "login.html")...)))
+	render.Add("checklist", template.Must(template.ParseFS(templatesFS, append(inc_templates, "checklist.html")...)))
+
+	r.HTMLRender = render
+
 	r.GET("/", webIndex)
+	r.GET("/login", webLogin)
 }
 
 func webIndex(c *gin.Context) {
@@ -27,5 +36,9 @@ func webIndex(c *gin.Context) {
 		"App": app.App,
 	}
 
-	c.HTML(http.StatusOK, "index.html", data)
+	c.HTML(http.StatusOK, "index", data)
+}
+
+func webLogin(c *gin.Context) {
+	c.HTML(http.StatusOK, "login", gin.H{})
 }

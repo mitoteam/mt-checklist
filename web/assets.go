@@ -14,7 +14,7 @@ import (
 //go:embed assets/css/*.css
 //go:embed assets/images/*.png
 //go:embed assets/favicon.ico
-//go:embed templates/*.html
+//go:embed templates/*
 var embedFS embed.FS
 
 var webAssetsHttpFS http.FileSystem

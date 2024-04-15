@@ -1,26 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>{{.App.AppName}}</title>
-    <link rel="icon" href="/favicon.ico" />
-    <link href="/assets/vendor/bootstrap.min.css" rel="stylesheet" />
-    <link href="/assets/vendor/fontawesome.min.css" rel="stylesheet" />
-    <link href="/assets/vendor/regular.min.css" rel="stylesheet" />
-    <link href="/assets/css/style.css" rel="stylesheet" />
-  </head>
-  <body>
-    <div class="container my-3">
-      <div class="border bg-light p-3">
-        APP {{.App.AppName}}
-      </div>
+{{template "inc/base.html" .}}
 
-      {{template "footer" .}}
-    </div>
+{{define "title"}}{{.App.AppName}}{{end}}
 
-    <script src="/assets/vendor/bootstrap.bundle.min.js"></script>
-    <script src="/assets/vendor/vue.global.prod.js"></script>
-
-    <script src="/assets/script.min.js"></script>
-  </body>
-</html>
+{{define "content"}}
+  APP {{.App.AppName}}
+{{end}}
