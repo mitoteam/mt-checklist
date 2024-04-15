@@ -14,7 +14,7 @@ func BuildWebRouter(r *gin.Engine) {
 	//serve assets
 	r.StaticFS("/assets", webAssetsHttpFS)
 
-	//serve HTML from template
+	//serve HTML from templates
 	t := template.Must(template.New("index").ParseFS(templatesFS, "*.html"))
 	r.SetHTMLTemplate(t)
 	r.GET("/", webIndex)
