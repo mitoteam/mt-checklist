@@ -1,0 +1,15 @@
+{{define "header"}}
+<div class="border bg-light p-3">
+  <div class="d-flex justify-content-between">
+    <div>
+      <div>
+        <a href="/" class="text-decoration-none">{{.App.AppName}}</a>
+      </div>
+      <div class="small text-muted">v.{{.App.Version}}</div>
+    </div>
+    <div>
+      <a href="/logout">Logout</a>
+    </div>
+  </div>
+</div>
+{{end}}

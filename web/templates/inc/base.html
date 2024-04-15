@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>{{block "title" .}}{{end}}</title>
+    <title>{{block "title" .}}{{end}} | {{.App.AppName}}</title>
     <link rel="icon" href="/favicon.ico" />
     <link href="/assets/vendor/bootstrap.min.css" rel="stylesheet" />
     <link href="/assets/vendor/fontawesome.min.css" rel="stylesheet" />
@@ -11,7 +11,9 @@
   </head>
   <body>
     <div class="container my-3">
-      <div class="border bg-light p-3">
+      {{template "header" .}}
+
+      <div class="border bg-light p-3 my-3">
         {{block "content" .}}{{end}}
       </div>
 
