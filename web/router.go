@@ -27,9 +27,10 @@ func BuildWebRouter(r *gin.Engine) {
 
 	r.HTMLRender = render
 
-	r.Use(authMiddleware([]string{"/logout"}))
+	r.Use(authMiddleware([]string{"/login", "/logout"}))
 	r.GET("/", webIndex)
 	r.GET("/logout", webLogout)
+	r.POST("/login", webLoginPost) //login form handler
 }
 
 // checks if user authenticated, redirects to /login if not (except for excludedPaths).
@@ -38,6 +39,7 @@ func authMiddleware(excludedPaths []string) gin.HandlerFunc {
 		if slices.Contains(excludedPaths, c.FullPath()) {
 			//no auth required for route
 			c.Next()
+			return
 		}
 
 		session := sessions.Default(c)
@@ -70,6 +72,50 @@ func webIndex(c *gin.Context) {
 
 func webLoginForm(c *gin.Context) {
 	c.HTML(http.StatusOK, "login_form", buildRequestData(c))
+}
+
+// Login form POST handler
+func webLoginPost(c *gin.Context) {
+	session := sessions.Default(c)
+
+	var errMessage string
+
+	username := c.PostForm("username")
+
+	if username == "" {
+		errMessage += "Username not given\n"
+	}
+
+	password := c.PostForm("password")
+
+	if password == "" {
+		errMessage += "Password not given\n"
+	}
+
+	if errMessage == "" {
+		user := app.AuthorizeUser(username, password)
+
+		if user != nil {
+			session.Set("userID", user.ID)
+			session.Save()
+
+			c.Redirect(http.StatusFound, "/")
+		} else {
+			session.Delete("userID")
+			session.Save()
+
+			errMessage = "User not found or wrong password given"
+		}
+	}
+
+	if errMessage != "" {
+		errMessage = "<pre>" + errMessage + "</pre><div><a href=\"/\">Main Page</a></div>"
+
+		c.Header("Content-Type", "text/html;charset=utf-8")
+		c.String(http.StatusUnauthorized, errMessage)
+		c.Abort()
+		return
+	}
 }
 
 func webLogout(c *gin.Context) {

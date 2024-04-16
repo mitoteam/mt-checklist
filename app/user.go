@@ -1,16 +1,18 @@
 package app
 
 import (
+	"errors"
 	"log"
 
 	"github.com/mitoteam/mt-checklist/model"
+	gorm "gorm.io/gorm"
 )
 
 func checkRootUser() error {
 	rootUser := model.MtUser{}
 
 	if err := Db.Limit(1).Find(&rootUser, 1).Error; err != nil {
-		log.Println("FirstOrInit ERROR: " + err.Error())
+		log.Println("checkRootUser ERROR: " + err.Error())
 		return err
 	}
 
@@ -22,7 +24,7 @@ func checkRootUser() error {
 		rootUser.SetPassword(App.AppSettings.(*AppSettingsType).InitialRootPassword)
 
 		if err := Db.Create(&rootUser).Error; err != nil {
-			log.Println("BotDb.Create ERROR: " + err.Error())
+			log.Println("Db.Create ERROR: " + err.Error())
 			return err
 		}
 
@@ -33,5 +35,23 @@ func checkRootUser() error {
 	}
 
 	//log.Printf("%+v\n", rootUser)
+	return nil
+}
+
+func AuthorizeUser(username, password string) *model.MtUser {
+	user := model.MtUser{}
+
+	err := Db.Where(model.MtUser{UserName: username}).First(&user).Error
+
+	if err == nil { //found
+		//check password
+		if user.CheckPassword(password) {
+			return &user
+		}
+	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
+		log.Println("Query ERROR: " + err.Error())
+		return nil
+	}
+
 	return nil
 }
