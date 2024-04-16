@@ -13,9 +13,7 @@
     <div class="container my-3">
       {{template "header" .}}
 
-      <div class="border bg-light p-3 my-3">
-        {{block "content" .}}{{end}}
-      </div>
+      {{block "content" .}}[content is empty]{{end}}
 
       {{template "footer" .}}
     </div>
