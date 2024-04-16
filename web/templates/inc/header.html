@@ -8,7 +8,9 @@
       <div class="small text-muted">v.{{.App.Version}}</div>
     </div>
     <div>
-      <a href="/logout">Logout</a>
+      {{if .UserID}}
+        <a href="/logout">Logout</a>
+      {{end}}
     </div>
   </div>
 </div>

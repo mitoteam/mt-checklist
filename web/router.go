@@ -22,7 +22,7 @@ func BuildWebRouter(r *gin.Engine) {
 
 	render := multitemplate.NewRenderer()
 	render.Add("index", template.Must(template.ParseFS(templatesFS, append(inc_templates, "index.html")...)))
-	render.Add("login", template.Must(template.ParseFS(templatesFS, append(inc_templates, "login.html")...)))
+	render.Add("login_form", template.Must(template.ParseFS(templatesFS, append(inc_templates, "login.html")...)))
 	render.Add("checklist", template.Must(template.ParseFS(templatesFS, append(inc_templates, "checklist.html")...)))
 
 	r.HTMLRender = render
@@ -43,7 +43,7 @@ func authMiddleware(excludedPaths []string) gin.HandlerFunc {
 		session := sessions.Default(c)
 
 		if session.Get("userID") == nil {
-			webLogin(c)
+			webLoginForm(c)
 			c.Abort() //stop other handlers
 			return
 		}
@@ -53,18 +53,23 @@ func authMiddleware(excludedPaths []string) gin.HandlerFunc {
 	}
 }
 
-func webIndex(c *gin.Context) {
-	//session := sessions.Default(c)
+func buildRequestData(c *gin.Context) gin.H {
+	session := sessions.Default(c)
 
 	data := gin.H{
-		"App": app.App,
+		"App":    app.App,
+		"UserID": session.Get("userID"),
 	}
 
-	c.HTML(http.StatusOK, "index", data)
+	return data
 }
 
-func webLogin(c *gin.Context) {
-	c.HTML(http.StatusOK, "login", gin.H{"App": app.App})
+func webIndex(c *gin.Context) {
+	c.HTML(http.StatusOK, "index", buildRequestData(c))
+}
+
+func webLoginForm(c *gin.Context) {
+	c.HTML(http.StatusOK, "login_form", buildRequestData(c))
 }
 
 func webLogout(c *gin.Context) {
