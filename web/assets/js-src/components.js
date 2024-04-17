@@ -15,13 +15,26 @@ let ComponentStatus = {
 
 //#region Admin area Components
 let ComponentAdminChecklistsList = {
-  props: {
-    checklists: [],
+  data: function() {
+    return {
+      checklists: [],
+    }
+  },
+
+  mounted: function() {
+    console.log("the component is now mounted");
+    this.checklists = [{name: "asdf"}, {name: "BBB"}];
+    console.log(this.checklists);
   },
 
   template: `
 <div>
   Some content
-</div>`
+  <ul>
+    <li v-for="checklist in checklists">
+      {{ checklist.name }}
+    </li>
+  </ul>
+</div>`,
 }
 //#endregion
