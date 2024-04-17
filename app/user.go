@@ -55,3 +55,18 @@ func AuthorizeUser(username, password string) *model.MtUser {
 
 	return nil
 }
+
+func GetUser(id uint) *model.MtUser {
+	user := model.MtUser{}
+
+	err := Db.First(&user, id).Error
+
+	if err == nil { //found
+		return &user
+	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
+		log.Println("Query ERROR: " + err.Error())
+		return nil
+	}
+
+	return nil
+}

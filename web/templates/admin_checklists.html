@@ -1,0 +1,15 @@
+{{template "inc/base.html" .}}
+
+{{define "title"}}All checklists{{end}}
+
+{{define "content"}}
+<div class="card">
+  <h5 class="card-header">Checklists</h5>
+  <div class="card-body">
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+  <div class="card-body">
+    <component-admin-checklists-list class="border-1"></component-admin-checklists-list>
+  </div>
+</div>
+{{end}}

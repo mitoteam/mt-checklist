@@ -13,9 +13,28 @@
     <div class="container my-3">
       {{template "header" .}}
 
-      {{block "content" .}}[content is empty]{{end}}
+      <div id="app">
+        {{block "content" .}}[content is empty]{{end}}
+      </div>
+
+      <component-status v-bind="status" class="mt-3"></component-status>
 
       {{template "footer" .}}
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg modal-fullscreen-md-down">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-prewrap">
+            Yo-Ho!
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="/assets/vendor/bootstrap.bundle.min.js"></script>

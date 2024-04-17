@@ -3,12 +3,12 @@ package web
 import (
 	"html/template"
 	"net/http"
-	"slices"
 
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/mt-checklist/app"
+	"github.com/mitoteam/mt-checklist/model"
 )
 
 func BuildWebRouter(r *gin.Engine) {
@@ -23,30 +23,51 @@ func BuildWebRouter(r *gin.Engine) {
 	render := multitemplate.NewRenderer()
 	render.Add("index", template.Must(template.ParseFS(templatesFS, append(inc_templates, "index.html")...)))
 	render.Add("login_form", template.Must(template.ParseFS(templatesFS, append(inc_templates, "login.html")...)))
+	render.Add("admin_checklists", template.Must(template.ParseFS(templatesFS, append(inc_templates, "admin_checklists.html")...)))
 	render.Add("checklist", template.Must(template.ParseFS(templatesFS, append(inc_templates, "checklist.html")...)))
 
 	r.HTMLRender = render
 
-	r.Use(authMiddleware([]string{"/login", "/logout"}))
-	r.GET("/", webIndex)
+	// no auth required routes
 	r.GET("/logout", webLogout)
 	r.POST("/login", webLoginPost) //login form handler
+
+	// auth required routes
+	g_auth := r.Group("")
+
+	g_auth.Use(authMiddleware()).
+		GET("/", func(c *gin.Context) { c.HTML(http.StatusOK, "index", buildRequestData(c)) })
+
+	// admin role required routes
+	g_auth.Group("/admin").
+		Use(adminRoleMiddleware()).
+		GET("/checklists", func(c *gin.Context) { c.HTML(http.StatusOK, "admin_checklists", buildRequestData(c)) })
 }
 
 // checks if user authenticated, redirects to /login if not (except for excludedPaths).
-func authMiddleware(excludedPaths []string) gin.HandlerFunc {
+func authMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if slices.Contains(excludedPaths, c.FullPath()) {
-			//no auth required for route
-			c.Next()
-			return
-		}
-
 		session := sessions.Default(c)
 
 		if session.Get("userID") == nil {
-			webLoginForm(c)
+			c.HTML(http.StatusOK, "login_form", buildRequestData(c))
 			c.Abort() //stop other handlers
+			return
+		}
+
+		// Call the next handler
+		c.Next()
+	}
+}
+
+func adminRoleMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session := sessions.Default(c)
+
+		user := app.GetUser(session.Get("userID").(uint))
+
+		if !user.HasRole(model.ROLE_ADMIN) {
+			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
 
@@ -58,20 +79,17 @@ func authMiddleware(excludedPaths []string) gin.HandlerFunc {
 func buildRequestData(c *gin.Context) gin.H {
 	session := sessions.Default(c)
 
+	user_id := session.Get("userID")
 	data := gin.H{
 		"App":    app.App,
-		"UserID": session.Get("userID"),
+		"UserID": user_id,
+	}
+
+	if user_id != nil {
+		data["User"] = app.GetUser(user_id.(uint))
 	}
 
 	return data
-}
-
-func webIndex(c *gin.Context) {
-	c.HTML(http.StatusOK, "index", buildRequestData(c))
-}
-
-func webLoginForm(c *gin.Context) {
-	c.HTML(http.StatusOK, "login_form", buildRequestData(c))
 }
 
 // Login form POST handler

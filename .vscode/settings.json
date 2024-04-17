@@ -26,6 +26,15 @@
         "isAsync": true,
         "cmd": "sass --stop-on-error --no-source-map --style=compressed \"${file}:${fileDirname}/${fileBasenameNoExt}.css\"",
         "event": "onFileChange"
+      },
+      {
+        "match": "\\.js$",
+        "notMatch": "\\.min\\.js$",
+        "isAsync": true,
+        ////original single file
+        ////quick crutch: multiple files to single one
+        "cmd": "terser \"${workspaceRoot}\\web\\assets\\js-src\\data.js\" \"${workspaceRoot}\\web\\assets\\js-src\\modal.js\" \"${workspaceRoot}\\web\\assets\\js-src\\api.js\" \"${workspaceRoot}\\web\\assets\\js-src\\components.js\" \"${workspaceRoot}\\web\\assets\\js-src\\main.js\" --mangle --compress -o \"${workspaceRoot}\\web\\assets\\script.min.js\"",
+        "event": "onFileChange"
       }
     ]
 }
