@@ -12,29 +12,3 @@ let ComponentStatus = {
   {{body}}
 </div>`
 }
-
-//#region Admin area Components
-let ComponentAdminChecklistsList = {
-  data: function() {
-    return {
-      checklists: [],
-    }
-  },
-
-  mounted: function() {
-    console.log("the component is now mounted");
-
-    MtApi.AdminGetChecklists(this);
-  },
-
-  template: `
-<div>
-  Some content
-  <ul>
-    <li v-for="checklist in checklists">
-      {{ checklist.name }}
-    </li>
-  </ul>
-</div>`,
-}
-//#endregion
