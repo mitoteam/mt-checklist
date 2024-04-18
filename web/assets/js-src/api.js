@@ -40,10 +40,14 @@ const MtApi = (function() {
 
   //// PUBLIC
   return {
-    AdminGetChecklists: function ()
+    AdminGetChecklists: function (component)
     {
-      ApiRequest('ds-registry', null, null, function (response) {
-        console.log(response);
+      ApiRequest('admin/checklists', null, component, function (response) {
+        //console.log(response);
+        if (response.status == "ok")
+        {
+          component.checklists = response.checklists
+        }
       });
     }
   };

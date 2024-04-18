@@ -23,8 +23,8 @@ let ComponentAdminChecklistsList = {
 
   mounted: function() {
     console.log("the component is now mounted");
-    this.checklists = [{name: "asdf"}, {name: "BBB"}];
-    console.log(this.checklists);
+
+    MtApi.AdminGetChecklists(this);
   },
 
   template: `
