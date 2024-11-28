@@ -7,6 +7,7 @@ import (
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/mt-checklist/app"
 	"github.com/mitoteam/mt-checklist/model"
 )
@@ -29,6 +30,7 @@ func BuildWebRouter(r *gin.Engine) {
 	r.HTMLRender = render
 
 	// no auth required routes
+	r.GET("/experiment", webExperiment)
 	r.GET("/logout", webLogout)
 	r.POST("/login", webLoginPost) //login form handler
 
@@ -143,4 +145,10 @@ func webLogout(c *gin.Context) {
 	session.Save()
 
 	c.Redirect(http.StatusFound, "/")
+}
+
+func webExperiment(c *gin.Context) {
+	c.Header("Content-Type", "text/html;charset=utf-8")
+
+	c.String(http.StatusUnauthorized, dhtml.BuildExperimentHtml().Render())
 }

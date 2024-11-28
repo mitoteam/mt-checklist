@@ -8,3 +8,8 @@
 	url = https://github.com/mitoteam/goappbase.git
 	branch = main
 	ignore = all # ignore hash changes
+[submodule "dhtml"]
+	path = dhtml
+	url = https://github.com/mitoteam/dhtml.git
+	branch = main
+	ignore = all # ignore hash changes
