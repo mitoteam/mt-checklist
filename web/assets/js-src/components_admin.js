@@ -7,15 +7,18 @@ let ComponentAdminChecklistsList = {
   },
 
   mounted: function() {
-    console.log("the component is now mounted");
+    //console.log("the component is now mounted");
 
     MtApi.AdminGetChecklists(this);
   },
 
   template: `
 <div class="mb-3 p-3 border">
-  <a href="#" class="btn btn-primary" onclick="MtModal.ShowHtml('title', 'htm<b>l</b>');">
+  <a href="#" class="btn btn-primary" onclick="MtModal.ShowHtml('dbg', 'body');">
     <i class="far fa-plus"></i> New checklist
+  </a>
+  <a href="#" class="btn btn-secondary ms-1" onclick="MtModal.ShowHtml('test title', 'test body <b>html</b>');">
+    <i class="far fa-flask-vial"></i> test btn
   </a>
 </div>
 <div>

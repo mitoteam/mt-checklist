@@ -6,6 +6,7 @@ Vue.createApp({
 
   components: {
     ComponentStatus: ComponentStatus,
+    ComponentMtModal: ComponentMtModal,
     ComponentAdminChecklistsList: ComponentAdminChecklistsList,
   },
 
