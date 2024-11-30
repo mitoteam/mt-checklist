@@ -150,5 +150,5 @@ func webLogout(c *gin.Context) {
 func webExperiment(c *gin.Context) {
 	c.Header("Content-Type", "text/html;charset=utf-8")
 
-	c.String(http.StatusUnauthorized, dhtml.BuildExperimentHtml().Render())
+	c.String(http.StatusOK, dhtml.BuildExperimentHtml().Render())
 }

@@ -56,6 +56,41 @@ const MtModal = (function() {
       bsModal.show();
     },
 
+    ShowGetHtml: function (title, url, placeholder = null, success_callback = null)
+    {
+      init();
+
+      titleElement.textContent = title;
+
+      if (placeholder == null)
+      {
+        placeholder = '<i class="fas fa-spinner fa-pulse"></i> Sending request...';
+      }
+
+      bodyElement.innerHTML = placeholder;
+      bsModal.show();
+
+      return;
+
+      fetch(url)
+        .then(function (response) {
+          if (response.ok) {
+            return response.text(); //reads response as HTML-string and returns next promise
+          } else {
+            console.error(response);
+          }
+        })
+        .then(function (html) {
+          //console.log(html);
+          bodyElement.innerHTML = html;
+
+          if (typeof success_callback === 'function') {
+            success_callback();
+          }
+        })
+        .catch(error => console.error(error));
+    },
+
     Hide: function ()
     {
       bsModal.hide();

@@ -14,7 +14,7 @@ let ComponentAdminChecklistsList = {
 
   template: `
 <div class="mb-3 p-3 border">
-  <a href="#" class="btn btn-primary" onclick="MtModal.ShowHtml('dbg', 'body');">
+  <a href="#" class="btn btn-primary" onclick="MtModal.ShowGetHtml('dbg', '/experiment');">
     <i class="far fa-plus"></i> New checklist
   </a>
   <a href="#" class="btn btn-secondary ms-1" onclick="MtModal.ShowHtml('test title', 'test body <b>html</b>');">
