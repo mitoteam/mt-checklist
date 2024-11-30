@@ -56,37 +56,14 @@ const MtModal = (function() {
       bsModal.show();
     },
 
-    ShowGetHtml: function (title, url, placeholder = null, success_callback = null)
+    ShowGetHtml: function (title, url)
     {
       init();
 
       titleElement.textContent = title;
-
-      if (placeholder == null)
-      {
-        placeholder = MtTools.Icon('spinner', 'waiting', 'fa-pulse').outerHTML + ' Sending request...';
-      }
-
-      bodyElement.innerHTML = placeholder;
       bsModal.show();
 
-      fetch(url)
-        .then(function (response) {
-          if (response.ok) {
-            return response.text(); //reads response as HTML-string and returns next promise
-          } else {
-            console.error(response);
-          }
-        })
-        .then(function (html) {
-          //console.log(html);
-          bodyElement.innerHTML = html;
-
-          if (typeof success_callback === 'function') {
-            success_callback();
-          }
-        })
-        .catch(error => console.error(error));
+      MtTools.SimpleGet(bodyElement, url);
     },
 
     Hide: function ()
