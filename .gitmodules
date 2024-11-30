@@ -13,3 +13,8 @@
 	url = https://github.com/mitoteam/dhtml.git
 	branch = main
 	ignore = all # ignore hash changes
+[submodule "mtweb"]
+	path = mtweb
+	url = https://github.com/mitoteam/mtweb.git
+	branch = main
+	ignore = all # ignore hash changes

@@ -64,13 +64,11 @@ const MtModal = (function() {
 
       if (placeholder == null)
       {
-        placeholder = '<i class="fas fa-spinner fa-pulse"></i> Sending request...';
+        placeholder = MtTools.Icon('spinner', 'waiting', 'fa-pulse').outerHTML + ' Sending request...';
       }
 
       bodyElement.innerHTML = placeholder;
       bsModal.show();
-
-      return;
 
       fetch(url)
         .then(function (response) {
