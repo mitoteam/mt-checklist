@@ -7,9 +7,9 @@ import (
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/mt-checklist/app"
 	"github.com/mitoteam/mt-checklist/model"
+	"github.com/mitoteam/mtweb"
 )
 
 func BuildWebRouter(r *gin.Engine) {
@@ -150,5 +150,5 @@ func webLogout(c *gin.Context) {
 func webExperiment(c *gin.Context) {
 	c.Header("Content-Type", "text/html;charset=utf-8")
 
-	c.String(http.StatusOK, dhtml.BuildExperimentHtml().Render())
+	c.String(http.StatusOK, mtweb.BuildExperimentHtml().Render())
 }
