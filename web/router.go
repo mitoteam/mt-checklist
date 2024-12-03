@@ -150,5 +150,5 @@ func webLogout(c *gin.Context) {
 func webExperiment(c *gin.Context) {
 	c.Header("Content-Type", "text/html;charset=utf-8")
 
-	c.String(http.StatusOK, mtweb.BuildExperimentHtml().Render())
+	c.String(http.StatusOK, mtweb.BuildExperimentHtml())
 }
