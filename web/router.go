@@ -166,7 +166,13 @@ func webPlaceholder(page_title string, builderF func(*gin.Context) *dhtml.HtmlPi
 	return func(c *gin.Context) {
 		data := buildRequestData(c)
 		data["Title"] = page_title
-		data["Content"] = builderF(c).String()
+		data["Content"] = template.HTML(
+			dhtml.Piece(
+				mtweb.NewCard().
+					Header(dhtml.Span().Class("fs-5").Text(page_title)).
+					Body(builderF(c)),
+			).String(),
+		)
 
 		c.HTML(http.StatusOK, "placeholder", data)
 	}
