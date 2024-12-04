@@ -48,7 +48,7 @@ func BuildWebRouter(r *gin.Engine) {
 		GET("/checklists", func(c *gin.Context) { c.HTML(http.StatusOK, "admin_checklists", buildRequestData(c)) })
 
 	r.GET("/form", webPlaceholder("Form!", func(c *gin.Context) *dhtml.HtmlPiece {
-		return mtweb.BuildExperimentForm()
+		return dhtml.Piece(mtweb.BuildExperimentForm())
 	}))
 }
 
@@ -154,13 +154,6 @@ func webLogout(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/")
 }
 
-// Handler for /experiment path
-func webExperiment(c *gin.Context) {
-	c.Header("Content-Type", "text/html;charset=utf-8")
-
-	c.String(http.StatusOK, mtweb.BuildExperimentHtml())
-}
-
 // Builds handler function for placeholder.html template
 func webPlaceholder(page_title string, builderF func(*gin.Context) *dhtml.HtmlPiece) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -176,4 +169,11 @@ func webPlaceholder(page_title string, builderF func(*gin.Context) *dhtml.HtmlPi
 
 		c.HTML(http.StatusOK, "placeholder", data)
 	}
+}
+
+// Handler for /experiment path
+func webExperiment(c *gin.Context) {
+	c.Header("Content-Type", "text/html;charset=utf-8")
+
+	c.String(http.StatusOK, mtweb.BuildExperimentHtml())
 }
