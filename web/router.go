@@ -7,6 +7,7 @@ import (
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/mt-checklist/app"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
@@ -22,7 +23,8 @@ func BuildWebRouter(r *gin.Engine) {
 	inc_templates := []string{"inc/base.html", "inc/header.html", "inc/footer.html"}
 
 	render := multitemplate.NewRenderer()
-	render.Add("index", template.Must(template.ParseFS(templatesFS, append(inc_templates, "index.html")...)))
+	render.Add("placeholder", template.Must(template.ParseFS(templatesFS, append(inc_templates, "placeholder.html")...)))
+	render.Add("dashboard", template.Must(template.ParseFS(templatesFS, append(inc_templates, "dashboard.html")...)))
 	render.Add("login_form", template.Must(template.ParseFS(templatesFS, append(inc_templates, "login.html")...)))
 	render.Add("admin_checklists", template.Must(template.ParseFS(templatesFS, append(inc_templates, "admin_checklists.html")...)))
 	render.Add("checklist", template.Must(template.ParseFS(templatesFS, append(inc_templates, "checklist.html")...)))
@@ -38,12 +40,16 @@ func BuildWebRouter(r *gin.Engine) {
 	g_auth := r.Group("")
 
 	g_auth.Use(authMiddleware()).
-		GET("/", func(c *gin.Context) { c.HTML(http.StatusOK, "index", buildRequestData(c)) })
+		GET("/", func(c *gin.Context) { c.HTML(http.StatusOK, "dashboard", buildRequestData(c)) })
 
 	// admin role required routes
 	g_auth.Group("/admin").
 		Use(adminRoleMiddleware()).
 		GET("/checklists", func(c *gin.Context) { c.HTML(http.StatusOK, "admin_checklists", buildRequestData(c)) })
+
+	r.GET("/form", webPlaceholder("Form!", func(c *gin.Context) *dhtml.HtmlPiece {
+		return mtweb.BuildExperimentForm()
+	}))
 }
 
 // checks if user authenticated, redirects to /login if not (except for excludedPaths).
@@ -78,6 +84,7 @@ func adminRoleMiddleware() gin.HandlerFunc {
 	}
 }
 
+// Prepares default set of gin.H data from context
 func buildRequestData(c *gin.Context) gin.H {
 	session := sessions.Default(c)
 
@@ -147,8 +154,20 @@ func webLogout(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/")
 }
 
+// Handler for /experiment path
 func webExperiment(c *gin.Context) {
 	c.Header("Content-Type", "text/html;charset=utf-8")
 
 	c.String(http.StatusOK, mtweb.BuildExperimentHtml())
+}
+
+// Builds handler function for placeholder.html template
+func webPlaceholder(page_title string, builderF func(*gin.Context) *dhtml.HtmlPiece) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		data := buildRequestData(c)
+		data["Title"] = page_title
+		data["Content"] = builderF(c).String()
+
+		c.HTML(http.StatusOK, "placeholder", data)
+	}
 }
