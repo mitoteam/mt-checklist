@@ -1,0 +1,30 @@
+name: Go tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Set env
+      run: echo "TERM=linux" >> "$GITHUB_ENV"
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '^1.23'
+        check-latest: true
+
+    - name: Build
+      run: go build -v ./...
+
+    - name: MT Tests
+      run: make tests
