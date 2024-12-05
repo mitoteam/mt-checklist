@@ -1,9 +1,9 @@
 # Set up variables
 EXECUTABLE_NAME := mt-checklist
-SUBMODULES := ./dhtml ./mtweb
+SUBMODULES := ./internal/dhtml ./internal/mtweb
 
 #do the job
-include goappbase/Makefile.inc.mk
+include internal/goappbase/Makefile.inc.mk
 
 # additional targets
 .PHONY: run
