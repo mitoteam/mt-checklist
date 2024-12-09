@@ -9,4 +9,5 @@ include internal/goappbase/Makefile.inc.mk
 .PHONY: run
 run:
 	clear
-	go run main.go run
+	go build
+	${EXECUTABLE_NAME} run
