@@ -48,10 +48,10 @@ func BuildWebRouter(r *gin.Engine) {
 		GET("/checklists", func(c *gin.Context) { c.HTML(http.StatusOK, "admin_checklists", buildRequestData(c)) })
 
 	r.GET("/form", webPlaceholder("Form!", func(c *gin.Context) *dhtml.HtmlPiece {
-		return dhtml.RenderForm(mtweb.GetTestForm(), c.Request)
+		return dhtml.RenderForm(mtweb.GetTestForm(), c.Writer, c.Request)
 	}))
 	r.POST("/form", webPlaceholder("Form!", func(c *gin.Context) *dhtml.HtmlPiece {
-		return dhtml.RenderForm(mtweb.GetTestForm(), c.Request)
+		return dhtml.RenderForm(mtweb.GetTestForm(), c.Writer, c.Request)
 	}))
 }
 
@@ -160,17 +160,21 @@ func webLogout(c *gin.Context) {
 // Builds handler function for placeholder.html template
 func webPlaceholder(page_title string, builderF func(*gin.Context) *dhtml.HtmlPiece) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		data := buildRequestData(c)
-		data["Title"] = page_title
-		data["Content"] = template.HTML(
-			dhtml.Piece(
-				mtweb.NewCard().
-					Header(dhtml.Span().Class("fs-5").Text(page_title)).
-					Body(builderF(c)),
-			).String(),
-		)
+		responseHtml := builderF(c)
 
-		c.HTML(http.StatusOK, "placeholder", data)
+		if !responseHtml.IsEmpty() {
+			data := buildRequestData(c)
+			data["Title"] = page_title
+			data["Content"] = template.HTML(
+				dhtml.Piece(
+					mtweb.NewCard().
+						Header(dhtml.Span().Class("fs-5").Text(page_title)).
+						Body(builderF(c)),
+				).String(),
+			)
+
+			c.HTML(http.StatusOK, "placeholder", data)
+		}
 	}
 }
 
