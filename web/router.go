@@ -48,7 +48,10 @@ func BuildWebRouter(r *gin.Engine) {
 		GET("/checklists", func(c *gin.Context) { c.HTML(http.StatusOK, "admin_checklists", buildRequestData(c)) })
 
 	r.GET("/form", webPlaceholder("Form!", func(c *gin.Context) *dhtml.HtmlPiece {
-		return dhtml.Piece(mtweb.BuildExperimentForm())
+		return dhtml.RenderForm(mtweb.GetTestForm(), c.Request)
+	}))
+	r.POST("/form", webPlaceholder("Form!", func(c *gin.Context) *dhtml.HtmlPiece {
+		return dhtml.RenderForm(mtweb.GetTestForm(), c.Request)
 	}))
 }
 
