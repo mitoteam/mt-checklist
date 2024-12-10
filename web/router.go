@@ -1,8 +1,10 @@
 package web
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-contrib/sessions"
@@ -65,10 +67,19 @@ func authMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
 
-		if session.Get("userID") == nil {
+		var user *model.MtUser
+		if userID := session.Get("userID"); userID != nil {
+			if uid, err := strconv.ParseUint(fmt.Sprint(userID), 10, 64); err == nil {
+				user = app.GetUser(uint(uid))
+			}
+		}
+
+		if user == nil {
 			c.HTML(http.StatusOK, "login_form", buildRequestData(c))
 			c.Abort() //stop other handlers
 			return
+		} else {
+			c.Set("User", user)
 		}
 
 		// Call the next handler
@@ -189,13 +200,12 @@ func webExperiment(c *gin.Context) {
 	c.String(http.StatusOK, mtweb.BuildExperimentHtml())
 }
 
-func webDhtmlTemplate(renderF func(*gin.Context, *PageTemplate)) gin.HandlerFunc {
+func webDhtmlTemplate(renderF func(*PageTemplate)) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		p := NewPageTemplate(c)
+		renderF(p)
+
 		c.Header("Content-Type", "text/html;charset=utf-8")
-
-		p := GetPageTemplate().Clear()
-		renderF(c, p)
-
 		c.String(http.StatusOK, p.String())
 	}
 }
