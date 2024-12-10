@@ -41,7 +41,8 @@ func BuildWebRouter(r *gin.Engine) {
 	g_auth := r.Group("")
 
 	g_auth.Use(authMiddleware()).
-		GET("/", func(c *gin.Context) { c.HTML(http.StatusOK, "dashboard", buildRequestData(c)) })
+		GET("/", func(c *gin.Context) { c.HTML(http.StatusOK, "dashboard", buildRequestData(c)) }).
+		GET("/dashboard", webDhtmlTemplate(PageDashboard))
 
 	// admin role required routes
 	g_auth.Group("/admin").
@@ -185,13 +186,16 @@ func webPlaceholder(page_title string, builderF func(*gin.Context) *dhtml.HtmlPi
 // Handler for /experiment path
 func webExperiment(c *gin.Context) {
 	c.Header("Content-Type", "text/html;charset=utf-8")
+	c.String(http.StatusOK, mtweb.BuildExperimentHtml())
+}
 
-	//c.String(http.StatusOK, mtweb.BuildExperimentHtml())
-	c.String(
-		http.StatusOK,
-		GetPageTemplate().Clear().
-			Title("Home").
-			Main("we-ha!").
-			String(),
-	)
+func webDhtmlTemplate(renderF func(*gin.Context, *PageTemplate)) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Header("Content-Type", "text/html;charset=utf-8")
+
+		p := GetPageTemplate().Clear()
+		renderF(c, p)
+
+		c.String(http.StatusOK, p.String())
+	}
 }
