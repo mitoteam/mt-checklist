@@ -56,7 +56,11 @@ func AuthorizeUser(username, password string) *model.MtUser {
 	return nil
 }
 
-func GetUser(id uint) *model.MtUser {
+func GetUser(id int64) *model.MtUser {
+	if id == 0 {
+		return nil
+	}
+
 	user := model.MtUser{}
 
 	err := Db.First(&user, id).Error

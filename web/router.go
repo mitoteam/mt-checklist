@@ -1,10 +1,8 @@
 package web
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-contrib/sessions"
@@ -44,7 +42,7 @@ func BuildWebRouter(r *gin.Engine) {
 	g_auth.Use(authMiddleware()).
 		GET("/", webDhtmlTemplate(PageDashboard))
 
-	// admin role required routes
+	// Subgroup: admin role required routes
 	g_auth.Group("/admin").
 		Use(adminRoleMiddleware()).
 		GET("/checklists", func(c *gin.Context) { c.HTML(http.StatusOK, "admin_checklists", buildRequestData(c)) })
@@ -65,12 +63,7 @@ func authMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
 
-		var user *model.MtUser
-		if userID := session.Get("userID"); userID != nil {
-			if uid, err := strconv.ParseUint(fmt.Sprint(userID), 10, 64); err == nil {
-				user = app.GetUser(uint(uid))
-			}
-		}
+		user := app.GetUser(mttools.AnyToInt64OrZero(session.Get("userID")))
 
 		if user == nil {
 			c.HTML(http.StatusOK, "login_form", buildRequestData(c))
@@ -87,9 +80,10 @@ func authMiddleware() gin.HandlerFunc {
 
 func adminRoleMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		session := sessions.Default(c)
-
-		user := app.GetUser(session.Get("userID").(uint))
+		var user *model.MtUser
+		if v, ok := c.Get("User"); ok {
+			user = v.(*model.MtUser)
+		}
 
 		if !user.HasRole(model.ROLE_ADMIN) {
 			c.AbortWithStatus(http.StatusUnauthorized)
@@ -103,16 +97,18 @@ func adminRoleMiddleware() gin.HandlerFunc {
 
 // Prepares default set of gin.H data from context
 func buildRequestData(c *gin.Context) gin.H {
-	session := sessions.Default(c)
-
-	user_id := session.Get("userID")
-	data := gin.H{
-		"App":    app.App,
-		"UserID": user_id,
+	var user *model.MtUser
+	if v, ok := c.Get("User"); ok {
+		user = v.(*model.MtUser)
 	}
 
-	if user_id != nil {
-		data["User"] = app.GetUser(user_id.(uint))
+	data := gin.H{
+		"App": app.App,
+	}
+
+	if user != nil {
+		data["UserID"] = user.ID
+		data["User"] = user
 	}
 
 	return data
