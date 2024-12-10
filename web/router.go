@@ -10,6 +10,7 @@ import (
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/mt-checklist/app"
 	"github.com/mitoteam/mt-checklist/model"
+	"github.com/mitoteam/mttools"
 	"github.com/mitoteam/mtweb"
 )
 
@@ -48,10 +49,13 @@ func BuildWebRouter(r *gin.Engine) {
 		GET("/checklists", func(c *gin.Context) { c.HTML(http.StatusOK, "admin_checklists", buildRequestData(c)) })
 
 	r.GET("/form", webPlaceholder("Form!", func(c *gin.Context) *dhtml.HtmlPiece {
-		return dhtml.FormManager.RenderForm("test_form", c.Writer, c.Request)
+		args := mttools.NewValues()
+		args.Set("oydi", c.Query("oydi"))
+
+		return dhtml.FormManager.RenderForm("test_form", c.Writer, c.Request, args)
 	}))
 	r.POST("/form", webPlaceholder("Form!", func(c *gin.Context) *dhtml.HtmlPiece {
-		return dhtml.FormManager.RenderForm("test_form", c.Writer, c.Request)
+		return dhtml.FormManager.RenderForm("test_form", c.Writer, c.Request, mttools.NewValues())
 	}))
 }
 
@@ -182,5 +186,12 @@ func webPlaceholder(page_title string, builderF func(*gin.Context) *dhtml.HtmlPi
 func webExperiment(c *gin.Context) {
 	c.Header("Content-Type", "text/html;charset=utf-8")
 
-	c.String(http.StatusOK, mtweb.BuildExperimentHtml())
+	//c.String(http.StatusOK, mtweb.BuildExperimentHtml())
+	c.String(
+		http.StatusOK,
+		GetPageTemplate().Clear().
+			Title("Home").
+			Main("we-ha!").
+			String(),
+	)
 }
