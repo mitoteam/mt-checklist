@@ -27,7 +27,6 @@ func BuildWebRouter(r *gin.Engine) {
 
 	render := multitemplate.NewRenderer()
 	render.Add("placeholder", template.Must(template.ParseFS(templatesFS, append(inc_templates, "placeholder.html")...)))
-	render.Add("dashboard", template.Must(template.ParseFS(templatesFS, append(inc_templates, "dashboard.html")...)))
 	render.Add("login_form", template.Must(template.ParseFS(templatesFS, append(inc_templates, "login.html")...)))
 	render.Add("admin_checklists", template.Must(template.ParseFS(templatesFS, append(inc_templates, "admin_checklists.html")...)))
 	render.Add("checklist", template.Must(template.ParseFS(templatesFS, append(inc_templates, "checklist.html")...)))
@@ -43,8 +42,7 @@ func BuildWebRouter(r *gin.Engine) {
 	g_auth := r.Group("")
 
 	g_auth.Use(authMiddleware()).
-		GET("/", func(c *gin.Context) { c.HTML(http.StatusOK, "dashboard", buildRequestData(c)) }).
-		GET("/dashboard", webDhtmlTemplate(PageDashboard))
+		GET("/", webDhtmlTemplate(PageDashboard))
 
 	// admin role required routes
 	g_auth.Group("/admin").
