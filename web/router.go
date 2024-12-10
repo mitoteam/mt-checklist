@@ -36,6 +36,8 @@ func BuildWebRouter(r *gin.Engine) {
 	r.GET("/logout", webLogout)
 	r.POST("/login", webLoginPost) //login form handler
 
+	r.GET("/sign-in", webDhtmlTemplate(PageLogin))
+
 	// auth required routes
 	g_auth := r.Group("")
 
@@ -47,6 +49,7 @@ func BuildWebRouter(r *gin.Engine) {
 		Use(adminRoleMiddleware()).
 		GET("/checklists", func(c *gin.Context) { c.HTML(http.StatusOK, "admin_checklists", buildRequestData(c)) })
 
+	//form experiment
 	r.GET("/form", webPlaceholder("Form!", func(c *gin.Context) *dhtml.HtmlPiece {
 		args := mttools.NewValues()
 		args.Set("oydi", c.Query("oydi"))
@@ -66,7 +69,8 @@ func authMiddleware() gin.HandlerFunc {
 		user := app.GetUser(mttools.AnyToInt64OrZero(session.Get("userID")))
 
 		if user == nil {
-			c.HTML(http.StatusOK, "login_form", buildRequestData(c))
+			//c.HTML(http.StatusOK, "login_form", buildRequestData(c))
+			c.Redirect(http.StatusSeeOther, "/sign-in?url="+c.Request.RequestURI)
 			c.Abort() //stop other handlers
 			return
 		} else {

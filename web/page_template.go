@@ -72,14 +72,15 @@ func (p *PageTemplate) render() (out *dhtml.HtmlPiece) {
 		Stylesheet("/assets/vendor/regular.min.css").
 		Stylesheet("/assets/css/style.css")
 
+	container := dhtml.Div().Class("container my-3").
+		Append(p.renderHeader())
+
 	// H1 page title
 	if !title.IsEmpty() {
-		document.Body().Append(dhtml.NewTag("h1").Append(title))
+		container.Append(dhtml.NewTag("h1").Append(title))
 	}
 
-	container := dhtml.Div().Class("container my-3").
-		Append(p.renderHeader()).
-		Append(dhtml.Div().Class("main").Append(p.GetMain())).
+	container.Append(dhtml.Div().Class("main").Append(p.GetMain())).
 		Append(p.renderFooter())
 
 	document.Body().Append(container)

@@ -2,6 +2,7 @@ package web
 
 import (
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/mttools"
 	"github.com/mitoteam/mtweb"
 )
 
@@ -34,4 +35,11 @@ func PageDashboard(p *PageTemplate) {
 		)
 
 	p.Main(cards_list)
+}
+
+func PageLogin(p *PageTemplate) {
+	p.Title("Sign In").
+		Main(dhtml.FormManager.RenderForm(
+			"login", p.GetContext().Writer, p.GetContext().Request, mttools.NewValues(),
+		))
 }
