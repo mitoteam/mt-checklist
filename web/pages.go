@@ -1,12 +1,22 @@
 package web
 
 import (
-	"github.com/gin-contrib/sessions"
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/mtweb"
 )
 
-func PageDashboard(p *PageTemplate) bool {
+func PageFormExperiment(p *PageBuilder) bool {
+	formOut := dhtml.FormManager.RenderForm("test_form", p.GetFormContext())
+
+	if !formOut.IsEmpty() {
+		p.Title("Form!").Main(formOut)
+		return true
+	}
+
+	return false
+}
+
+func PageDashboard(p *PageBuilder) bool {
 	cards_list := mtweb.NewCardList().
 		Add(
 			mtweb.NewCard().Header(mtweb.Icon("vial").Label("Experiment")).
@@ -38,17 +48,17 @@ func PageDashboard(p *PageTemplate) bool {
 	return true
 }
 
-func PageLogin(p *PageTemplate) bool {
+func PageLogin(p *PageBuilder) bool {
 	p.Title("Sign In")
 
-	session := sessions.Default(p.GetContext())
+	session := p.GetSession()
 
 	if userID, ok := session.Get("userID").(int64); ok && userID > 0 {
 		p.Main("Already authenticated")
 	} else {
-		fc := FormContextFromGin(p.GetContext()).
+		fc := p.GetFormContext().
 			SetParam("Session", session).
-			SetRedirect(p.GetContext().DefaultQuery("destination", "/"))
+			SetRedirect(p.GetGinContext().DefaultQuery("destination", "/"))
 
 		formOut := dhtml.FormManager.RenderForm("login", fc)
 

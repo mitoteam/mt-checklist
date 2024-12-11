@@ -2,10 +2,8 @@ package web
 
 import (
 	"github.com/gin-contrib/sessions"
-	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/mt-checklist/app"
-	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
 
@@ -57,15 +55,4 @@ func init() {
 			}
 		},
 	})
-}
-
-func FormContextFromGin(c *gin.Context) *dhtml.FormContext {
-	fc := dhtml.NewFormContext(c.Writer, c.Request)
-
-	//current user from session if he authorized
-	if user, ok := c.Get("User"); ok {
-		fc.SetArg("User", user.(*model.MtUser))
-	}
-
-	return fc
 }

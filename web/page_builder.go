@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/mt-checklist/app"
@@ -10,7 +11,7 @@ import (
 	"github.com/mitoteam/mtweb"
 )
 
-type PageTemplate struct {
+type PageBuilder struct {
 	context *gin.Context
 
 	// "title" = H1 page title
@@ -18,8 +19,8 @@ type PageTemplate struct {
 	regions dhtml.NamedHtmlPieces
 }
 
-func NewPageTemplate(context *gin.Context) *PageTemplate {
-	p := &PageTemplate{
+func NewPageBuilder(context *gin.Context) *PageBuilder {
+	p := &PageBuilder{
 		regions: dhtml.NewNamedHtmlPieces(),
 		context: context,
 	}
@@ -27,33 +28,48 @@ func NewPageTemplate(context *gin.Context) *PageTemplate {
 	return p
 }
 
-func (p *PageTemplate) GetContext() *gin.Context {
+func (p *PageBuilder) GetGinContext() *gin.Context {
 	return p.context
 }
 
-func (p *PageTemplate) Title(v any) *PageTemplate {
+func (p *PageBuilder) GetSession() sessions.Session {
+	return sessions.Default(p.context)
+}
+
+func (p *PageBuilder) GetFormContext() *dhtml.FormContext {
+	fc := dhtml.NewFormContext(p.context.Writer, p.context.Request)
+
+	//current user from session if he authorized
+	if user, ok := p.context.Get("User"); ok {
+		fc.SetArg("User", user.(*model.MtUser))
+	}
+
+	return fc
+}
+
+func (p *PageBuilder) Title(v any) *PageBuilder {
 	p.regions.Add("title", v)
 	return p
 }
 
-func (p *PageTemplate) GetTitle() *dhtml.HtmlPiece {
+func (p *PageBuilder) GetTitle() *dhtml.HtmlPiece {
 	return p.regions.Get("title")
 }
 
-func (p *PageTemplate) Main(v any) *PageTemplate {
+func (p *PageBuilder) Main(v any) *PageBuilder {
 	p.regions.Add("main", v)
 	return p
 }
 
-func (p *PageTemplate) GetMain() *dhtml.HtmlPiece {
+func (p *PageBuilder) GetMain() *dhtml.HtmlPiece {
 	return p.regions.Get("main")
 }
 
-func (p *PageTemplate) String() string {
+func (p *PageBuilder) String() string {
 	return p.render().String()
 }
 
-func (p *PageTemplate) render() (out *dhtml.HtmlPiece) {
+func (p *PageBuilder) render() (out *dhtml.HtmlPiece) {
 	document := dhtml.NewHtmlDocument()
 
 	var head_title = app.App.AppName
@@ -94,7 +110,7 @@ func (p *PageTemplate) render() (out *dhtml.HtmlPiece) {
 	return dhtml.Piece(document)
 }
 
-func (p *PageTemplate) renderHeader() (out dhtml.HtmlPiece) {
+func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 	var user *model.MtUser
 	if v, ok := p.context.Get("User"); ok {
 		user = v.(*model.MtUser)
@@ -123,7 +139,7 @@ func (p *PageTemplate) renderHeader() (out dhtml.HtmlPiece) {
 	return out
 }
 
-func (p *PageTemplate) renderFooter() (out dhtml.HtmlPiece) {
+func (p *PageBuilder) renderFooter() (out dhtml.HtmlPiece) {
 	out.Append(dhtml.Div().Class("border bg-light p-3 mt-3").Append(
 		mtweb.NewJustifiedLR().
 			L(fmt.Sprintf("%s v.%s", app.App.AppName, app.App.Version)).

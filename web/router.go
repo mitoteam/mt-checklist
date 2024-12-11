@@ -7,7 +7,6 @@ import (
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/mt-checklist/app"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mttools"
@@ -24,14 +23,11 @@ func BuildWebRouter(r *gin.Engine) {
 	inc_templates := []string{"inc/base.html", "inc/header.html", "inc/footer.html"}
 
 	render := multitemplate.NewRenderer()
-	render.Add("placeholder", template.Must(template.ParseFS(templatesFS, append(inc_templates, "placeholder.html")...)))
 	render.Add("admin_checklists", template.Must(template.ParseFS(templatesFS, append(inc_templates, "admin_checklists.html")...)))
-	render.Add("checklist", template.Must(template.ParseFS(templatesFS, append(inc_templates, "checklist.html")...)))
 
 	r.HTMLRender = render
 
 	// no auth required routes
-	r.GET("/experiment", webExperiment)
 	r.GET("/logout", webLogout)
 
 	r.GET("/sign-in", webDhtmlTemplate(PageLogin))
@@ -40,27 +36,23 @@ func BuildWebRouter(r *gin.Engine) {
 	// auth required routes
 	authenticated_routes := r.Group("")
 	authenticated_routes.Use(authMiddleware())
-
 	authenticated_routes.
 		GET("/", webDhtmlTemplate(PageDashboard))
 
 	// Subgroup: admin role required routes
 	admin_routes := authenticated_routes.Group("/admin")
 	admin_routes.Use(adminRoleMiddleware())
-
 	admin_routes.
 		GET("/checklists", func(c *gin.Context) { c.HTML(http.StatusOK, "admin_checklists", buildRequestData(c)) })
 
-	//form experiment
-	r.GET("/form", webPlaceholder("Form!", func(c *gin.Context) *dhtml.HtmlPiece {
-		args := mttools.NewValues()
-		args.Set("oydi", c.Query("oydi"))
+	//EXPERIMENTS
+	r.GET("/experiment", func(c *gin.Context) {
+		c.Header("Content-Type", "text/html;charset=utf-8")
+		c.String(http.StatusOK, mtweb.BuildExperimentHtml())
+	})
 
-		return dhtml.FormManager.RenderForm("test_form", FormContextFromGin(c))
-	}))
-	r.POST("/form", webPlaceholder("Form!", func(c *gin.Context) *dhtml.HtmlPiece {
-		return dhtml.FormManager.RenderForm("test_form", FormContextFromGin(c))
-	}))
+	r.GET("/form", webDhtmlTemplate(PageFormExperiment))
+	r.POST("/form", webDhtmlTemplate(PageFormExperiment))
 }
 
 // checks if user authenticated, redirects to /login if not (except for excludedPaths).
@@ -127,39 +119,14 @@ func webLogout(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/")
 }
 
-// Builds handler function for placeholder.html template
-func webPlaceholder(page_title string, builderF func(*gin.Context) *dhtml.HtmlPiece) gin.HandlerFunc {
+func webDhtmlTemplate(renderF func(*PageBuilder) bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		responseHtml := builderF(c)
-
-		if !responseHtml.IsEmpty() {
-			data := buildRequestData(c)
-			data["Title"] = page_title
-			data["Content"] = template.HTML(
-				dhtml.Piece(
-					mtweb.NewCard().
-						Header(dhtml.Span().Class("fs-5").Text(page_title)).
-						Body(builderF(c)),
-				).String(),
-			)
-
-			c.HTML(http.StatusOK, "placeholder", data)
-		}
-	}
-}
-
-// Handler for /experiment path
-func webExperiment(c *gin.Context) {
-	c.Header("Content-Type", "text/html;charset=utf-8")
-	c.String(http.StatusOK, mtweb.BuildExperimentHtml())
-}
-
-func webDhtmlTemplate(renderF func(*PageTemplate) bool) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		p := NewPageTemplate(c)
+		p := NewPageBuilder(c)
 		if renderF(p) {
 			c.Header("Content-Type", "text/html;charset=utf-8")
 			c.String(http.StatusOK, p.String())
+		} else {
+			c.Abort()
 		}
 	}
 }
