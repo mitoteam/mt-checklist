@@ -38,5 +38,8 @@
         "cmd": "terser \"${workspaceRoot}\\internal\\mtweb\\js\\tools.js\" \"${workspaceRoot}\\web\\assets\\js-src\\main.js\" --mangle --compress -o \"${workspaceRoot}\\web\\assets\\script.min.js\"",
         "event": "onFileChange"
       }
-    ]
+    ],
+    "commentAnchors.showCursor": true,
+    "commentAnchors.tags.separators": [" ", ": ", ":"],
+    "commentAnchors.tags.matchCase": false
 }

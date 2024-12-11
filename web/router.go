@@ -20,20 +20,20 @@ func BuildWebRouter(r *gin.Engine) {
 	// no auth required routes
 	r.GET("/logout", webLogout)
 
-	r.GET("/sign-in", webDhtmlTemplate(PageLogin))
-	r.POST("/sign-in", webDhtmlTemplate(PageLogin))
+	r.GET("/sign-in", webPageBuilder(PageLogin))
+	r.POST("/sign-in", webPageBuilder(PageLogin))
 
 	// auth required routes
 	authenticated_routes := r.Group("")
 	authenticated_routes.Use(authMiddleware())
 	authenticated_routes.
-		GET("/", webDhtmlTemplate(PageDashboard))
+		GET("/", webPageBuilder(PageDashboard))
 
 	// Subgroup: admin role required routes
 	admin_routes := authenticated_routes.Group("/admin")
 	admin_routes.Use(adminRoleMiddleware())
 	admin_routes.
-		GET("/checklists", webDhtmlTemplate(PageAdminChecklists))
+		GET("/checklists", webPageBuilder(PageAdminChecklists))
 
 	//EXPERIMENTS
 	r.GET("/experiment", func(c *gin.Context) {
@@ -41,8 +41,8 @@ func BuildWebRouter(r *gin.Engine) {
 		c.String(http.StatusOK, mtweb.BuildExperimentHtml())
 	})
 
-	r.GET("/form", webDhtmlTemplate(PageFormExperiment))
-	r.POST("/form", webDhtmlTemplate(PageFormExperiment))
+	r.GET("/form", webPageBuilder(PageFormExperiment))
+	r.POST("/form", webPageBuilder(PageFormExperiment))
 }
 
 // checks if user authenticated, redirects to /login if not (except for excludedPaths).
@@ -82,25 +82,6 @@ func adminRoleMiddleware() gin.HandlerFunc {
 	}
 }
 
-// Prepares default set of gin.H data from context
-func buildRequestData(c *gin.Context) gin.H {
-	var user *model.MtUser
-	if v, ok := c.Get("User"); ok {
-		user = v.(*model.MtUser)
-	}
-
-	data := gin.H{
-		"App": app.App,
-	}
-
-	if user != nil {
-		data["UserID"] = user.ID
-		data["User"] = user
-	}
-
-	return data
-}
-
 func webLogout(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Delete("userID")
@@ -109,7 +90,7 @@ func webLogout(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/")
 }
 
-func webDhtmlTemplate(renderF func(*PageBuilder) bool) gin.HandlerFunc {
+func webPageBuilder(renderF func(*PageBuilder) bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		p := NewPageBuilder(c)
 		if renderF(p) {
