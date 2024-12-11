@@ -1,7 +1,11 @@
 package web
 
 import (
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/mt-checklist/app"
+	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
 
@@ -19,14 +23,51 @@ func init() {
 				Append(dhtml.NewFormSubmit().Label(mtweb.Icon("arrow-right-to-bracket").Label("Sign In")))
 		},
 		ValidateF: func(fd *dhtml.FormData) {
-			if v, ok := fd.GetValue("weha").(string); ok {
-				if len(v) < 3 {
-					fd.SetItemError("weha", "At least three characters expected")
+			username := fd.GetValue("username").(string)
+			password := fd.GetValue("password").(string)
+
+			if len(username) == 0 {
+				fd.SetItemError("username", "Username required")
+			}
+
+			if len(password) == 0 {
+				fd.SetItemError("password", "Password required")
+			}
+
+			if !fd.HasError() {
+				user := app.AuthorizeUser(username, password)
+
+				if user != nil {
+					fd.SetValue("userID", user.ID)
+				} else {
+					if session, ok := fd.GetParam("Session").(sessions.Session); ok {
+						session.Delete("userID")
+						session.Save()
+					}
+
+					fd.SetError("User not found or wrong password given")
 				}
 			}
 		},
 		SubmitF: func(fd *dhtml.FormData) {
-			fd.SetRedirect("/")
+			if session, ok := fd.GetParam("Session").(sessions.Session); ok {
+
+				session.Set("userID", fd.GetValue("userID").(int64))
+				session.Save()
+			}
+
+			fd.SetRedirect("/experiment")
 		},
 	})
+}
+
+func FormContextFromGin(c *gin.Context) dhtml.FormContext {
+	fc := dhtml.NewFormContext(c.Writer, c.Request)
+
+	//current user from session if he authorized
+	if user, ok := c.Get("User"); ok {
+		fc.SetArg("User", user.(*model.MtUser))
+	}
+
+	return fc
 }

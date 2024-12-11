@@ -1,12 +1,12 @@
 package web
 
 import (
+	"github.com/gin-contrib/sessions"
 	"github.com/mitoteam/dhtml"
-	"github.com/mitoteam/mttools"
 	"github.com/mitoteam/mtweb"
 )
 
-func PageDashboard(p *PageTemplate) {
+func PageDashboard(p *PageTemplate) bool {
 	cards_list := mtweb.NewCardList().
 		Add(
 			mtweb.NewCard().Header(mtweb.Icon("vial").Label("Experiment")).
@@ -35,11 +35,20 @@ func PageDashboard(p *PageTemplate) {
 		)
 
 	p.Main(cards_list)
+	return true
 }
 
-func PageLogin(p *PageTemplate) {
-	p.Title("Sign In").
-		Main(dhtml.FormManager.RenderForm(
-			"login", p.GetContext().Writer, p.GetContext().Request, mttools.NewValues(),
-		))
+func PageLogin(p *PageTemplate) bool {
+	fc := FormContextFromGin(p.GetContext())
+
+	fc.SetParam("Session", sessions.Default(p.GetContext()))
+
+	formOut := dhtml.FormManager.RenderForm("login", fc)
+
+	if formOut.IsEmpty() {
+		return false
+	} else {
+		p.Title("Sign In").Main(formOut)
+		return true
+	}
 }

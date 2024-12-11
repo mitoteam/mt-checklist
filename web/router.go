@@ -37,16 +37,20 @@ func BuildWebRouter(r *gin.Engine) {
 	r.POST("/login", webLoginPost) //login form handler
 
 	r.GET("/sign-in", webDhtmlTemplate(PageLogin))
+	r.POST("/sign-in", webDhtmlTemplate(PageLogin))
 
 	// auth required routes
-	g_auth := r.Group("")
+	authenticated_routes := r.Group("")
+	authenticated_routes.Use(authMiddleware())
 
-	g_auth.Use(authMiddleware()).
+	authenticated_routes.
 		GET("/", webDhtmlTemplate(PageDashboard))
 
 	// Subgroup: admin role required routes
-	g_auth.Group("/admin").
-		Use(adminRoleMiddleware()).
+	admin_routes := authenticated_routes.Group("/admin")
+	admin_routes.Use(adminRoleMiddleware())
+
+	admin_routes.
 		GET("/checklists", func(c *gin.Context) { c.HTML(http.StatusOK, "admin_checklists", buildRequestData(c)) })
 
 	//form experiment
@@ -54,10 +58,10 @@ func BuildWebRouter(r *gin.Engine) {
 		args := mttools.NewValues()
 		args.Set("oydi", c.Query("oydi"))
 
-		return dhtml.FormManager.RenderForm("test_form", c.Writer, c.Request, args)
+		return dhtml.FormManager.RenderForm("test_form", FormContextFromGin(c))
 	}))
 	r.POST("/form", webPlaceholder("Form!", func(c *gin.Context) *dhtml.HtmlPiece {
-		return dhtml.FormManager.RenderForm("test_form", c.Writer, c.Request, mttools.NewValues())
+		return dhtml.FormManager.RenderForm("test_form", FormContextFromGin(c))
 	}))
 }
 
@@ -69,7 +73,6 @@ func authMiddleware() gin.HandlerFunc {
 		user := app.GetUser(mttools.AnyToInt64OrZero(session.Get("userID")))
 
 		if user == nil {
-			//c.HTML(http.StatusOK, "login_form", buildRequestData(c))
 			c.Redirect(http.StatusSeeOther, "/sign-in?url="+c.Request.RequestURI)
 			c.Abort() //stop other handlers
 			return
@@ -198,12 +201,14 @@ func webExperiment(c *gin.Context) {
 	c.String(http.StatusOK, mtweb.BuildExperimentHtml())
 }
 
-func webDhtmlTemplate(renderF func(*PageTemplate)) gin.HandlerFunc {
+func webDhtmlTemplate(renderF func(*PageTemplate) bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		p := NewPageTemplate(c)
-		renderF(p)
-
-		c.Header("Content-Type", "text/html;charset=utf-8")
-		c.String(http.StatusOK, p.String())
+		if renderF(p) {
+			c.Header("Content-Type", "text/html;charset=utf-8")
+			c.String(http.StatusOK, p.String())
+		} else {
+			c.Abort()
+		}
 	}
 }
