@@ -25,7 +25,6 @@ func BuildWebRouter(r *gin.Engine) {
 
 	render := multitemplate.NewRenderer()
 	render.Add("placeholder", template.Must(template.ParseFS(templatesFS, append(inc_templates, "placeholder.html")...)))
-	render.Add("login_form", template.Must(template.ParseFS(templatesFS, append(inc_templates, "login.html")...)))
 	render.Add("admin_checklists", template.Must(template.ParseFS(templatesFS, append(inc_templates, "admin_checklists.html")...)))
 	render.Add("checklist", template.Must(template.ParseFS(templatesFS, append(inc_templates, "checklist.html")...)))
 
@@ -34,7 +33,6 @@ func BuildWebRouter(r *gin.Engine) {
 	// no auth required routes
 	r.GET("/experiment", webExperiment)
 	r.GET("/logout", webLogout)
-	r.POST("/login", webLoginPost) //login form handler
 
 	r.GET("/sign-in", webDhtmlTemplate(PageLogin))
 	r.POST("/sign-in", webDhtmlTemplate(PageLogin))
@@ -73,7 +71,7 @@ func authMiddleware() gin.HandlerFunc {
 		user := app.GetUser(mttools.AnyToInt64OrZero(session.Get("userID")))
 
 		if user == nil {
-			c.Redirect(http.StatusSeeOther, "/sign-in?url="+c.Request.RequestURI)
+			c.Redirect(http.StatusSeeOther, "/sign-in?destination="+c.Request.RequestURI)
 			c.Abort() //stop other handlers
 			return
 		} else {
@@ -121,53 +119,8 @@ func buildRequestData(c *gin.Context) gin.H {
 	return data
 }
 
-// Login form POST handler
-func webLoginPost(c *gin.Context) {
-	session := sessions.Default(c)
-
-	var errMessage string
-
-	username := c.PostForm("username")
-
-	if username == "" {
-		errMessage += "Username not given\n"
-	}
-
-	password := c.PostForm("password")
-
-	if password == "" {
-		errMessage += "Password not given\n"
-	}
-
-	if errMessage == "" {
-		user := app.AuthorizeUser(username, password)
-
-		if user != nil {
-			session.Set("userID", user.ID)
-			session.Save()
-
-			c.Redirect(http.StatusFound, "/")
-		} else {
-			session.Delete("userID")
-			session.Save()
-
-			errMessage = "User not found or wrong password given"
-		}
-	}
-
-	if errMessage != "" {
-		errMessage = "<pre>" + errMessage + "</pre><div><a href=\"/\">Main Page</a></div>"
-
-		c.Header("Content-Type", "text/html;charset=utf-8")
-		c.String(http.StatusUnauthorized, errMessage)
-		c.Abort()
-		return
-	}
-}
-
 func webLogout(c *gin.Context) {
 	session := sessions.Default(c)
-
 	session.Delete("userID")
 	session.Save()
 
@@ -207,8 +160,6 @@ func webDhtmlTemplate(renderF func(*PageTemplate) bool) gin.HandlerFunc {
 		if renderF(p) {
 			c.Header("Content-Type", "text/html;charset=utf-8")
 			c.String(http.StatusOK, p.String())
-		} else {
-			c.Abort()
 		}
 	}
 }

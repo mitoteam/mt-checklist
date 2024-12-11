@@ -39,16 +39,25 @@ func PageDashboard(p *PageTemplate) bool {
 }
 
 func PageLogin(p *PageTemplate) bool {
-	fc := FormContextFromGin(p.GetContext())
+	p.Title("Sign In")
 
-	fc.SetParam("Session", sessions.Default(p.GetContext()))
+	session := sessions.Default(p.GetContext())
 
-	formOut := dhtml.FormManager.RenderForm("login", fc)
-
-	if formOut.IsEmpty() {
-		return false
+	if userID, ok := session.Get("userID").(int64); ok && userID > 0 {
+		p.Main("Already authenticated")
 	} else {
-		p.Title("Sign In").Main(formOut)
-		return true
+		fc := FormContextFromGin(p.GetContext()).
+			SetParam("Session", session).
+			SetRedirect(p.GetContext().DefaultQuery("destination", "/"))
+
+		formOut := dhtml.FormManager.RenderForm("login", fc)
+
+		if formOut.IsEmpty() {
+			return false
+		} else {
+			p.Main(formOut)
+		}
 	}
+
+	return true
 }

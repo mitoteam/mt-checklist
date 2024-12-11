@@ -55,13 +55,11 @@ func init() {
 				session.Set("userID", fd.GetValue("userID").(int64))
 				session.Save()
 			}
-
-			fd.SetRedirect("/experiment")
 		},
 	})
 }
 
-func FormContextFromGin(c *gin.Context) dhtml.FormContext {
+func FormContextFromGin(c *gin.Context) *dhtml.FormContext {
 	fc := dhtml.NewFormContext(c.Writer, c.Request)
 
 	//current user from session if he authorized
