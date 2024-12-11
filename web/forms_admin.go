@@ -30,6 +30,7 @@ func init() {
 			cl := fd.GetParam("Checklist").(*model.MtChecklist)
 
 			cl.Name = fd.GetValue("name").(string)
+
 			app.Db.Save(cl)
 		},
 	})

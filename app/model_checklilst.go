@@ -8,36 +8,23 @@ import (
 	gorm "gorm.io/gorm"
 )
 
-func GetChecklist(id int64) *model.MtChecklist {
+func GetChecklist(id int64) (cl *model.MtChecklist) {
 	if id == 0 {
-		return nil
+		return
 	}
 
-	o := model.MtChecklist{}
+	err := Db.First(&cl, id).Error
 
-	err := Db.First(&o, id).Error
-
-	if err == nil { //found
-		return &o
-	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		log.Println("Query ERROR: " + err.Error())
 		return nil
 	}
 
-	return nil
+	return
 }
 
 func GetChecklistsList() (list []*model.MtChecklist) {
-	rows, _ := Db.Model(&model.MtChecklist{}).Rows()
-	defer rows.Close()
+	Db.Model(&model.MtChecklist{}).Find(&list)
 
-	o := model.MtChecklist{}
-	for rows.Next() {
-		Db.ScanRows(rows, &o)
-
-		new_o := o
-		list = append(list, &new_o)
-	}
-
-	return list
+	return
 }
