@@ -33,7 +33,9 @@ func BuildWebRouter(r *gin.Engine) {
 	admin_routes := authenticated_routes.Group("/admin")
 	admin_routes.Use(adminRoleMiddleware())
 	admin_routes.
-		GET("/checklists", webPageBuilder(PageAdminChecklists))
+		GET("/checklists", webPageBuilder(PageAdminChecklists)).
+		GET("/checklists/:id/edit", webPageBuilder(PageAdminChecklistEdit)).
+		POST("/checklists/:id/edit", webPageBuilder(PageAdminChecklistEdit))
 
 	//EXPERIMENTS
 	r.GET("/experiment", func(c *gin.Context) {

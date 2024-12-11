@@ -14,7 +14,6 @@ func main() {
 	app.App.LongDescription = `Checklists management system`
 
 	app.App.BuildWebRouterF = web.BuildWebRouter
-	web.BuildWebApiRouter(app.App)
 
 	app.App.PreRunF = app.DoPreRun
 	app.App.PostRunF = app.DoPostRun
