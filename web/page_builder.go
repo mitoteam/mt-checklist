@@ -104,7 +104,8 @@ func (p *PageBuilder) render() (out *dhtml.HtmlPiece) {
 	//scripts
 	document.Body().
 		Append(dhtml.NewTag("script").Attribute("src", "/assets/vendor/bootstrap.bundle.min.js")).
-		Append(dhtml.NewTag("script").Attribute("src", "/assets/vendor/vue.global.prod.js")).
+		//time for vue has not come yet
+		//Append(dhtml.NewTag("script").Attribute("src", "/assets/vendor/vue.global.prod.js")).
 		Append(dhtml.NewTag("script").Attribute("src", "/assets/script.min.js"))
 
 	return dhtml.Piece(document)

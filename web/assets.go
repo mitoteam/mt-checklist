@@ -14,17 +14,12 @@ import (
 //go:embed assets/css/*.css
 //go:embed assets/images/*.png
 //go:embed assets/favicon.ico
-//go:embed templates/*
 var embedFS embed.FS
 
 var webAssetsHttpFS http.FileSystem
-var templatesFS fs.FS
 
 func init() {
 	//prepare FS for subdirectory "/assets"
 	webAssetsFS, _ := fs.Sub(embedFS, "assets")
 	webAssetsHttpFS = http.FS(webAssetsFS)
-
-	//prepare FS for subdirectory "/templates"
-	templatesFS, _ = fs.Sub(embedFS, "templates")
 }

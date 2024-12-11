@@ -5,11 +5,10 @@ go 1.23
 require (
 	github.com/mitoteam/dhtml v0.0.0-20241128160328-ab13a14f2236
 	github.com/mitoteam/goappbase v0.0.0-20241128132657-76cbe0b09c62
-	github.com/mitoteam/mttools v0.0.0-20241128155109-524c9d282ee0 // indirect
+	github.com/mitoteam/mttools v0.0.0-20241128155109-524c9d282ee0
 )
 
 require (
-	github.com/gin-contrib/multitemplate v1.0.1
 	github.com/gin-contrib/sessions v1.0.1
 	github.com/gin-gonic/gin v1.10.0
 	github.com/mitoteam/mtweb v0.0.0-20241204153033-472845acc975

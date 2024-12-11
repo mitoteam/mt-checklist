@@ -35,7 +35,7 @@
         "isAsync": true,
         ////original single file
         ////quick crutch: multiple files to single one
-        "cmd": "terser \"${workspaceRoot}\\mtweb\\js\\tools.js\" \"${workspaceRoot}\\web\\assets\\js-src\\data.js\" \"${workspaceRoot}\\web\\assets\\js-src\\api.js\" \"${workspaceRoot}\\web\\assets\\js-src\\components_modal.js\" \"${workspaceRoot}\\web\\assets\\js-src\\components.js\" \"${workspaceRoot}\\web\\assets\\js-src\\components_admin.js\" \"${workspaceRoot}\\web\\assets\\js-src\\main.js\" --mangle --compress -o \"${workspaceRoot}\\web\\assets\\script.min.js\"",
+        "cmd": "terser \"${workspaceRoot}\\internal\\mtweb\\js\\tools.js\" \"${workspaceRoot}\\web\\assets\\js-src\\main.js\" --mangle --compress -o \"${workspaceRoot}\\web\\assets\\script.min.js\"",
         "event": "onFileChange"
       }
     ]

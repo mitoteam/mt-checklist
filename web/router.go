@@ -1,10 +1,8 @@
 package web
 
 import (
-	"html/template"
 	"net/http"
 
-	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/mt-checklist/app"
@@ -18,14 +16,6 @@ func BuildWebRouter(r *gin.Engine) {
 
 	//serve assets
 	r.StaticFS("/assets", webAssetsHttpFS)
-
-	//serve HTML from templates
-	inc_templates := []string{"inc/base.html", "inc/header.html", "inc/footer.html"}
-
-	render := multitemplate.NewRenderer()
-	render.Add("admin_checklists", template.Must(template.ParseFS(templatesFS, append(inc_templates, "admin_checklists.html")...)))
-
-	r.HTMLRender = render
 
 	// no auth required routes
 	r.GET("/logout", webLogout)
@@ -43,7 +33,7 @@ func BuildWebRouter(r *gin.Engine) {
 	admin_routes := authenticated_routes.Group("/admin")
 	admin_routes.Use(adminRoleMiddleware())
 	admin_routes.
-		GET("/checklists", func(c *gin.Context) { c.HTML(http.StatusOK, "admin_checklists", buildRequestData(c)) })
+		GET("/checklists", webDhtmlTemplate(PageAdminChecklists))
 
 	//EXPERIMENTS
 	r.GET("/experiment", func(c *gin.Context) {
