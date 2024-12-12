@@ -24,12 +24,10 @@ func init() {
 	goappbase.DbSchema.AddModel(reflect.TypeFor[Checklist]())
 }
 
-func LoadChecklist(id any) (cl *Checklist) {
+func LoadChecklist(id any) *Checklist {
 	return goappbase.LoadObject[Checklist](id)
 }
 
-func GetChecklistsList() (list []*Checklist) {
-	goappbase.DbSchema.Db().Model(&Checklist{}).Find(&list)
-
-	return
+func GetChecklistsList() []*Checklist {
+	return goappbase.LoadObjectList[Checklist]()
 }
