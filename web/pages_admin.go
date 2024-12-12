@@ -4,9 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mitoteam/dhtml"
-	"github.com/mitoteam/mt-checklist/app"
 	"github.com/mitoteam/mt-checklist/model"
-	"github.com/mitoteam/mttools"
 	"github.com/mitoteam/mtweb"
 )
 
@@ -19,7 +17,7 @@ func PageAdminChecklists(p *PageBuilder) bool {
 	)
 
 	cardList := mtweb.NewCardList()
-	checklists := app.GetChecklistsList()
+	checklists := model.GetChecklistsList()
 
 	for _, cl := range checklists {
 		card := mtweb.NewCard().
@@ -40,10 +38,10 @@ func PageAdminChecklists(p *PageBuilder) bool {
 }
 
 func PageAdminChecklistEdit(p *PageBuilder) bool {
-	cl := app.GetChecklist(mttools.AnyToInt64OrZero(p.GetGinContext().Param("id")))
+	cl := model.LoadChecklist(p.GetGinContext().Param("id"))
 
 	if cl == nil {
-		cl = &model.MtChecklist{}
+		cl = &model.Checklist{}
 		p.Title("New checklist")
 	} else {
 		p.Title("Edit checklist: " + cl.Name)

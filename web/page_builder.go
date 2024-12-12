@@ -41,7 +41,7 @@ func (p *PageBuilder) GetFormContext() *dhtml.FormContext {
 
 	//current user from session if he authorized
 	if user, ok := p.context.Get("User"); ok {
-		fc.SetArg("User", user.(*model.MtUser))
+		fc.SetArg("User", user.(*model.User))
 	}
 
 	return fc
@@ -112,9 +112,9 @@ func (p *PageBuilder) render() (out *dhtml.HtmlPiece) {
 }
 
 func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
-	var user *model.MtUser
+	var user *model.User
 	if v, ok := p.context.Get("User"); ok {
-		user = v.(*model.MtUser)
+		user = v.(*model.User)
 	}
 
 	header := dhtml.Div().Class("border bg-light p-3 mb-3").Attribute("role", "header")

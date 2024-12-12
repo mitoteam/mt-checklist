@@ -69,9 +69,9 @@ func authMiddleware() gin.HandlerFunc {
 
 func adminRoleMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var user *model.MtUser
+		var user *model.User
 		if v, ok := c.Get("User"); ok {
-			user = v.(*model.MtUser)
+			user = v.(*model.User)
 		}
 
 		if !user.HasRole(model.ROLE_ADMIN) {

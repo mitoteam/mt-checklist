@@ -9,7 +9,7 @@ import (
 )
 
 func checkRootUser() error {
-	rootUser := model.MtUser{}
+	rootUser := model.User{}
 
 	if err := Db.Limit(1).Find(&rootUser, 1).Error; err != nil {
 		log.Println("checkRootUser ERROR: " + err.Error())
@@ -38,10 +38,10 @@ func checkRootUser() error {
 	return nil
 }
 
-func AuthorizeUser(username, password string) *model.MtUser {
-	user := model.MtUser{}
+func AuthorizeUser(username, password string) *model.User {
+	user := model.User{}
 
-	err := Db.Where(model.MtUser{UserName: username}).First(&user).Error
+	err := Db.Where(model.User{UserName: username}).First(&user).Error
 
 	if err == nil { //found
 		//check password
@@ -56,12 +56,12 @@ func AuthorizeUser(username, password string) *model.MtUser {
 	return nil
 }
 
-func GetUser(id int64) *model.MtUser {
+func GetUser(id int64) *model.User {
 	if id == 0 {
 		return nil
 	}
 
-	user := model.MtUser{}
+	user := model.User{}
 
 	err := Db.First(&user, id).Error
 

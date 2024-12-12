@@ -11,7 +11,7 @@ func init() {
 	dhtml.FormManager.Register(&dhtml.FormHandler{
 		Id: "admin_checklist_edit",
 		RenderF: func(form *dhtml.FormElement, fd *dhtml.FormData) {
-			cl := fd.GetParam("Checklist").(*model.MtChecklist)
+			cl := fd.GetParam("Checklist").(*model.Checklist)
 
 			form.Class("border bg-light p-3").
 				Append(
@@ -27,7 +27,7 @@ func init() {
 			}
 		},
 		SubmitF: func(fd *dhtml.FormData) {
-			cl := fd.GetParam("Checklist").(*model.MtChecklist)
+			cl := fd.GetParam("Checklist").(*model.Checklist)
 
 			cl.Name = fd.GetValue("name").(string)
 
