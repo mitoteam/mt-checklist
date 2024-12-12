@@ -21,6 +21,9 @@ func PageDashboard(p *PageBuilder) bool {
 		Add(
 			mtweb.NewCard().Header(mtweb.Icon("vial").Label("Experiment")).
 				Body(dhtml.Div().Text("Html renderer ").Append(dhtml.NewLink("/experiment").Label("experiment")).Text(" link.")).
+				Body(
+					dhtml.Div().Text("Confirm link ").Append(dhtml.NewConfirmLink("/experiment", "Are you sure?").Label("experiment")),
+				).
 				Body(dhtml.Div().Text("Forms ").Append(dhtml.NewLink("/form").Label("experiment")).Text(" link.")),
 		).
 		Add(

@@ -35,7 +35,8 @@ func BuildWebRouter(r *gin.Engine) {
 	admin_routes.
 		GET("/checklists", webPageBuilder(PageAdminChecklists)).
 		GET("/checklists/:id/edit", webPageBuilder(PageAdminChecklistEdit)).
-		POST("/checklists/:id/edit", webPageBuilder(PageAdminChecklistEdit))
+		POST("/checklists/:id/edit", webPageBuilder(PageAdminChecklistEdit)).
+		GET("/checklists/:id/delete", webAdminChecklistDelete)
 
 	//EXPERIMENTS
 	r.GET("/experiment", func(c *gin.Context) {

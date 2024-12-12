@@ -2,8 +2,11 @@ package web
 
 import (
 	"fmt"
+	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/goappbase"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
@@ -25,6 +28,10 @@ func PageAdminChecklists(p *PageBuilder) bool {
 					L(cl.Name).
 					R(
 						dhtml.NewLink(fmt.Sprintf("/admin/checklists/%d/edit", cl.ID)).Label(mtweb.Icon("edit")),
+					).
+					R(
+						dhtml.NewConfirmLink(fmt.Sprintf("/admin/checklists/%d/delete", cl.ID), "").
+							Label(mtweb.Icon("trash").Class("text-danger")),
 					),
 			).
 			Body("body")
@@ -58,4 +65,12 @@ func PageAdminChecklistEdit(p *PageBuilder) bool {
 	}
 
 	return true
+}
+
+func webAdminChecklistDelete(c *gin.Context) {
+	if cl := model.LoadChecklist(c.Param("id")); cl != nil {
+		goappbase.DeleteObject(cl)
+	}
+
+	c.Redirect(http.StatusFound, "/admin/checklists")
 }
