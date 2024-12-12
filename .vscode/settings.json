@@ -21,25 +21,5 @@
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
     "files.trimTrailingWhitespace": true,
-    "editor.rulers": [120,200],
-    "filewatcher.commands": [
-      {
-        "match": "\\.scss$",
-        "isAsync": true,
-        "cmd": "sass --stop-on-error --no-source-map --style=compressed \"${file}:${fileDirname}/${fileBasenameNoExt}.css\"",
-        "event": "onFileChange"
-      },
-      {
-        "match": "\\.js$",
-        "notMatch": "\\.min\\.js$",
-        "isAsync": true,
-        ////original single file
-        ////quick crutch: multiple files to single one
-        "cmd": "terser \"${workspaceRoot}\\internal\\mtweb\\js\\tools.js\" \"${workspaceRoot}\\web\\assets\\js-src\\main.js\" --mangle --compress -o \"${workspaceRoot}\\web\\assets\\script.min.js\"",
-        "event": "onFileChange"
-      }
-    ],
-    "commentAnchors.showCursor": true,
-    "commentAnchors.tags.separators": [" ", ": ", ":"],
-    "commentAnchors.tags.matchCase": false
+    "editor.rulers": [120,200]
 }

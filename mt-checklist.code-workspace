@@ -1,0 +1,39 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "internal/goappbase"
+		},
+		{
+			"path": "internal/dhtml"
+		},
+		{
+			"path": "internal/mttools"
+		},
+		{
+			"path": "internal/mtweb"
+		}
+	],
+	"settings": {
+		"filewatcher.commands": [
+			{
+				"match": "\\.scss$",
+				"isAsync": true,
+				"cmd": "sass --stop-on-error --no-source-map --style=compressed \"${file}:${fileDirname}/${fileBasenameNoExt}.css\"",
+				"event": "onFileChange"
+			},
+			{
+				"match": "\\.js$",
+				"notMatch": "\\.min\\.js$",
+				"isAsync": true,
+				"cmd": "terser \"${workspaceRoot}\\internal\\mtweb\\js\\tools.js\" \"${workspaceRoot}\\web\\assets\\js-src\\main.js\" --mangle --compress -o \"${workspaceRoot}\\web\\assets\\script.min.js\"",
+				"event": "onFileChange"
+			}
+		],
+		"commentAnchors.showCursor": true,
+		"commentAnchors.tags.separators": [" ", ": ", ":"],
+		"commentAnchors.tags.matchCase": false
+	}
+}
