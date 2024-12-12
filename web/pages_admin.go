@@ -17,9 +17,8 @@ func PageAdminChecklists(p *PageBuilder) bool {
 	)
 
 	cardList := mtweb.NewCardList()
-	checklists := model.GetChecklistsList()
 
-	for _, cl := range checklists {
+	for _, cl := range model.GetChecklistsList() {
 		card := mtweb.NewCard().
 			Header(
 				mtweb.NewJustifiedLR().
@@ -47,7 +46,7 @@ func PageAdminChecklistEdit(p *PageBuilder) bool {
 		p.Title("Edit checklist: " + cl.Name)
 	}
 
-	fc := p.GetFormContext().SetRedirect("/admin/checklists").
+	fc := p.FormContext().SetRedirect("/admin/checklists").
 		SetParam("Checklist", cl)
 
 	formOut := dhtml.FormManager.RenderForm("admin_checklist_edit", fc)

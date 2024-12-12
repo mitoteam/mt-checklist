@@ -6,7 +6,7 @@ import (
 )
 
 func PageFormExperiment(p *PageBuilder) bool {
-	formOut := dhtml.FormManager.RenderForm("test_form", p.GetFormContext())
+	formOut := dhtml.FormManager.RenderForm("test_form", p.FormContext())
 
 	if !formOut.IsEmpty() {
 		p.Title("Form!").Main(formOut)
@@ -56,7 +56,7 @@ func PageLogin(p *PageBuilder) bool {
 	if userID, ok := session.Get("userID").(int64); ok && userID > 0 {
 		p.Main("Already authenticated")
 	} else {
-		fc := p.GetFormContext().
+		fc := p.FormContext().
 			SetParam("Session", session).
 			SetRedirect(p.GetGinContext().DefaultQuery("destination", "/"))
 

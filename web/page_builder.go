@@ -36,7 +36,8 @@ func (p *PageBuilder) GetSession() sessions.Session {
 	return sessions.Default(p.context)
 }
 
-func (p *PageBuilder) GetFormContext() *dhtml.FormContext {
+// Builds new dhtml.FormContext to be used with form builder
+func (p *PageBuilder) FormContext() *dhtml.FormContext {
 	fc := dhtml.NewFormContext(p.context.Writer, p.context.Request)
 
 	//current user from session if he authorized
