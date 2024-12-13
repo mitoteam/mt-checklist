@@ -73,3 +73,39 @@ func webAdminChecklistDelete(c *gin.Context) {
 
 	c.Redirect(http.StatusFound, "/admin/checklists")
 }
+
+// ====================== user management ===================
+func PageAdminUsers(p *PageBuilder) bool {
+	p.Main(
+		mtweb.NewBtnPanel().Class("mb-3").AddIconBtn(
+			"/", "home", "Home",
+		).AddIconBtn(
+			"/admin/users/0/edit", "plus", "Create user",
+		),
+	)
+
+	return true
+}
+
+func PageAdminUserEdit(p *PageBuilder) bool {
+	user := goappbase.LoadOrCreateObject[model.User](p.GetGinContext().Param("id"))
+
+	if user == nil {
+		p.Title("New user")
+	} else {
+		p.Title("Edit user: " + user.DisplayName)
+	}
+
+	fc := p.FormContext().SetRedirect("/admin/users").
+		SetParam("User", user)
+
+	formOut := dhtml.FormManager.RenderForm("admin_user_edit", fc)
+
+	if formOut.IsEmpty() {
+		return false
+	} else {
+		p.Main(formOut)
+	}
+
+	return true
+}

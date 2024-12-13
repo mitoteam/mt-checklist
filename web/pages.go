@@ -40,11 +40,14 @@ func PageDashboard(p *PageBuilder) bool {
 		).
 		Add(
 			mtweb.NewCard().Header(mtweb.Icon("cog").Label("System management")).
-				Body(
+				Body(dhtml.Div().Append(
+					dhtml.NewLink("/admin/users").Label(mtweb.Icon("user").Label("Users")),
+				)).
+				Body(dhtml.Div().Append(
 					dhtml.Div().Append(
 						dhtml.NewLink("/admin/checklists").Label(mtweb.Icon("list-check").Label("Checklists")),
 					).Append(" (administration)"),
-				),
+				)),
 		)
 
 	p.Main(cards_list)

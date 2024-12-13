@@ -37,6 +37,11 @@ func BuildWebRouter(r *gin.Engine) {
 		POST("/checklists/:id/edit", webPageBuilder(PageAdminChecklistEdit)).
 		GET("/checklists/:id/delete", webAdminChecklistDelete)
 
+	admin_routes.
+		GET("/users", webPageBuilder(PageAdminUsers)).
+		GET("/users/:id/edit", webPageBuilder(PageAdminUserEdit)).
+		POST("/users/:id/edit", webPageBuilder(PageAdminUserEdit))
+
 	//EXPERIMENTS
 	r.GET("/experiment", func(c *gin.Context) {
 		c.Header("Content-Type", "text/html;charset=utf-8")
@@ -95,6 +100,7 @@ func webLogout(c *gin.Context) {
 func webPageBuilder(renderF func(*PageBuilder) bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		p := NewPageBuilder(c)
+
 		if renderF(p) {
 			c.Header("Content-Type", "text/html;charset=utf-8")
 			c.String(http.StatusOK, p.String())
