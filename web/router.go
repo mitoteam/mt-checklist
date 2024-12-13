@@ -79,7 +79,7 @@ func adminRoleMiddleware() gin.HandlerFunc {
 			user = v.(*model.User)
 		}
 
-		if !user.HasRole(model.ROLE_ADMIN) {
+		if !user.HasRole(model.USER_ROLE_ADMIN) {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}

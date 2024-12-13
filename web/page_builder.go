@@ -129,12 +129,18 @@ func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 	header_right := dhtml.Div().Class("text-end")
 
 	if user != nil {
-		header_right.
+		header_right.Append(dhtml.Div().
 			Text(user.DisplayName).
 			Append(
 				dhtml.NewLink("/logout").Label(mtweb.Icon("arrow-right-from-bracket")).
 					Class("ms-1").Title("Sign Out"),
-			)
+			))
+
+		if user.IsAdmin() {
+			header_right.Append(dhtml.Div().Class("text-muted").Append(
+				mtweb.Icon("user-police-tie").Label("admin"),
+			))
+		}
 	}
 
 	header.Append(mtweb.NewJustifiedLR().L(header_left).R(header_right))

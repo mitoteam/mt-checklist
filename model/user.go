@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	ROLE_ADMIN = 1
+	USER_ROLE_ADMIN = 1
 )
 
 type User struct {
@@ -47,7 +47,11 @@ func (u *User) CheckPassword(password string) bool {
 }
 
 func (u *User) HasRole(role int) bool {
-	return true //todo: do real check
+	return true //TODO: do real check
+}
+
+func (u *User) IsAdmin() bool {
+	return u.HasRole(USER_ROLE_ADMIN)
 }
 
 func AuthorizeUser(username, password string) *User {
