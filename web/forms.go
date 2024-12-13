@@ -3,7 +3,7 @@ package web
 import (
 	"github.com/gin-contrib/sessions"
 	"github.com/mitoteam/dhtml"
-	"github.com/mitoteam/mt-checklist/app"
+	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
 
@@ -33,7 +33,7 @@ func init() {
 			}
 
 			if !fd.HasError() {
-				user := app.AuthorizeUser(username, password)
+				user := model.AuthorizeUser(username, password)
 
 				if user != nil {
 					fd.SetValue("userID", user.ID)

@@ -15,7 +15,7 @@ func PageAdminChecklists(p *PageBuilder) bool {
 	p.Main(
 		dhtml.Div().Class("mb-3 p-3 border").
 			Append(
-				dhtml.NewLink("/admin/checklists/0/edit").Label(mtweb.Icon("plus").Label("Create checklist")),
+				mtweb.NewIconBtn("/admin/checklists/0/edit", "plus", "Create checklist"),
 			),
 	)
 
@@ -27,11 +27,10 @@ func PageAdminChecklists(p *PageBuilder) bool {
 				mtweb.NewJustifiedLR().
 					L(cl.Name).
 					R(
-						dhtml.NewLink(fmt.Sprintf("/admin/checklists/%d/edit", cl.ID)).Label(mtweb.Icon("edit")),
+						mtweb.NewEditBtn(fmt.Sprintf("/admin/checklists/%d/edit", cl.ID)),
 					).
 					R(
-						dhtml.NewConfirmLink(fmt.Sprintf("/admin/checklists/%d/delete", cl.ID), "").
-							Label(mtweb.Icon("trash").Class("text-danger")),
+						mtweb.NewDeleteBtn(fmt.Sprintf("/admin/checklists/%d/delete", cl.ID), ""),
 					),
 			).
 			Body("body")

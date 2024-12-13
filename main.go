@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	app.App = goappbase.NewAppBase(app.Settings)
+	app.App = goappbase.NewAppBase(app.DefaultSettings)
 
 	app.App.AppName = "MiTo Team Checklist"
 	app.App.ExecutableName = "mt-checklist"

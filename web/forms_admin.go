@@ -2,7 +2,7 @@ package web
 
 import (
 	"github.com/mitoteam/dhtml"
-	"github.com/mitoteam/mt-checklist/app"
+	"github.com/mitoteam/goappbase"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
@@ -31,7 +31,7 @@ func init() {
 
 			cl.Name = fd.GetValue("name").(string)
 
-			app.Db.Save(cl)
+			goappbase.SaveObject(cl)
 		},
 	})
 }

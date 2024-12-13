@@ -6,15 +6,15 @@ import (
 )
 
 var (
-	App      *goappbase.AppBase
-	Settings *AppSettingsType
-	Db       *gorm.DB
+	App             *goappbase.AppBase
+	DefaultSettings *AppSettingsType
+	Db              *gorm.DB
 )
 
 func init() {
 	//default settings (no defaults for now)
-	Settings = &AppSettingsType{}
+	DefaultSettings = &AppSettingsType{}
 
 	//default values for goappbase.AppSettingsBase options
-	Settings.WebserverPort = 15119
+	DefaultSettings.WebserverPort = 15119
 }

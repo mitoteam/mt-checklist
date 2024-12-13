@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/mitoteam/mt-checklist/app"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mttools"
 	"github.com/mitoteam/mtweb"
@@ -53,7 +52,7 @@ func authMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
 
-		user := app.GetUser(mttools.AnyToInt64OrZero(session.Get("userID")))
+		user := model.LoadUser(mttools.AnyToInt64OrZero(session.Get("userID")))
 
 		if user == nil {
 			c.Redirect(http.StatusSeeOther, "/sign-in?destination="+c.Request.RequestURI)
