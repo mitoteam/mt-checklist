@@ -55,7 +55,7 @@ func renderStatistics() (out dhtml.HtmlPiece) {
 
 	out.Append(dhtml.RenderValueE("Checklists", goappbase.CountOL[model.Checklist](), "no checklists created"))
 
-	goappbase.ModelQuery[model.Checklist]().Where("is_active = ?", true)
+	goappbase.PreQuery[model.Checklist]().Where("is_active = ?", true)
 	out.Append(dhtml.RenderValueE("Active checklists", goappbase.CountOL[model.Checklist](), "no active checklists"))
 
 	return out

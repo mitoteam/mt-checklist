@@ -8,7 +8,6 @@ import (
 
 	"github.com/mitoteam/goappbase"
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 )
 
 const (
@@ -51,22 +50,17 @@ func (u *User) IsAdmin() bool {
 }
 
 func AuthorizeUser(username, password string) *User {
-	user := User{}
+	goappbase.PreQuery[User]().Where("user_name", username)
+	user := goappbase.FirstO[User]()
 
-	err := goappbase.DbSchema.Db().Where(User{UserName: username}).First(&user).Error
-
-	if err == nil { //found
-		//check password
+	if user != nil { //found
 		if user.CheckPassword(password) {
 			user.LastLogin = time.Now() //update last login time
 
-			goappbase.SaveObject(&user)
+			goappbase.SaveObject(user)
 
-			return &user
+			return user
 		}
-	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
-		log.Println("Query ERROR: " + err.Error())
-		return nil
 	}
 
 	return nil
