@@ -8,6 +8,11 @@ body {
   font-style: normal;
 }
 
+//override Bootstrap's font-weight: bolder; - it is too bold in Roboto.
+b, strong {
+  font-weight: 500;
+}
+
 .dhtml-form {
   .form-item{
     margin-bottom: $spacer;

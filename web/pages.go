@@ -51,7 +51,7 @@ func PageDashboard(p *PageBuilder) bool {
 
 func renderStatistics() (out dhtml.HtmlPiece) {
 	out.Append(dhtml.RenderValue("User count", len(model.GetUsersList())))
-	out.Append(dhtml.RenderValue("Checklist count", len(model.GetChecklistsList())))
+	out.Append(dhtml.RenderValueE("Checklist count", len(model.GetChecklistsList()), "no checklists created"))
 
 	return out
 }
