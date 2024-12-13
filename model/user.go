@@ -30,11 +30,7 @@ func init() {
 }
 
 func LoadUser(id any) *User {
-	return goappbase.LoadObject[User](id)
-}
-
-func GetUsersList() []*User {
-	return goappbase.LoadObjectList[User]()
+	return goappbase.LoadO[User](id)
 }
 
 func (u *User) SetPassword(password string) {

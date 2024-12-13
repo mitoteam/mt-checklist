@@ -13,15 +13,18 @@ import (
 
 func PageAdminChecklists(p *PageBuilder) bool {
 	p.Main(
-		dhtml.Div().Class("mb-3 p-3 border").
-			Append(
-				mtweb.NewIconBtn("/admin/checklists/0/edit", "plus", "Create checklist"),
-			),
+		mtweb.NewBtnPanel().Class("mb-3").AddIconBtn(
+			"/", "home", "Home",
+		).AddIconBtn(
+			"/admin/checklists/0/edit", "plus", "Create checklist",
+		),
 	)
 
 	cardList := mtweb.NewCardList()
 
-	for _, cl := range model.GetChecklistsList() {
+	list := goappbase.LoadOL[model.Checklist]()
+
+	for _, cl := range list {
 		card := mtweb.NewCard().
 			Header(
 				mtweb.NewJustifiedLR().
@@ -88,7 +91,7 @@ func PageAdminUsers(p *PageBuilder) bool {
 }
 
 func PageAdminUserEdit(p *PageBuilder) bool {
-	user := goappbase.LoadOrCreateObject[model.User](p.GetGinContext().Param("id"))
+	user := goappbase.LoadOrCreateO[model.User](p.GetGinContext().Param("id"))
 
 	if user == nil {
 		p.Title("New user")

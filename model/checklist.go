@@ -9,8 +9,9 @@ import (
 type Checklist struct {
 	goappbase.BaseModel
 
-	Name string
-	Body string `gorm:"type:varchar(1000)"`
+	Name     string
+	IsActive bool
+	Body     string `gorm:"type:varchar(1000)"`
 }
 
 type ChecklistItem struct {
@@ -25,9 +26,5 @@ func init() {
 }
 
 func LoadChecklist(id any) *Checklist {
-	return goappbase.LoadObject[Checklist](id)
-}
-
-func GetChecklistsList() []*Checklist {
-	return goappbase.LoadObjectList[Checklist]()
+	return goappbase.LoadO[Checklist](id)
 }
