@@ -70,6 +70,14 @@ func (p *PageBuilder) String() string {
 	return p.render().String()
 }
 
+func (p *PageBuilder) User() (user *model.User) {
+	if v, ok := p.context.Get("User"); ok {
+		user = v.(*model.User)
+	}
+
+	return user
+}
+
 func (p *PageBuilder) render() (out *dhtml.HtmlPiece) {
 	document := dhtml.NewHtmlDocument()
 
@@ -115,10 +123,7 @@ func (p *PageBuilder) render() (out *dhtml.HtmlPiece) {
 }
 
 func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
-	var user *model.User
-	if v, ok := p.context.Get("User"); ok {
-		user = v.(*model.User)
-	}
+	user := p.User()
 
 	header := dhtml.Div().Class("border bg-light p-3 mb-3").Attribute("role", "header")
 

@@ -34,17 +34,21 @@ func PageDashboard(p *PageBuilder) bool {
 			Body("Some content"),
 	).Add(
 		mtweb.NewCard().Header(mtweb.Icon("chart-simple").Label("Statistics")).Body(renderStatistics()),
-	).Add(
-		mtweb.NewCard().Header(mtweb.Icon("cog").Label("System management")).
-			Body(dhtml.Div().Append(
-				dhtml.NewLink("/admin/users").Label(mtweb.Icon("user").Label("Users")),
-			)).
-			Body(dhtml.Div().Append(
-				dhtml.Div().Append(
-					dhtml.NewLink("/admin/checklists").Label(mtweb.Icon("list-check").Label("Checklists")),
-				).Append(" (administration)"),
-			)),
 	)
+
+	if p.User().IsAdmin() {
+		cards_list.Add(
+			mtweb.NewCard().Header(mtweb.Icon("cog").Label("System management")).
+				Body(dhtml.Div().Append(
+					dhtml.NewLink("/admin/users").Label(mtweb.Icon("user").Label("Users")),
+				)).
+				Body(dhtml.Div().Append(
+					dhtml.Div().Append(
+						dhtml.NewLink("/admin/checklists").Label(mtweb.Icon("list-check").Label("Checklists")),
+					).Append(" (administration)"),
+				)),
+		)
+	}
 
 	p.Main(cards_list)
 	return true

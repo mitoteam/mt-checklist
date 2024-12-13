@@ -78,6 +78,7 @@ func webAdminChecklistDelete(c *gin.Context) {
 }
 
 // ====================== user management ===================
+
 func PageAdminUsers(p *PageBuilder) bool {
 	p.Main(
 		mtweb.NewBtnPanel().Class("mb-3").AddIconBtn(
