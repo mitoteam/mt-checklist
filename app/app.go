@@ -5,9 +5,24 @@ import (
 	"github.com/mitoteam/mt-checklist/model"
 )
 
+var App *goappbase.AppBase
+
+func InitApp() *goappbase.AppBase {
+	App = goappbase.NewAppBase(defaultSettings)
+
+	App.AppName = "MiTo Team Checklist"
+	App.ExecutableName = "mt-checklist"
+	App.LongDescription = `Checklists management system`
+
+	App.PreRunF = DoPreRun
+	App.PostRunF = DoPostRun
+
+	return App
+}
+
 func DoPreRun() (err error) {
 	// open database and migrate schema
-	if Db, err = goappbase.DbSchema.Open(); err != nil {
+	if err = goappbase.DbSchema.Open(); err != nil {
 		return err
 	}
 
