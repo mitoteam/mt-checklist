@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/mitoteam/goappbase"
+	"github.com/mitoteam/mttools"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -17,11 +18,11 @@ const (
 type User struct {
 	goappbase.BaseModel
 
-	UserName     string
+	UserName     string `gorm:"uniqueIndex"`
 	DisplayName  string
 	PasswordHash []byte
 	IsActive     bool
-	LastLogin    time.Time
+	LastLogin    *time.Time
 }
 
 func init() {
@@ -55,7 +56,7 @@ func AuthorizeUser(username, password string) *User {
 
 	if user != nil { //found
 		if user.CheckPassword(password) {
-			user.LastLogin = time.Now() //update last login time
+			user.LastLogin = mttools.Ptr(time.Now()) //update last login time
 
 			goappbase.SaveObject(user)
 

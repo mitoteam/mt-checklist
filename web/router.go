@@ -40,7 +40,8 @@ func BuildWebRouter(r *gin.Engine) {
 	admin_routes.
 		GET("/users", webPageBuilder(PageAdminUsers)).
 		GET("/users/:id/edit", webPageBuilder(PageAdminUserEdit)).
-		POST("/users/:id/edit", webPageBuilder(PageAdminUserEdit))
+		POST("/users/:id/edit", webPageBuilder(PageAdminUserEdit)).
+		GET("/users/:id/delete", webAdminUserDelete)
 
 	//EXPERIMENTS
 	r.GET("/experiment", func(c *gin.Context) {

@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/dhtml"
@@ -88,6 +89,38 @@ func PageAdminUsers(p *PageBuilder) bool {
 		),
 	)
 
+	table := dhtml.NewTable().Class("table table-hover table-sm").
+		Header("Username").
+		Header("Display name").
+		Header("Active").
+		Header("Admin").
+		Header("Last Login").
+		Header("")
+
+	p.Main(table)
+
+	for _, user := range goappbase.LoadOL[model.User]() {
+		row := table.NewRow()
+
+		row.Cell(user.UserName).
+			Cell(user.DisplayName).
+			Cell(mtweb.IconYesNo(user.IsActive)).
+			Cell(mtweb.IconYesNo(user.IsAdmin()))
+
+		if user.LastLogin != nil {
+			row.Cell(user.LastLogin.Format(time.DateTime))
+		} else {
+			row.Cell(mtweb.IconNo())
+		}
+
+		var actions dhtml.HtmlPiece
+
+		actions.Append(mtweb.NewEditBtn(fmt.Sprintf("/admin/users/%d/edit", user.ID)))
+		actions.Append(mtweb.NewDeleteBtn(fmt.Sprintf("/admin/users/%d/delete", user.ID), ""))
+
+		row.Cell(actions)
+	}
+
 	return true
 }
 
@@ -112,4 +145,9 @@ func PageAdminUserEdit(p *PageBuilder) bool {
 	}
 
 	return true
+}
+
+func webAdminUserDelete(c *gin.Context) {
+	goappbase.DeleteObject(goappbase.LoadOMust[model.User](c.Param("id")))
+	c.Redirect(http.StatusFound, "/admin/users")
 }

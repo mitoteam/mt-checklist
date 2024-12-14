@@ -106,7 +106,7 @@ func (p *PageBuilder) render() (out *dhtml.HtmlPiece) {
 		container.Append(dhtml.NewTag("h1").Append(title))
 	}
 
-	container.Append(dhtml.Div().Class("main").Append(p.GetMain()))
+	container.Append(dhtml.Div().Class("region-main").Append(p.GetMain()))
 
 	container.Append(p.renderFooter())
 
@@ -125,7 +125,7 @@ func (p *PageBuilder) render() (out *dhtml.HtmlPiece) {
 func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 	user := p.User()
 
-	header := dhtml.Div().Class("border bg-light p-3 mb-3").Attribute("role", "header")
+	header := dhtml.Div().Class("region-header border bg-light p-3 mb-3").Attribute("role", "header")
 
 	header_left := dhtml.Div().
 		Append(dhtml.Div().Append(dhtml.NewLink("/").Label(app.App.AppName).Class("text-decoration-none"))).
@@ -155,7 +155,7 @@ func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 }
 
 func (p *PageBuilder) renderFooter() (out dhtml.HtmlPiece) {
-	out.Append(dhtml.Div().Class("border bg-light p-3 mt-3").Append(
+	out.Append(dhtml.Div().Class("region-footer border bg-light p-3 mt-3").Append(
 		mtweb.NewJustifiedLR().
 			L(fmt.Sprintf("%s v.%s", app.App.AppName, app.App.Version)).
 			R(
