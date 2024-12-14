@@ -43,6 +43,8 @@ func init() {
 			).Append(
 				dhtml.NewFormInput("displayname", "text").Label("Display name").DefaultValue(user.DisplayName),
 			).Append(
+				dhtml.NewFormCheckbox("is_active").Label("Active").DefaultValue(user.IsActive),
+			).Append(
 				dhtml.NewFormSubmit().Label(mtweb.Icon("save").Label("Save")),
 			)
 		},
@@ -60,6 +62,7 @@ func init() {
 
 			user.UserName = fd.GetValue("username").(string)
 			user.DisplayName = fd.GetValue("displayname").(string)
+			user.IsActive = fd.GetValue("is_active").(bool)
 
 			goappbase.SaveObject(user)
 		},

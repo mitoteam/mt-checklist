@@ -13,6 +13,7 @@ b, strong, th {
   font-weight: 500;
 }
 
+// space between form items
 .dhtml-form {
   .form-item{
     margin-bottom: $spacer;
@@ -21,4 +22,13 @@ b, strong, th {
       margin-bottom: 0;
     }
   }
+}
+
+// no space after form labels
+.form-label {
+  margin-bottom: 0;
+}
+
+.form-text {
+  margin-top: 0;
 }
