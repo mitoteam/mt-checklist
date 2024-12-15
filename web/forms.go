@@ -7,8 +7,20 @@ import (
 	"github.com/mitoteam/mtweb"
 )
 
+// helper type to have all form handlers in one place
+type formsType struct {
+	Login *dhtml.FormHandler
+
+	AdminUserEdit     *dhtml.FormHandler
+	AdminUserPassword *dhtml.FormHandler
+
+	AdminChecklistEdit *dhtml.FormHandler
+}
+
+var Forms formsType
+
 func init() {
-	dhtml.FormManager.Register(&dhtml.FormHandler{
+	Forms.Login = &dhtml.FormHandler{
 		Id: "login",
 		RenderF: func(form *dhtml.FormElement, fd *dhtml.FormData) {
 			form.Class("border bg-light p-3").
@@ -54,5 +66,7 @@ func init() {
 				session.Save()
 			}
 		},
-	})
+	}
+
+	dhtml.FormManager.Register(Forms.Login)
 }

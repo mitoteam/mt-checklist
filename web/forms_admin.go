@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	dhtml.FormManager.Register(&dhtml.FormHandler{
+	Forms.AdminChecklistEdit = &dhtml.FormHandler{
 		Id: "admin_checklist_edit",
 		RenderF: func(form *dhtml.FormElement, fd *dhtml.FormData) {
 			cl := fd.GetParam("Checklist").(*model.Checklist)
@@ -31,9 +31,10 @@ func init() {
 
 			goappbase.SaveObject(cl)
 		},
-	})
+	}
+	dhtml.FormManager.Register(Forms.AdminChecklistEdit)
 
-	dhtml.FormManager.Register(&dhtml.FormHandler{
+	Forms.AdminUserEdit = &dhtml.FormHandler{
 		Id: "admin_user_edit",
 		RenderF: func(form *dhtml.FormElement, fd *dhtml.FormData) {
 			user := fd.GetParam("User").(*model.User)
@@ -66,9 +67,10 @@ func init() {
 
 			goappbase.SaveObject(user)
 		},
-	})
+	}
+	dhtml.FormManager.Register(Forms.AdminUserEdit)
 
-	dhtml.FormManager.Register(&dhtml.FormHandler{
+	Forms.AdminUserPassword = &dhtml.FormHandler{
 		Id: "admin_user_password",
 		RenderF: func(form *dhtml.FormElement, fd *dhtml.FormData) {
 			form.Class("border bg-light p-3").Append(
@@ -98,5 +100,6 @@ func init() {
 
 			goappbase.SaveObject(user)
 		},
-	})
+	}
+	dhtml.FormManager.Register(Forms.AdminUserPassword)
 }

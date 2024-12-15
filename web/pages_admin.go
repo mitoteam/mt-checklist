@@ -59,7 +59,7 @@ func PageAdminChecklistEdit(p *PageBuilder) bool {
 	fc := p.FormContext().SetRedirect("/admin/checklists").
 		SetParam("Checklist", cl)
 
-	formOut := dhtml.FormManager.RenderForm("admin_checklist_edit", fc)
+	formOut := dhtml.FormManager.RenderForm(Forms.AdminChecklistEdit, fc)
 
 	if formOut.IsEmpty() {
 		return false
@@ -140,7 +140,7 @@ func PageAdminUserEdit(p *PageBuilder) bool {
 	fc := p.FormContext().SetRedirect("/admin/users").
 		SetParam("User", user)
 
-	formOut := dhtml.FormManager.RenderForm("admin_user_edit", fc)
+	formOut := dhtml.FormManager.RenderForm(Forms.AdminUserEdit, fc)
 
 	if formOut.IsEmpty() {
 		return false
@@ -158,7 +158,7 @@ func PageAdminUserPassword(p *PageBuilder) bool {
 	fc := p.FormContext().SetRedirect("/admin/users").
 		SetParam("User", user)
 
-	formOut := dhtml.FormManager.RenderForm("admin_user_password", fc)
+	formOut := dhtml.FormManager.RenderForm(Forms.AdminUserPassword, fc)
 
 	if formOut.IsEmpty() {
 		return false
