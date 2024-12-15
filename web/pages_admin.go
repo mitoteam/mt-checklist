@@ -188,13 +188,17 @@ func PageAdminChecklistTemplates(p *PageBuilder) bool {
 	table := dhtml.NewTable().Class("table table-hover table-sm").EmptyLabel("no checklist templates created yet").
 		Header("Name").
 		Header("Checklist Name").
+		Header("Items").
 		Header("") //actions
 
 	for _, t := range goappbase.LoadOL[model.ChecklistTemplate]() {
 		row := table.NewRow()
 
 		row.Cell(t.Name).
-			Cell(t.ChecklistName)
+			Cell(t.ChecklistName).
+			Cell(
+				dhtml.NewLink(fmt.Sprintf("/admin/templates/%d/items", t.ID)).Label(len(t.Items)),
+			)
 
 		var actions dhtml.HtmlPiece
 
@@ -235,4 +239,47 @@ func PageAdminChecklistTemplateEdit(p *PageBuilder) bool {
 func webAdminChecklistTemplateDelete(c *gin.Context) {
 	goappbase.DeleteObject(goappbase.LoadOMust[model.ChecklistTemplate](c.Param("id")))
 	c.Redirect(http.StatusFound, "/admin/templates")
+}
+
+func PageAdminChecklistTemplateItemList(p *PageBuilder) bool {
+	t := goappbase.LoadOrCreateO[model.ChecklistTemplate](p.GetGinContext().Param("id"))
+
+	p.Main(
+		mtweb.NewBtnPanel().Class("mb-3").AddIconBtn(
+			"/", "home", "Home",
+		).AddIconBtn(
+			"/admin/templates",
+			iconTemplate, "All Templates",
+		).AddIconBtn(
+			fmt.Sprintf("/admin/templates/%d/items/0/edit", t.ID),
+			"plus", "Add item",
+		),
+	)
+
+	table := dhtml.NewTable().Class("table table-hover table-sm").EmptyLabel("no items added yet").
+		Header("Caption").
+		Header("Body").
+		Header("Sort Order").
+		Header("Weight").
+		Header("") //actions
+
+	for _, item := range t.Items {
+		row := table.NewRow()
+
+		row.Cell(item.Caption).
+			Cell(item.Body).
+			Cell(item.SortOrder).
+			Cell(item.Weight)
+
+		var actions dhtml.HtmlPiece
+
+		actions.Append(mtweb.NewEditBtn(fmt.Sprintf("/admin/templates/%d/items/%d/edit", t.ID, item.ID)))
+		actions.Append(mtweb.NewDeleteBtn(fmt.Sprintf("/admin/templates/%d/items/%d/delete", t.ID, item.ID), ""))
+
+		row.Cell(actions)
+	}
+
+	p.Main(table)
+
+	return true
 }

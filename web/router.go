@@ -51,7 +51,8 @@ func BuildWebRouter(r *gin.Engine) {
 		GET("/templates", webPageBuilder(PageAdminChecklistTemplates)).
 		GET("/templates/:id/edit", webPageBuilder(PageAdminChecklistTemplateEdit)).
 		POST("/templates/:id/edit", webPageBuilder(PageAdminChecklistTemplateEdit)).
-		GET("/templates/:id/delete", webAdminChecklistTemplateDelete)
+		GET("/templates/:id/delete", webAdminChecklistTemplateDelete).
+		GET("/templates/:id/items", webPageBuilder(PageAdminChecklistTemplateItemList))
 
 	//EXPERIMENTS
 	r.GET("/experiment", func(c *gin.Context) {

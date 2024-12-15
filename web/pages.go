@@ -7,6 +7,10 @@ import (
 	"github.com/mitoteam/mtweb"
 )
 
+const (
+	iconTemplate = "pen-ruler"
+)
+
 func PageFormExperiment(p *PageBuilder) bool {
 	formOut := dhtml.FormManager.RenderFormById("test_form", p.FormContext())
 
@@ -43,7 +47,7 @@ func PageDashboard(p *PageBuilder) bool {
 					dhtml.NewLink("/admin/users").Label(mtweb.Icon("user").Label("Users")),
 				)).
 				Body(dhtml.Div().Append(
-					dhtml.NewLink("/admin/templates").Label(mtweb.Icon("pen-ruler").Label("Templates")),
+					dhtml.NewLink("/admin/templates").Label(mtweb.Icon(iconTemplate).Label("Templates")),
 				)).
 				Body(dhtml.Div().Append(
 					dhtml.Div().Append(

@@ -11,12 +11,23 @@ type ChecklistTemplate struct {
 
 	Name          string
 	ChecklistName string
+
+	Items []ChecklistTemplateItem
 }
 
 type ChecklistTemplateItem struct {
 	goappbase.BaseModel
 
-	Name string
+	//fk
+	ChecklistTemplateID int64
+
+	Caption   string
+	Body      string
+	SortOrder int
+	Weight    int
+
+	ResponsibleID uint
+	Responsible   User
 }
 
 func init() {

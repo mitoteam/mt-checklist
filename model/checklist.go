@@ -9,16 +9,16 @@ import (
 type Checklist struct {
 	goappbase.BaseModel
 
-	Name     string
-	IsActive bool
-	Body     string `gorm:"type:varchar(1000)"`
+	Name        string
+	IsActive    bool
+	Description string
 }
 
 type ChecklistItem struct {
 	goappbase.BaseModel
 
 	Name string
-	Body string `gorm:"type:varchar(1000)"`
+	Body string
 }
 
 func init() {
