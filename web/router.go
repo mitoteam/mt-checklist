@@ -48,7 +48,10 @@ func BuildWebRouter(r *gin.Engine) {
 		GET("/users/:id/delete", webAdminUserDelete)
 
 	admin_routes.
-		GET("/templates", webPageBuilder(PageAdminChecklistTemplates))
+		GET("/templates", webPageBuilder(PageAdminChecklistTemplates)).
+		GET("/templates/:id/edit", webPageBuilder(PageAdminChecklistTemplateEdit)).
+		POST("/templates/:id/edit", webPageBuilder(PageAdminChecklistTemplateEdit)).
+		GET("/templates/:id/delete", webAdminChecklistTemplateDelete)
 
 	//EXPERIMENTS
 	r.GET("/experiment", func(c *gin.Context) {

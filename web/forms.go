@@ -12,14 +12,15 @@ import (
 
 // helper type to have all form handlers in one place
 type formsType struct {
-	Login *dhtml.FormHandler
+	Login     *dhtml.FormHandler
+	MyAccount *dhtml.FormHandler
 
 	AdminUserEdit     *dhtml.FormHandler
 	AdminUserPassword *dhtml.FormHandler
 
 	AdminChecklist *dhtml.FormHandler
 
-	MyAccount *dhtml.FormHandler
+	AdminChecklistTemplate *dhtml.FormHandler
 }
 
 var Forms formsType

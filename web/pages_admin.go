@@ -208,3 +208,31 @@ func PageAdminChecklistTemplates(p *PageBuilder) bool {
 
 	return true
 }
+
+func PageAdminChecklistTemplateEdit(p *PageBuilder) bool {
+	t := goappbase.LoadOrCreateO[model.ChecklistTemplate](p.GetGinContext().Param("id"))
+
+	if t == nil {
+		p.Title("New template")
+	} else {
+		p.Title("Edit template: " + t.Name)
+	}
+
+	fc := p.FormContext().SetRedirect("/admin/templates").
+		SetParam("Template", t)
+
+	formOut := dhtml.FormManager.RenderForm(Forms.AdminChecklistTemplate, fc)
+
+	if formOut.IsEmpty() {
+		return false
+	} else {
+		p.Main(formOut)
+	}
+
+	return true
+}
+
+func webAdminChecklistTemplateDelete(c *gin.Context) {
+	goappbase.DeleteObject(goappbase.LoadOMust[model.ChecklistTemplate](c.Param("id")))
+	c.Redirect(http.StatusFound, "/admin/templates")
+}
