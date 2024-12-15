@@ -1,8 +1,11 @@
 package web
 
 import (
+	"strings"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/goappbase"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
@@ -14,7 +17,9 @@ type formsType struct {
 	AdminUserEdit     *dhtml.FormHandler
 	AdminUserPassword *dhtml.FormHandler
 
-	AdminChecklistEdit *dhtml.FormHandler
+	AdminChecklist *dhtml.FormHandler
+
+	MyAccount *dhtml.FormHandler
 }
 
 var Forms formsType
@@ -67,6 +72,50 @@ func init() {
 			}
 		},
 	}
-
 	dhtml.FormManager.Register(Forms.Login)
+
+	Forms.MyAccount = &dhtml.FormHandler{
+		Id: "my_account",
+		RenderF: func(form *dhtml.FormElement, fd *dhtml.FormData) {
+			user := fd.GetParam("User").(*model.User)
+
+			form.Class("border bg-light p-3").Append(
+				dhtml.NewFormInput("displayname", "text").Label("Display name").
+					DefaultValue(user.DisplayName).Note("empty = use username: " + user.UserName),
+			).Append(
+				dhtml.NewFormInput("password1", "password").Label("Password").Note("empty = do not change"),
+			).Append(
+				dhtml.NewFormInput("password2", "password").Label("Confirmation"),
+			).Append(
+				dhtml.NewFormSubmit().Label(mtweb.Icon("save").Label("Save")),
+			)
+		},
+		ValidateF: func(fd *dhtml.FormData) {
+			password1 := strings.TrimSpace(fd.GetValue("password1").(string))
+			password2 := strings.TrimSpace(fd.GetValue("password2").(string))
+
+			if password1 != "" {
+				if len(password1) < 6 {
+					fd.SetItemError("password1", "Minimum password is 6 characters")
+				} else {
+					if password1 != password2 {
+						fd.SetItemError("password2", "Password and confirmation do not match")
+					}
+				}
+			}
+		},
+		SubmitF: func(fd *dhtml.FormData) {
+			user := fd.GetParam("User").(*model.User)
+
+			password := strings.TrimSpace(fd.GetValue("password1").(string))
+			if password != "" {
+				user.SetPassword(password)
+			}
+
+			user.DisplayName = fd.GetValue("displayname").(string)
+
+			goappbase.SaveObject(user)
+		},
+	}
+	dhtml.FormManager.Register(Forms.MyAccount)
 }

@@ -42,6 +42,14 @@ func (u *User) CheckPassword(password string) bool {
 	return err == nil
 }
 
+func (u *User) GetDisplayName() string {
+	if u.DisplayName != "" {
+		return u.DisplayName
+	} else {
+		return u.UserName
+	}
+}
+
 func (u *User) HasRole(role int) bool {
 	return true //TODO: do real check
 }

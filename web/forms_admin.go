@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	Forms.AdminChecklistEdit = &dhtml.FormHandler{
+	Forms.AdminChecklist = &dhtml.FormHandler{
 		Id: "admin_checklist_edit",
 		RenderF: func(form *dhtml.FormElement, fd *dhtml.FormData) {
 			cl := fd.GetParam("Checklist").(*model.Checklist)
@@ -32,7 +32,7 @@ func init() {
 			goappbase.SaveObject(cl)
 		},
 	}
-	dhtml.FormManager.Register(Forms.AdminChecklistEdit)
+	dhtml.FormManager.Register(Forms.AdminChecklist)
 
 	Forms.AdminUserEdit = &dhtml.FormHandler{
 		Id: "admin_user_edit",

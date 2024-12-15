@@ -26,7 +26,9 @@ func BuildWebRouter(r *gin.Engine) {
 	authenticated_routes := r.Group("")
 	authenticated_routes.Use(authMiddleware())
 	authenticated_routes.
-		GET("/", webPageBuilder(PageDashboard))
+		GET("/", webPageBuilder(PageDashboard)).
+		GET("/account", webPageBuilder(PageMyAccount)).
+		POST("/account", webPageBuilder(PageMyAccount))
 
 	// Subgroup: admin role required routes
 	admin_routes := authenticated_routes.Group("/admin")

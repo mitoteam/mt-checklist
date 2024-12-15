@@ -135,7 +135,7 @@ func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 
 	if user != nil {
 		header_right.Append(dhtml.Div().
-			Text(user.DisplayName).
+			Text(user.GetDisplayName()).
 			Append(
 				dhtml.NewLink("/logout").Label(mtweb.Icon("arrow-right-from-bracket")).
 					Class("ms-1").Title("Sign Out"),
@@ -151,7 +151,11 @@ func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 
 		icon.Label(user.UserName)
 
-		header_right.Append(dhtml.Div().Class("text-muted").Append(icon))
+		header_right.Append(
+			dhtml.Div().Class("text-muted").
+				Append(icon).
+				Append(dhtml.NewLink("/account").Label(mtweb.Icon("cog"))),
+		)
 	}
 
 	header.Append(mtweb.NewJustifiedLR().L(header_left).R(header_right))

@@ -59,7 +59,7 @@ func PageAdminChecklistEdit(p *PageBuilder) bool {
 	fc := p.FormContext().SetRedirect("/admin/checklists").
 		SetParam("Checklist", cl)
 
-	formOut := dhtml.FormManager.RenderForm(Forms.AdminChecklistEdit, fc)
+	formOut := dhtml.FormManager.RenderForm(Forms.AdminChecklist, fc)
 
 	if formOut.IsEmpty() {
 		return false

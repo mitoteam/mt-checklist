@@ -88,3 +88,20 @@ func PageLogin(p *PageBuilder) bool {
 
 	return true
 }
+
+func PageMyAccount(p *PageBuilder) bool {
+	p.Title(p.User().GetDisplayName())
+
+	fc := p.FormContext().SetRedirect("/").
+		SetParam("User", p.User())
+
+	formOut := dhtml.FormManager.RenderForm(Forms.MyAccount, fc)
+
+	if formOut.IsEmpty() {
+		return false
+	} else {
+		p.Main(formOut)
+	}
+
+	return true
+}
