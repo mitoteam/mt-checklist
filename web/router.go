@@ -41,6 +41,8 @@ func BuildWebRouter(r *gin.Engine) {
 		GET("/users", webPageBuilder(PageAdminUsers)).
 		GET("/users/:id/edit", webPageBuilder(PageAdminUserEdit)).
 		POST("/users/:id/edit", webPageBuilder(PageAdminUserEdit)).
+		GET("/users/:id/password", webPageBuilder(PageAdminUserPassword)).
+		POST("/users/:id/password", webPageBuilder(PageAdminUserPassword)).
 		GET("/users/:id/delete", webAdminUserDelete)
 
 	//EXPERIMENTS

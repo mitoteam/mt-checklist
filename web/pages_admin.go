@@ -116,6 +116,10 @@ func PageAdminUsers(p *PageBuilder) bool {
 		var actions dhtml.HtmlPiece
 
 		actions.Append(mtweb.NewEditBtn(fmt.Sprintf("/admin/users/%d/edit", user.ID)))
+		actions.Append(
+			mtweb.NewBtn().Class("btn-sm p-1").Href(fmt.Sprintf("/admin/users/%d/password", user.ID)).
+				Title("Change password").Label(mtweb.Icon("key")),
+		)
 		actions.Append(mtweb.NewDeleteBtn(fmt.Sprintf("/admin/users/%d/delete", user.ID), ""))
 
 		row.Cell(actions)
@@ -137,6 +141,24 @@ func PageAdminUserEdit(p *PageBuilder) bool {
 		SetParam("User", user)
 
 	formOut := dhtml.FormManager.RenderForm("admin_user_edit", fc)
+
+	if formOut.IsEmpty() {
+		return false
+	} else {
+		p.Main(formOut)
+	}
+
+	return true
+}
+
+func PageAdminUserPassword(p *PageBuilder) bool {
+	user := goappbase.LoadOMust[model.User](p.GetGinContext().Param("id"))
+	p.Title("User password: " + user.DisplayName)
+
+	fc := p.FormContext().SetRedirect("/admin/users").
+		SetParam("User", user)
+
+	formOut := dhtml.FormManager.RenderForm("admin_user_password", fc)
 
 	if formOut.IsEmpty() {
 		return false

@@ -67,4 +67,36 @@ func init() {
 			goappbase.SaveObject(user)
 		},
 	})
+
+	dhtml.FormManager.Register(&dhtml.FormHandler{
+		Id: "admin_user_password",
+		RenderF: func(form *dhtml.FormElement, fd *dhtml.FormData) {
+			form.Class("border bg-light p-3").Append(
+				dhtml.NewFormInput("password1", "password").Label("Password"),
+			).Append(
+				dhtml.NewFormInput("password2", "password").Label("Confirmation"),
+			).Append(
+				dhtml.NewFormSubmit().Label(mtweb.Icon("save").Label("Save")),
+			)
+		},
+		ValidateF: func(fd *dhtml.FormData) {
+			password1 := fd.GetValue("password1").(string)
+			password2 := fd.GetValue("password2").(string)
+
+			if len(password1) < 6 {
+				fd.SetItemError("password1", "Minimum password is 6 characters")
+			} else {
+				if password1 != password2 {
+					fd.SetItemError("password2", "Password and confirmation do not match")
+				}
+			}
+		},
+		SubmitF: func(fd *dhtml.FormData) {
+			user := fd.GetParam("User").(*model.User)
+
+			user.SetPassword(fd.GetValue("password1").(string))
+
+			goappbase.SaveObject(user)
+		},
+	})
 }
