@@ -43,6 +43,9 @@ func PageDashboard(p *PageBuilder) bool {
 					dhtml.NewLink("/admin/users").Label(mtweb.Icon("user").Label("Users")),
 				)).
 				Body(dhtml.Div().Append(
+					dhtml.NewLink("/admin/templates").Label(mtweb.Icon("pen-ruler").Label("Templates")),
+				)).
+				Body(dhtml.Div().Append(
 					dhtml.Div().Append(
 						dhtml.NewLink("/admin/checklists").Label(mtweb.Icon("list-check").Label("Checklists")),
 					).Append(" (administration)"),

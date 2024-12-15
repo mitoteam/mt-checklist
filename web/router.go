@@ -47,6 +47,9 @@ func BuildWebRouter(r *gin.Engine) {
 		POST("/users/:id/password", webPageBuilder(PageAdminUserPassword)).
 		GET("/users/:id/delete", webAdminUserDelete)
 
+	admin_routes.
+		GET("/templates", webPageBuilder(PageAdminChecklistTemplates))
+
 	//EXPERIMENTS
 	r.GET("/experiment", func(c *gin.Context) {
 		c.Header("Content-Type", "text/html;charset=utf-8")

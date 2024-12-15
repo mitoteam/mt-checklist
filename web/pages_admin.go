@@ -173,3 +173,38 @@ func webAdminUserDelete(c *gin.Context) {
 	goappbase.DeleteObject(goappbase.LoadOMust[model.User](c.Param("id")))
 	c.Redirect(http.StatusFound, "/admin/users")
 }
+
+// ====================== checklist templates management ===================
+
+func PageAdminChecklistTemplates(p *PageBuilder) bool {
+	p.Main(
+		mtweb.NewBtnPanel().Class("mb-3").AddIconBtn(
+			"/", "home", "Home",
+		).AddIconBtn(
+			"/admin/templates/0/edit", "plus", "Create template",
+		),
+	)
+
+	table := dhtml.NewTable().Class("table table-hover table-sm").EmptyLabel("no checklist templates created yet").
+		Header("Name").
+		Header("Checklist Name").
+		Header("") //actions
+
+	for _, t := range goappbase.LoadOL[model.ChecklistTemplate]() {
+		row := table.NewRow()
+
+		row.Cell(t.Name).
+			Cell(t.ChecklistName)
+
+		var actions dhtml.HtmlPiece
+
+		actions.Append(mtweb.NewEditBtn(fmt.Sprintf("/admin/templates/%d/edit", t.ID)))
+		actions.Append(mtweb.NewDeleteBtn(fmt.Sprintf("/admin/templates/%d/delete", t.ID), ""))
+
+		row.Cell(actions)
+	}
+
+	p.Main(table)
+
+	return true
+}
