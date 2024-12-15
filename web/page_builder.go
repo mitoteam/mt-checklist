@@ -141,11 +141,17 @@ func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 					Class("ms-1").Title("Sign Out"),
 			))
 
+		var icon *mtweb.IconElement
+
 		if user.IsAdmin() {
-			header_right.Append(dhtml.Div().Class("text-muted").Append(
-				mtweb.Icon("user-police-tie").Label("admin"),
-			))
+			icon = mtweb.Icon("user-police-tie").Title("administrator")
+		} else {
+			icon = mtweb.Icon("user").Title("user")
 		}
+
+		icon.Label(user.UserName)
+
+		header_right.Append(dhtml.Div().Class("text-muted").Append(icon))
 	}
 
 	header.Append(mtweb.NewJustifiedLR().L(header_left).R(header_right))
