@@ -134,4 +134,34 @@ func init() {
 		},
 	}
 	dhtml.FormManager.Register(Forms.AdminChecklistTemplate)
+
+	Forms.AdminChecklistTemplateItem = &dhtml.FormHandler{
+		Id: "admin_checklist_template_item",
+		RenderF: func(form *dhtml.FormElement, fd *dhtml.FormData) {
+			item := fd.GetParam("Item").(*model.ChecklistTemplateItem)
+
+			form.Append(dhtml.RenderValue("Template", item.GetChecklistTemplate().Name).Class("mb-3"))
+
+			form.Class("border bg-light p-3").Append(
+				dhtml.NewFormInput("caption", "text").Label("Caption").DefaultValue(item.Caption),
+			).Append(
+				dhtml.NewFormSubmit().Label(mtweb.Icon("save").Label("Save")),
+			)
+		},
+		ValidateF: func(fd *dhtml.FormData) {
+			caption := fd.GetValue("caption").(string)
+
+			if len(caption) == 0 {
+				fd.SetItemError("name", "Caption is required")
+			}
+		},
+		SubmitF: func(fd *dhtml.FormData) {
+			item := fd.GetParam("Item").(*model.ChecklistTemplateItem)
+
+			item.Caption = fd.GetValue("caption").(string)
+
+			goappbase.SaveObject(item)
+		},
+	}
+	dhtml.FormManager.Register(Forms.AdminChecklistTemplateItem)
 }

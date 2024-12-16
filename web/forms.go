@@ -20,7 +20,8 @@ type formsType struct {
 
 	AdminChecklist *dhtml.FormHandler
 
-	AdminChecklistTemplate *dhtml.FormHandler
+	AdminChecklistTemplate     *dhtml.FormHandler
+	AdminChecklistTemplateItem *dhtml.FormHandler
 }
 
 var Forms formsType
@@ -67,7 +68,6 @@ func init() {
 		},
 		SubmitF: func(fd *dhtml.FormData) {
 			if session, ok := fd.GetParam("Session").(sessions.Session); ok {
-
 				session.Set("userID", fd.GetValue("userID").(int64))
 				session.Save()
 			}

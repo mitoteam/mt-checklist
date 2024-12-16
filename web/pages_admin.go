@@ -197,7 +197,8 @@ func PageAdminChecklistTemplates(p *PageBuilder) bool {
 		row.Cell(t.Name).
 			Cell(t.ChecklistName).
 			Cell(
-				dhtml.NewLink(fmt.Sprintf("/admin/templates/%d/items", t.ID)).Label(len(t.Items)),
+				mtweb.NewBtn().Href(fmt.Sprintf("/admin/templates/%d/items", t.ID)).Class("btn-sm").
+					Label(mtweb.Icon("list-check").Label(t.ItemCount())),
 			)
 
 		var actions dhtml.HtmlPiece
@@ -242,7 +243,7 @@ func webAdminChecklistTemplateDelete(c *gin.Context) {
 }
 
 func PageAdminChecklistTemplateItemList(p *PageBuilder) bool {
-	t := goappbase.LoadOrCreateO[model.ChecklistTemplate](p.GetGinContext().Param("id"))
+	t := goappbase.LoadOMust[model.ChecklistTemplate](p.GetGinContext().Param("id"))
 
 	p.Main(
 		mtweb.NewBtnPanel().Class("mb-3").AddIconBtn(
@@ -254,6 +255,8 @@ func PageAdminChecklistTemplateItemList(p *PageBuilder) bool {
 			fmt.Sprintf("/admin/templates/%d/items/0/edit", t.ID),
 			"plus", "Add item",
 		),
+	).Main(
+		dhtml.RenderValue("Template", t.Name).Class("mb-3"),
 	)
 
 	table := dhtml.NewTable().Class("table table-hover table-sm").EmptyLabel("no items added yet").
@@ -263,7 +266,7 @@ func PageAdminChecklistTemplateItemList(p *PageBuilder) bool {
 		Header("Weight").
 		Header("") //actions
 
-	for _, item := range t.Items {
+	for _, item := range t.Items() {
 		row := table.NewRow()
 
 		row.Cell(item.Caption).
@@ -282,4 +285,43 @@ func PageAdminChecklistTemplateItemList(p *PageBuilder) bool {
 	p.Main(table)
 
 	return true
+}
+
+func PageAdminChecklistTemplateItemEdit(p *PageBuilder) bool {
+	t := goappbase.LoadOMust[model.ChecklistTemplate](p.GetGinContext().Param("id"))
+	item := goappbase.LoadOrCreateO[model.ChecklistTemplateItem](p.GetGinContext().Param("item_id"))
+
+	if item.ID == 0 {
+		p.Title("New item")
+		item.ChecklistTemplateID = t.ID
+	} else {
+		if item.ChecklistTemplateID != t.ID {
+			return false
+		}
+
+		p.Title("Edit item: " + item.Caption)
+	}
+
+	fc := p.FormContext().SetRedirect(fmt.Sprintf("/admin/templates/%d/items", t.ID)).
+		SetParam("Item", item)
+
+	formOut := dhtml.FormManager.RenderForm(Forms.AdminChecklistTemplateItem, fc)
+
+	if formOut.IsEmpty() {
+		return false
+	} else {
+		p.Main(formOut)
+	}
+
+	return true
+}
+
+func webAdminChecklistTemplateDeleteItem(c *gin.Context) {
+	item := goappbase.LoadOMust[model.ChecklistTemplateItem](c.Param("item_id"))
+	t := goappbase.LoadOMust[model.ChecklistTemplateItem](c.Param("id"))
+
+	if item.ChecklistTemplateID == t.ID {
+		goappbase.DeleteObject(item)
+	}
+	c.Redirect(http.StatusFound, "/admin/templates")
 }
