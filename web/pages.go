@@ -1,6 +1,8 @@
 package web
 
 import (
+	"net/http"
+
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/goappbase"
 	"github.com/mitoteam/mt-checklist/model"
@@ -78,7 +80,18 @@ func PageLogin(p *PageBuilder) bool {
 	session := p.GetSession()
 
 	if userID, ok := session.Get("userID").(int64); ok && userID > 0 {
-		p.Main("Already authenticated")
+		user := goappbase.LoadO[model.User](userID)
+
+		if user == nil {
+			//Session user not found, restart session
+			session.Clear()
+			session.Save()
+
+			p.GetGinContext().Redirect(http.StatusSeeOther, "/")
+			return false
+		} else {
+			p.Main("Already authenticated")
+		}
 	} else {
 		fc := p.FormContext().
 			SetParam("Session", session).
