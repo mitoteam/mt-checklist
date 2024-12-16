@@ -318,10 +318,11 @@ func PageAdminChecklistTemplateItemEdit(p *PageBuilder) bool {
 
 func webAdminChecklistTemplateDeleteItem(c *gin.Context) {
 	item := goappbase.LoadOMust[model.ChecklistTemplateItem](c.Param("item_id"))
-	t := goappbase.LoadOMust[model.ChecklistTemplateItem](c.Param("id"))
+	t := goappbase.LoadOMust[model.ChecklistTemplate](c.Param("id"))
 
-	if item.ChecklistTemplateID == t.ID {
+	if item.ChecklistTemplateID != t.ID {
 		goappbase.DeleteObject(item)
 	}
-	c.Redirect(http.StatusFound, "/admin/templates")
+
+	c.Redirect(http.StatusFound, fmt.Sprintf("/admin/templates/%d/items", t.ID))
 }

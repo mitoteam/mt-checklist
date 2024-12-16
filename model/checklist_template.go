@@ -4,6 +4,7 @@ import (
 	"reflect"
 
 	"github.com/mitoteam/goappbase"
+	"gorm.io/gorm"
 )
 
 type ChecklistTemplate struct {
@@ -11,8 +12,20 @@ type ChecklistTemplate struct {
 
 	Name          string
 	ChecklistName string
+}
 
-	SortOrder3 string `gorm:"index"`
+func init() {
+	goappbase.DbSchema.AddModel(reflect.TypeFor[ChecklistTemplate]())
+}
+
+func (t *ChecklistTemplate) BeforeDelete(tx *gorm.DB) (err error) {
+	for _, item := range t.Items() {
+		if err := goappbase.DeleteObject(item); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (t *ChecklistTemplate) Items() []*ChecklistTemplateItem {
@@ -40,15 +53,14 @@ type ChecklistTemplateItem struct {
 	ResponsibleID int64
 }
 
+func init() {
+	goappbase.DbSchema.AddModel(reflect.TypeFor[ChecklistTemplateItem]())
+}
+
 func (item *ChecklistTemplateItem) GetChecklistTemplate() *ChecklistTemplate {
 	if item.ChecklistTemplate == nil {
 		item.ChecklistTemplate = goappbase.LoadOMust[ChecklistTemplate](item.ChecklistTemplateID)
 	}
 
 	return item.ChecklistTemplate
-}
-
-func init() {
-	goappbase.DbSchema.AddModel(reflect.TypeFor[ChecklistTemplate]())
-	goappbase.DbSchema.AddModel(reflect.TypeFor[ChecklistTemplateItem]())
 }
