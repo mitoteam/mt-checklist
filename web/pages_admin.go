@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/dhtml"
-	"github.com/mitoteam/goappbase"
+	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
@@ -23,7 +23,7 @@ func PageAdminChecklists(p *PageBuilder) bool {
 
 	cardList := mtweb.NewCardList()
 
-	list := goappbase.LoadOL[model.Checklist]()
+	list := goapp.LoadOL[model.Checklist]()
 
 	for _, cl := range list {
 		card := mtweb.NewCard().
@@ -72,7 +72,7 @@ func PageAdminChecklistEdit(p *PageBuilder) bool {
 
 func webAdminChecklistDelete(c *gin.Context) {
 	if cl := model.LoadChecklist(c.Param("id")); cl != nil {
-		goappbase.DeleteObject(cl)
+		goapp.DeleteObject(cl)
 	}
 
 	c.Redirect(http.StatusFound, "/admin/checklists")
@@ -99,7 +99,7 @@ func PageAdminUsers(p *PageBuilder) bool {
 
 	p.Main(table)
 
-	for _, user := range goappbase.LoadOL[model.User]() {
+	for _, user := range goapp.LoadOL[model.User]() {
 		row := table.NewRow()
 
 		row.Cell(user.UserName).
@@ -129,7 +129,7 @@ func PageAdminUsers(p *PageBuilder) bool {
 }
 
 func PageAdminUserEdit(p *PageBuilder) bool {
-	user := goappbase.LoadOrCreateO[model.User](p.GetGinContext().Param("id"))
+	user := goapp.LoadOrCreateO[model.User](p.GetGinContext().Param("id"))
 
 	if user == nil {
 		p.Title("New user")
@@ -152,7 +152,7 @@ func PageAdminUserEdit(p *PageBuilder) bool {
 }
 
 func PageAdminUserPassword(p *PageBuilder) bool {
-	user := goappbase.LoadOMust[model.User](p.GetGinContext().Param("id"))
+	user := goapp.LoadOMust[model.User](p.GetGinContext().Param("id"))
 	p.Title("User password: " + user.DisplayName)
 
 	fc := p.FormContext().SetRedirect("/admin/users").
@@ -170,7 +170,7 @@ func PageAdminUserPassword(p *PageBuilder) bool {
 }
 
 func webAdminUserDelete(c *gin.Context) {
-	goappbase.DeleteObject(goappbase.LoadOMust[model.User](c.Param("id")))
+	goapp.DeleteObject(goapp.LoadOMust[model.User](c.Param("id")))
 	c.Redirect(http.StatusFound, "/admin/users")
 }
 
@@ -191,7 +191,7 @@ func PageAdminChecklistTemplates(p *PageBuilder) bool {
 		Header("Items").
 		Header("") //actions
 
-	for _, t := range goappbase.LoadOL[model.ChecklistTemplate]() {
+	for _, t := range goapp.LoadOL[model.ChecklistTemplate]() {
 		row := table.NewRow()
 
 		row.Cell(t.Name).
@@ -215,7 +215,7 @@ func PageAdminChecklistTemplates(p *PageBuilder) bool {
 }
 
 func PageAdminChecklistTemplateEdit(p *PageBuilder) bool {
-	t := goappbase.LoadOrCreateO[model.ChecklistTemplate](p.GetGinContext().Param("id"))
+	t := goapp.LoadOrCreateO[model.ChecklistTemplate](p.GetGinContext().Param("id"))
 
 	if t == nil {
 		p.Title("New template")
@@ -238,12 +238,12 @@ func PageAdminChecklistTemplateEdit(p *PageBuilder) bool {
 }
 
 func webAdminChecklistTemplateDelete(c *gin.Context) {
-	goappbase.DeleteObject(goappbase.LoadOMust[model.ChecklistTemplate](c.Param("id")))
+	goapp.DeleteObject(goapp.LoadOMust[model.ChecklistTemplate](c.Param("id")))
 	c.Redirect(http.StatusFound, "/admin/templates")
 }
 
 func PageAdminChecklistTemplateItemList(p *PageBuilder) bool {
-	t := goappbase.LoadOMust[model.ChecklistTemplate](p.GetGinContext().Param("id"))
+	t := goapp.LoadOMust[model.ChecklistTemplate](p.GetGinContext().Param("id"))
 
 	p.Main(
 		mtweb.NewBtnPanel().Class("mb-3").AddIconBtn(
@@ -288,8 +288,8 @@ func PageAdminChecklistTemplateItemList(p *PageBuilder) bool {
 }
 
 func PageAdminChecklistTemplateItemEdit(p *PageBuilder) bool {
-	t := goappbase.LoadOMust[model.ChecklistTemplate](p.GetGinContext().Param("id"))
-	item := goappbase.LoadOrCreateO[model.ChecklistTemplateItem](p.GetGinContext().Param("item_id"))
+	t := goapp.LoadOMust[model.ChecklistTemplate](p.GetGinContext().Param("id"))
+	item := goapp.LoadOrCreateO[model.ChecklistTemplateItem](p.GetGinContext().Param("item_id"))
 
 	if item.ID == 0 {
 		p.Title("New item")
@@ -317,11 +317,11 @@ func PageAdminChecklistTemplateItemEdit(p *PageBuilder) bool {
 }
 
 func webAdminChecklistTemplateDeleteItem(c *gin.Context) {
-	item := goappbase.LoadOMust[model.ChecklistTemplateItem](c.Param("item_id"))
-	t := goappbase.LoadOMust[model.ChecklistTemplate](c.Param("id"))
+	item := goapp.LoadOMust[model.ChecklistTemplateItem](c.Param("item_id"))
+	t := goapp.LoadOMust[model.ChecklistTemplate](c.Param("id"))
 
 	if item.ChecklistTemplateID != t.ID {
-		goappbase.DeleteObject(item)
+		goapp.DeleteObject(item)
 	}
 
 	c.Redirect(http.StatusFound, fmt.Sprintf("/admin/templates/%d/items", t.ID))

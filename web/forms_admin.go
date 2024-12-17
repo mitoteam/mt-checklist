@@ -2,7 +2,7 @@ package web
 
 import (
 	"github.com/mitoteam/dhtml"
-	"github.com/mitoteam/goappbase"
+	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
@@ -29,7 +29,7 @@ func init() {
 
 			cl.Name = fd.GetValue("name").(string)
 
-			goappbase.SaveObject(cl)
+			goapp.SaveObject(cl)
 		},
 	}
 	dhtml.FormManager.Register(Forms.AdminChecklist)
@@ -65,7 +65,7 @@ func init() {
 			user.DisplayName = fd.GetValue("displayname").(string)
 			user.IsActive = fd.GetValue("is_active").(bool)
 
-			goappbase.SaveObject(user)
+			goapp.SaveObject(user)
 		},
 	}
 	dhtml.FormManager.Register(Forms.AdminUserEdit)
@@ -98,7 +98,7 @@ func init() {
 
 			user.SetPassword(fd.GetValue("password1").(string))
 
-			goappbase.SaveObject(user)
+			goapp.SaveObject(user)
 		},
 	}
 	dhtml.FormManager.Register(Forms.AdminUserPassword)
@@ -130,7 +130,7 @@ func init() {
 			t.Name = fd.GetValue("name").(string)
 			t.ChecklistName = fd.GetValue("checklist_name").(string)
 
-			goappbase.SaveObject(t)
+			goapp.SaveObject(t)
 		},
 	}
 	dhtml.FormManager.Register(Forms.AdminChecklistTemplate)
@@ -163,7 +163,7 @@ func init() {
 
 			item.ResponsibleID = fd.GetArg("User").(*model.User).ID
 
-			goappbase.SaveObject(item)
+			goapp.SaveObject(item)
 		},
 	}
 	dhtml.FormManager.Register(Forms.AdminChecklistTemplateItem)

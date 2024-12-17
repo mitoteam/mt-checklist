@@ -4,7 +4,7 @@
 			"path": "."
 		},
 		{
-			"path": "internal/goappbase"
+			"path": "internal/goapp"
 		},
 		{
 			"path": "internal/dhtml"

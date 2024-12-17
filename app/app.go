@@ -1,14 +1,14 @@
 package app
 
 import (
-	"github.com/mitoteam/goappbase"
+	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
 )
 
-var App *goappbase.AppBase
+var App *goapp.AppBase
 
-func InitApp() *goappbase.AppBase {
-	App = goappbase.NewAppBase(defaultSettings)
+func InitApp() *goapp.AppBase {
+	App = goapp.NewAppBase(defaultSettings)
 
 	App.AppName = "MiTo Team Checklist"
 	App.ExecutableName = "mt-checklist"
@@ -22,7 +22,7 @@ func InitApp() *goappbase.AppBase {
 
 func DoPreRun() (err error) {
 	// open database and migrate schema
-	if err = goappbase.DbSchema.Open(); err != nil {
+	if err = goapp.DbSchema.Open(); err != nil {
 		return err
 	}
 
@@ -35,7 +35,7 @@ func DoPreRun() (err error) {
 }
 
 func DoPostRun() error {
-	goappbase.DbSchema.Close()
+	goapp.DbSchema.Close()
 
 	return nil //no errors
 }

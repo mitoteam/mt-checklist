@@ -3,16 +3,12 @@ module github.com/mitoteam/mt-checklist
 go 1.23
 
 require (
-	github.com/mitoteam/dhtml v0.0.0-20241128160328-ab13a14f2236
-	github.com/mitoteam/goappbase v0.0.0-20241128132657-76cbe0b09c62
-	github.com/mitoteam/mttools v0.0.0-20241128155109-524c9d282ee0
-)
-
-require (
 	github.com/gin-contrib/sessions v1.0.1
 	github.com/gin-gonic/gin v1.10.0
+	github.com/mitoteam/dhtml v0.0.0-20241128160328-ab13a14f2236
+	github.com/mitoteam/goapp v0.0.0-20241217094645-cd419ad8e2e5
+	github.com/mitoteam/mttools v0.0.0-20241211122020-c9fb856488d1
 	github.com/mitoteam/mtweb v0.0.0-20241204153033-472845acc975
-	golang.org/x/crypto v0.31.0
 	gorm.io/gorm v1.25.12
 )
 
@@ -31,7 +27,7 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.23.0 // indirect
-	github.com/goccy/go-json v0.10.3 // indirect
+	github.com/goccy/go-json v0.10.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/context v1.1.2 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
@@ -54,14 +50,15 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.12.0 // indirect
-	golang.org/x/exp v0.0.0-20241108190413-2d47ceb2692f // indirect
-	golang.org/x/net v0.31.0 // indirect
+	golang.org/x/crypto v0.31.0
+	golang.org/x/exp v0.0.0-20241210194714-1829a127f884 // indirect
+	golang.org/x/net v0.32.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	google.golang.org/protobuf v1.35.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	modernc.org/libc v1.61.3 // indirect
+	modernc.org/libc v1.61.4 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.8.0 // indirect
-	modernc.org/sqlite v1.34.1 // indirect
+	modernc.org/sqlite v1.34.2 // indirect
 )

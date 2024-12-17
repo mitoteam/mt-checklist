@@ -21,4 +21,4 @@ Project Status: **Active Development**
 * https://github.com/mitoteam/dhtml
 * https://github.com/mitoteam/dhtmlform
 * https://github.com/mitoteam/mtweb
-* https://github.com/mitoteam/goappbase
+* https://github.com/mitoteam/goapp

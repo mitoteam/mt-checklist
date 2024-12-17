@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/mitoteam/goappbase"
+	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mttools"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -16,7 +16,7 @@ const (
 )
 
 type User struct {
-	goappbase.BaseModel
+	goapp.BaseModel
 
 	UserName     string `gorm:"uniqueIndex"`
 	DisplayName  string
@@ -26,11 +26,11 @@ type User struct {
 }
 
 func init() {
-	goappbase.DbSchema.AddModel(reflect.TypeFor[User]())
+	goapp.DbSchema.AddModel(reflect.TypeFor[User]())
 }
 
 func LoadUser(id any) *User {
-	return goappbase.LoadO[User](id)
+	return goapp.LoadO[User](id)
 }
 
 func (u *User) SetPassword(password string) {
@@ -59,14 +59,14 @@ func (u *User) IsAdmin() bool {
 }
 
 func AuthorizeUser(username, password string) *User {
-	goappbase.PreQuery[User]().Where("user_name", username)
-	user := goappbase.FirstO[User]()
+	goapp.PreQuery[User]().Where("user_name", username)
+	user := goapp.FirstO[User]()
 
 	if user != nil { //found
 		if user.CheckPassword(password) {
 			user.LastLogin = mttools.Ptr(time.Now()) //update last login time
 
-			goappbase.SaveObject(user)
+			goapp.SaveObject(user)
 
 			return user
 		}
@@ -89,7 +89,7 @@ func InitializeRootUser(initialPassword string) error {
 		rootUser.ID = 1
 		rootUser.SetPassword(initialPassword)
 
-		if !goappbase.SaveObject(rootUser) {
+		if !goapp.SaveObject(rootUser) {
 			err := errors.New("Error creating new root user")
 			log.Println("ERROR: " + err.Error())
 			return err

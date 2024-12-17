@@ -3,11 +3,11 @@ package model
 import (
 	"reflect"
 
-	"github.com/mitoteam/goappbase"
+	"github.com/mitoteam/goapp"
 )
 
 type Checklist struct {
-	goappbase.BaseModel
+	goapp.BaseModel
 
 	Name        string
 	IsActive    bool
@@ -15,16 +15,16 @@ type Checklist struct {
 }
 
 type ChecklistItem struct {
-	goappbase.BaseModel
+	goapp.BaseModel
 
 	Name string
 	Body string
 }
 
 func init() {
-	goappbase.DbSchema.AddModel(reflect.TypeFor[Checklist]())
+	goapp.DbSchema.AddModel(reflect.TypeFor[Checklist]())
 }
 
 func LoadChecklist(id any) *Checklist {
-	return goappbase.LoadO[Checklist](id)
+	return goapp.LoadO[Checklist](id)
 }

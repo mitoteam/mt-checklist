@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/mitoteam/dhtml"
-	"github.com/mitoteam/goappbase"
+	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
@@ -115,7 +115,7 @@ func init() {
 
 			user.DisplayName = fd.GetValue("displayname").(string)
 
-			goappbase.SaveObject(user)
+			goapp.SaveObject(user)
 		},
 	}
 	dhtml.FormManager.Register(Forms.MyAccount)

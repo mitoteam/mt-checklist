@@ -3,7 +3,7 @@ EXECUTABLE_NAME := mt-checklist
 SUBMODULES := ./pkg/mttools ./pkg/dhtml ./pkg/dhtmlform ./internal/mtweb
 
 #do the job
-include internal/goappbase/Makefile.inc.mk
+include internal/goapp/Makefile.inc.mk
 
 # additional targets
 .PHONY: run

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/mitoteam/dhtml"
-	"github.com/mitoteam/goappbase"
+	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
@@ -67,19 +67,19 @@ func PageDashboard(p *PageBuilder) bool {
 
 func renderStatistics() (out dhtml.HtmlPiece) {
 	out.Append(
-		dhtml.RenderValue(mtweb.Icon(iconUser).Label("Users"), goappbase.CountOL[model.User]()),
-		dhtml.RenderValueE(mtweb.Icon(iconChecklist).Label("Checklists"), goappbase.CountOL[model.Checklist](), "no checklists created"),
+		dhtml.RenderValue(mtweb.Icon(iconUser).Label("Users"), goapp.CountOL[model.User]()),
+		dhtml.RenderValueE(mtweb.Icon(iconChecklist).Label("Checklists"), goapp.CountOL[model.Checklist](), "no checklists created"),
 	)
 
-	goappbase.PreQuery[model.Checklist]().Where("is_active = ?", true)
+	goapp.PreQuery[model.Checklist]().Where("is_active = ?", true)
 	out.Append(
 		dhtml.RenderValueE(
-			mtweb.Icon("flag").Label("Active checklists"), goappbase.CountOL[model.Checklist](), "no active checklists",
+			mtweb.Icon("flag").Label("Active checklists"), goapp.CountOL[model.Checklist](), "no active checklists",
 		),
 	)
 
 	out.Append(
-		dhtml.RenderValueE(mtweb.Icon(iconTemplate).Label("Templates"), goappbase.CountOL[model.ChecklistTemplate](), "no templates created"),
+		dhtml.RenderValueE(mtweb.Icon(iconTemplate).Label("Templates"), goapp.CountOL[model.ChecklistTemplate](), "no templates created"),
 	)
 
 	return out
@@ -91,7 +91,7 @@ func PageLogin(p *PageBuilder) bool {
 	session := p.GetSession()
 
 	if userID, ok := session.Get("userID").(int64); ok && userID > 0 {
-		user := goappbase.LoadO[model.User](userID)
+		user := goapp.LoadO[model.User](userID)
 
 		if user == nil {
 			//Session user not found, restart session
