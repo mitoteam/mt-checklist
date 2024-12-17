@@ -1,8 +1,8 @@
 go 1.23
 
 use .
-use ./internal/dhtml
+use ./pkg/mttools
+use ./pkg/dhtml
 use ./pkg/dhtmlform
-use ./internal/mttools
 use ./internal/mtweb
 use ./internal/goappbase
