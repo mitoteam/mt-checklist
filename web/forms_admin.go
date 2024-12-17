@@ -144,7 +144,7 @@ func init() {
 
 			form.Class("border bg-light p-3").Append(
 				dhtml.NewFormInput("caption", "text").Label("Caption").DefaultValue(item.Caption),
-			).Append(
+				dhtml.NewFormInput("body", "text").Label("Body").DefaultValue(item.Body),
 				dhtml.NewFormSubmit().Label(mtweb.Icon("save").Label("Save")),
 			)
 		},
@@ -159,6 +159,9 @@ func init() {
 			item := fd.GetParam("Item").(*model.ChecklistTemplateItem)
 
 			item.Caption = fd.GetValue("caption").(string)
+			item.Body = fd.GetValue("body").(string)
+
+			item.ResponsibleID = fd.GetArg("User").(*model.User).ID
 
 			goappbase.SaveObject(item)
 		},

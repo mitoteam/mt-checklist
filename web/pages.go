@@ -10,7 +10,9 @@ import (
 )
 
 const (
-	iconTemplate = "pen-ruler"
+	iconTemplate  = "pen-ruler"
+	iconUser      = "person"
+	iconChecklist = "list-check"
 )
 
 func PageFormExperiment(p *PageBuilder) bool {
@@ -46,14 +48,14 @@ func PageDashboard(p *PageBuilder) bool {
 		cards_list.Add(
 			mtweb.NewCard().Header(mtweb.Icon("cog").Label("System management")).
 				Body(dhtml.Div().Append(
-					dhtml.NewLink("/admin/users").Label(mtweb.Icon("user").Label("Users")),
+					dhtml.NewLink("/admin/users").Label(mtweb.Icon(iconUser).Label("Users")),
 				)).
 				Body(dhtml.Div().Append(
 					dhtml.NewLink("/admin/templates").Label(mtweb.Icon(iconTemplate).Label("Templates")),
 				)).
 				Body(dhtml.Div().Append(
 					dhtml.Div().Append(
-						dhtml.NewLink("/admin/checklists").Label(mtweb.Icon("list-check").Label("Checklists")),
+						dhtml.NewLink("/admin/checklists").Label(mtweb.Icon(iconChecklist).Label("Checklists")),
 					).Append(" (administration)"),
 				)),
 		)
@@ -64,12 +66,21 @@ func PageDashboard(p *PageBuilder) bool {
 }
 
 func renderStatistics() (out dhtml.HtmlPiece) {
-	out.Append(dhtml.RenderValue("Users", goappbase.CountOL[model.User]()))
-
-	out.Append(dhtml.RenderValueE("Checklists", goappbase.CountOL[model.Checklist](), "no checklists created"))
+	out.Append(
+		dhtml.RenderValue(mtweb.Icon(iconUser).Label("Users"), goappbase.CountOL[model.User]()),
+		dhtml.RenderValueE(mtweb.Icon(iconChecklist).Label("Checklists"), goappbase.CountOL[model.Checklist](), "no checklists created"),
+	)
 
 	goappbase.PreQuery[model.Checklist]().Where("is_active = ?", true)
-	out.Append(dhtml.RenderValueE("Active checklists", goappbase.CountOL[model.Checklist](), "no active checklists"))
+	out.Append(
+		dhtml.RenderValueE(
+			mtweb.Icon("flag").Label("Active checklists"), goappbase.CountOL[model.Checklist](), "no active checklists",
+		),
+	)
+
+	out.Append(
+		dhtml.RenderValueE(mtweb.Icon(iconTemplate).Label("Templates"), goappbase.CountOL[model.ChecklistTemplate](), "no templates created"),
+	)
 
 	return out
 }
