@@ -7,10 +7,10 @@
 			"path": "internal/goapp"
 		},
 		{
-			"path": "internal/dhtml"
+			"path": "pkg/dhtml"
 		},
 		{
-			"path": "internal/mttools"
+			"path": "pkg/mttools"
 		},
 		{
 			"path": "internal/mtweb"
