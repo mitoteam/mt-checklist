@@ -16,7 +16,7 @@ const (
 )
 
 func PageFormExperiment(p *PageBuilder) bool {
-	formOut := dhtml.FormManager.RenderFormById("test_form", p.FormContext())
+	formOut := mtweb.ExperimentFormHandler.Render(p.FormContext())
 
 	if !formOut.IsEmpty() {
 		p.Title("Form!").Main(formOut)
@@ -108,7 +108,7 @@ func PageLogin(p *PageBuilder) bool {
 			SetParam("Session", session).
 			SetRedirect(p.GetGinContext().DefaultQuery("destination", "/"))
 
-		formOut := dhtml.FormManager.RenderForm(Forms.Login, fc)
+		formOut := Forms.Login.Render(fc)
 
 		if formOut.IsEmpty() {
 			return false
@@ -126,7 +126,7 @@ func PageMyAccount(p *PageBuilder) bool {
 	fc := p.FormContext().SetRedirect("/").
 		SetParam("User", p.User())
 
-	formOut := dhtml.FormManager.RenderForm(Forms.MyAccount, fc)
+	formOut := Forms.MyAccount.Render(fc)
 
 	if formOut.IsEmpty() {
 		return false

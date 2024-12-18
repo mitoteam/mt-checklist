@@ -2,29 +2,25 @@ package web
 
 import (
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/dhtmlform"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
 
 func init() {
-	Forms.AdminChecklist = &dhtml.FormHandler{
-		Id: "admin_checklist_edit",
-		RenderF: func(form *dhtml.FormElement, fd *dhtml.FormData) {
+	Forms.AdminChecklist = &dhtmlform.FormHandler{
+		RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
 			cl := fd.GetParam("Checklist").(*model.Checklist)
 
-			form.Class("border bg-light p-3").
-				Append(
-					mtweb.NewFloatingFormInput("name", "text").Label("Name").DefaultValue(cl.Name),
-				).
-				Append(dhtml.NewFormSubmit().Label(mtweb.Icon("save").Label("Save")))
+			container := dhtml.Div().Class("border bg-light p-3").Append(
+				dhtmlform.NewTextInput("name").Label("Name").Default(cl.Name).Require(),
+				dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
+			)
+
+			formBody.Append(container)
 		},
-		ValidateF: func(fd *dhtml.FormData) {
-			if len(fd.GetValue("name").(string)) == 0 {
-				fd.SetItemError("name", "Name is required")
-			}
-		},
-		SubmitF: func(fd *dhtml.FormData) {
+		SubmitF: func(fd *dhtmlform.FormData) {
 			cl := fd.GetParam("Checklist").(*model.Checklist)
 
 			cl.Name = fd.GetValue("name").(string)
@@ -32,33 +28,27 @@ func init() {
 			goapp.SaveObject(cl)
 		},
 	}
-	dhtml.FormManager.Register(Forms.AdminChecklist)
 
-	Forms.AdminUserEdit = &dhtml.FormHandler{
-		Id: "admin_user_edit",
-		RenderF: func(form *dhtml.FormElement, fd *dhtml.FormData) {
+	Forms.AdminUserEdit = &dhtmlform.FormHandler{
+		RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
 			user := fd.GetParam("User").(*model.User)
 
-			form.Class("border bg-light p-3").Append(
-				dhtml.NewFormInput("username", "text").Label("Username").DefaultValue(user.UserName),
-			).Append(
-				dhtml.NewFormInput("displayname", "text").Label("Display name").DefaultValue(user.DisplayName),
-			).Append(
-				dhtml.NewFormCheckbox("is_active").Label("Active").DefaultValue(user.IsActive),
-			).Append(
-				dhtml.NewFormSubmit().Label(mtweb.Icon("save").Label("Save")),
+			container := dhtml.Div().Class("border bg-light p-3").Append(
+				dhtmlform.NewTextInput("username").Label("Username").Require().Default(user.UserName),
+				dhtmlform.NewTextInput("displayname").Label("Display name").Default(user.DisplayName),
+				dhtmlform.NewCheckbox("is_active").Label("Active").Default(user.IsActive),
+				dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
 			)
-		},
-		ValidateF: func(fd *dhtml.FormData) {
-			if len(fd.GetValue("username").(string)) == 0 {
-				fd.SetItemError("username", "Username is required")
-			}
 
+			formBody.Append(container)
+		},
+		ValidateF: func(fd *dhtmlform.FormData) {
+			// get display name from username if not set
 			if len(fd.GetValue("displayname").(string)) == 0 {
-				fd.SetValue("displayname", fd.GetValue("username"))
+				fd.SetControlValue("displayname", fd.GetValue("username"))
 			}
 		},
-		SubmitF: func(fd *dhtml.FormData) {
+		SubmitF: func(fd *dhtmlform.FormData) {
 			user := fd.GetParam("User").(*model.User)
 
 			user.UserName = fd.GetValue("username").(string)
@@ -68,32 +58,30 @@ func init() {
 			goapp.SaveObject(user)
 		},
 	}
-	dhtml.FormManager.Register(Forms.AdminUserEdit)
 
-	Forms.AdminUserPassword = &dhtml.FormHandler{
-		Id: "admin_user_password",
-		RenderF: func(form *dhtml.FormElement, fd *dhtml.FormData) {
-			form.Class("border bg-light p-3").Append(
-				dhtml.NewFormInput("password1", "password").Label("Password"),
-			).Append(
-				dhtml.NewFormInput("password2", "password").Label("Confirmation"),
-			).Append(
-				dhtml.NewFormSubmit().Label(mtweb.Icon("save").Label("Save")),
+	Forms.AdminUserPassword = &dhtmlform.FormHandler{
+		RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
+			container := dhtml.Div().Class("border bg-light p-3").Append(
+				dhtmlform.NewPasswordInput("password1").Label("Password"),
+				dhtmlform.NewPasswordInput("password2").Label("Confirmation"),
+				dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
 			)
+
+			formBody.Append(container)
 		},
-		ValidateF: func(fd *dhtml.FormData) {
+		ValidateF: func(fd *dhtmlform.FormData) {
 			password1 := fd.GetValue("password1").(string)
 			password2 := fd.GetValue("password2").(string)
 
 			if len(password1) < 6 {
-				fd.SetItemError("password1", "Minimum password is 6 characters")
+				fd.SetError("password1", "Minimum password is 6 characters")
 			} else {
 				if password1 != password2 {
-					fd.SetItemError("password2", "Password and confirmation do not match")
+					fd.SetError("password2", "Password and confirmation do not match")
 				}
 			}
 		},
-		SubmitF: func(fd *dhtml.FormData) {
+		SubmitF: func(fd *dhtmlform.FormData) {
 			user := fd.GetParam("User").(*model.User)
 
 			user.SetPassword(fd.GetValue("password1").(string))
@@ -101,30 +89,19 @@ func init() {
 			goapp.SaveObject(user)
 		},
 	}
-	dhtml.FormManager.Register(Forms.AdminUserPassword)
 
-	Forms.AdminChecklistTemplate = &dhtml.FormHandler{
-		Id: "admin_checklist_template",
-		RenderF: func(form *dhtml.FormElement, fd *dhtml.FormData) {
+	Forms.AdminChecklistTemplate = &dhtmlform.FormHandler{
+		RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
 			t := fd.GetParam("Template").(*model.ChecklistTemplate)
 
-			form.Class("border bg-light p-3").Append(
-				dhtml.NewFormInput("name", "text").Label("Template Name").DefaultValue(t.Name),
-			).Append(
-				dhtml.NewFormInput("checklist_name", "text").Label("Checklist Name").
-					DefaultValue(t.ChecklistName).Note("Default name of created checklist"),
-			).Append(
-				dhtml.NewFormSubmit().Label(mtweb.Icon("save").Label("Save")),
-			)
+			formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
+				dhtmlform.NewTextInput("name").Label("Template Name").Default(t.Name).Require(),
+				dhtmlform.NewTextInput("checklist_name").Label("Checklist Name").
+					Default(t.ChecklistName).Note("Default name of created checklist"),
+				dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
+			))
 		},
-		ValidateF: func(fd *dhtml.FormData) {
-			name := fd.GetValue("name").(string)
-
-			if len(name) == 0 {
-				fd.SetItemError("name", "Template Name is required")
-			}
-		},
-		SubmitF: func(fd *dhtml.FormData) {
+		SubmitF: func(fd *dhtmlform.FormData) {
 			t := fd.GetParam("Template").(*model.ChecklistTemplate)
 
 			t.Name = fd.GetValue("name").(string)
@@ -133,29 +110,19 @@ func init() {
 			goapp.SaveObject(t)
 		},
 	}
-	dhtml.FormManager.Register(Forms.AdminChecklistTemplate)
 
-	Forms.AdminChecklistTemplateItem = &dhtml.FormHandler{
-		Id: "admin_checklist_template_item",
-		RenderF: func(form *dhtml.FormElement, fd *dhtml.FormData) {
+	Forms.AdminChecklistTemplateItem = &dhtmlform.FormHandler{
+		RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
 			item := fd.GetParam("Item").(*model.ChecklistTemplateItem)
 
-			form.Append(dhtml.RenderValue("Template", item.GetChecklistTemplate().Name).Class("mb-3"))
-
-			form.Class("border bg-light p-3").Append(
-				dhtml.NewFormInput("caption", "text").Label("Caption").DefaultValue(item.Caption),
-				dhtml.NewFormInput("body", "text").Label("Body").DefaultValue(item.Body),
-				dhtml.NewFormSubmit().Label(mtweb.Icon("save").Label("Save")),
-			)
+			formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
+				dhtml.RenderValue("Template", item.GetChecklistTemplate().Name).Class("mb-3"),
+				dhtmlform.NewTextInput("caption").Label("Caption").Default(item.Caption).Require(),
+				dhtmlform.NewTextInput("body").Label("Body").Default(item.Body),
+				dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
+			))
 		},
-		ValidateF: func(fd *dhtml.FormData) {
-			caption := fd.GetValue("caption").(string)
-
-			if len(caption) == 0 {
-				fd.SetItemError("name", "Caption is required")
-			}
-		},
-		SubmitF: func(fd *dhtml.FormData) {
+		SubmitF: func(fd *dhtmlform.FormData) {
 			item := fd.GetParam("Item").(*model.ChecklistTemplateItem)
 
 			item.Caption = fd.GetValue("caption").(string)
@@ -166,5 +133,4 @@ func init() {
 			goapp.SaveObject(item)
 		},
 	}
-	dhtml.FormManager.Register(Forms.AdminChecklistTemplateItem)
 }

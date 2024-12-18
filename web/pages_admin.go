@@ -59,7 +59,7 @@ func PageAdminChecklistEdit(p *PageBuilder) bool {
 	fc := p.FormContext().SetRedirect("/admin/checklists").
 		SetParam("Checklist", cl)
 
-	formOut := dhtml.FormManager.RenderForm(Forms.AdminChecklist, fc)
+	formOut := Forms.AdminChecklist.Render(fc)
 
 	if formOut.IsEmpty() {
 		return false
@@ -140,7 +140,7 @@ func PageAdminUserEdit(p *PageBuilder) bool {
 	fc := p.FormContext().SetRedirect("/admin/users").
 		SetParam("User", user)
 
-	formOut := dhtml.FormManager.RenderForm(Forms.AdminUserEdit, fc)
+	formOut := Forms.AdminUserEdit.Render(fc)
 
 	if formOut.IsEmpty() {
 		return false
@@ -158,7 +158,7 @@ func PageAdminUserPassword(p *PageBuilder) bool {
 	fc := p.FormContext().SetRedirect("/admin/users").
 		SetParam("User", user)
 
-	formOut := dhtml.FormManager.RenderForm(Forms.AdminUserPassword, fc)
+	formOut := Forms.AdminUserPassword.Render(fc)
 
 	if formOut.IsEmpty() {
 		return false
@@ -226,7 +226,7 @@ func PageAdminChecklistTemplateEdit(p *PageBuilder) bool {
 	fc := p.FormContext().SetRedirect("/admin/templates").
 		SetParam("Template", t)
 
-	formOut := dhtml.FormManager.RenderForm(Forms.AdminChecklistTemplate, fc)
+	formOut := Forms.AdminChecklistTemplate.Render(fc)
 
 	if formOut.IsEmpty() {
 		return false
@@ -305,7 +305,7 @@ func PageAdminChecklistTemplateItemEdit(p *PageBuilder) bool {
 	fc := p.FormContext().SetRedirect(fmt.Sprintf("/admin/templates/%d/items", t.ID)).
 		SetParam("Item", item)
 
-	formOut := dhtml.FormManager.RenderForm(Forms.AdminChecklistTemplateItem, fc)
+	formOut := Forms.AdminChecklistTemplateItem.Render(fc)
 
 	if formOut.IsEmpty() {
 		return false

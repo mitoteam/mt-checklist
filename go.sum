@@ -72,6 +72,8 @@ github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWE
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/mitoteam/dhtml v0.0.0-20241128160328-ab13a14f2236 h1:1lHlLfcmKLV5NEivsySahWH/6/B691MScTwlpLj7wb4=
 github.com/mitoteam/dhtml v0.0.0-20241128160328-ab13a14f2236/go.mod h1:/gQMA8ja2BKNYBCOsJIHo85IW0cRhaX2latuDafbk1Y=
+github.com/mitoteam/dhtmlform v0.0.0-20241218152109-416aa7f025aa h1:Ho0jWLTf4+zs8zO0yiyKAnhyn4W/Yag6w29r/E9U1p8=
+github.com/mitoteam/dhtmlform v0.0.0-20241218152109-416aa7f025aa/go.mod h1:OgpZUTR4kow/FCWnp8Virz0xRRRu4Mw9G5LzuW8NTEw=
 github.com/mitoteam/goapp v0.0.0-20241217094645-cd419ad8e2e5 h1:u5wyu1/spPQzFTPG8UhEFgErt6kgmQjITXK9sZkuebI=
 github.com/mitoteam/goapp v0.0.0-20241217094645-cd419ad8e2e5/go.mod h1:CuVSF9G1J/8SZQBIprJ2BF0Y8epfCRltmAMXXd9Czoo=
 github.com/mitoteam/mttools v0.0.0-20241211122020-c9fb856488d1 h1:rJxQyk6vUbtBqicb5R3PicFKDdz8LJUQTUPQr9tmmH0=

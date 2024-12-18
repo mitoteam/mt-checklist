@@ -6,6 +6,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/dhtmlform"
 	"github.com/mitoteam/mt-checklist/app"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
@@ -37,8 +38,8 @@ func (p *PageBuilder) GetSession() sessions.Session {
 }
 
 // Builds new dhtml.FormContext to be used with form builder
-func (p *PageBuilder) FormContext() *dhtml.FormContext {
-	fc := dhtml.NewFormContext(p.context.Writer, p.context.Request)
+func (p *PageBuilder) FormContext() *dhtmlform.FormContext {
+	fc := dhtmlform.NewFormContext(p.context.Writer, p.context.Request)
 
 	//current user from session if he authorized
 	if user, ok := p.context.Get("User"); ok {
