@@ -23,3 +23,8 @@
 	url = https://github.com/mitoteam/dhtmlform.git
 	branch = main
 	ignore = all # ignore hash changes
+[submodule "pkg/dhtmlbs"]
+	path = pkg/dhtmlbs
+	url = https://github.com/mitoteam/dhtmlbs.git
+	branch = main
+	ignore = all # ignore hash changes

@@ -1,22 +1,32 @@
 {
 	"folders": [
 		{
+			"name": "mt-checklist",
 			"path": "."
 		},
 		{
+			"name": "goapp",
 			"path": "internal/goapp"
 		},
 		{
-			"path": "pkg/dhtml"
-		},
-		{
+			"name": "mttools",
 			"path": "pkg/mttools"
 		},
 		{
+			"name": "mtweb",
 			"path": "internal/mtweb"
 		},
 		{
+			"name": "dhtml",
+			"path": "pkg/dhtml"
+		},
+		{
+			"name": "dhtmlform",
 			"path": "pkg/dhtmlform"
+		},
+		{
+			"name": "dhtmlbs",
+			"path": "pkg/dhtmlbs"
 		}
 	],
 	"settings": {
@@ -37,6 +47,9 @@
 		],
 		"commentAnchors.showCursor": true,
 		"commentAnchors.tags.separators": [" ", ": ", ":"],
-		"commentAnchors.tags.matchCase": false
+		"commentAnchors.tags.matchCase": false,
+		"cSpell.words": [
+			"dhtmlbs"
+		]
 	}
 }
