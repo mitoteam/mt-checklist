@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/dhtmlbs"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
@@ -28,7 +29,7 @@ func PageAdminChecklists(p *PageBuilder) bool {
 	for _, cl := range list {
 		card := mtweb.NewCard().
 			Header(
-				mtweb.NewJustifiedLR().
+				dhtmlbs.NewJustifiedLR().
 					L(cl.Name).
 					R(
 						mtweb.NewEditBtn(fmt.Sprintf("/admin/checklists/%d/edit", cl.ID)),

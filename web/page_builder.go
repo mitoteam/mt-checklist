@@ -6,6 +6,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/dhtmlbs"
 	"github.com/mitoteam/dhtmlform"
 	"github.com/mitoteam/mt-checklist/app"
 	"github.com/mitoteam/mt-checklist/model"
@@ -159,7 +160,7 @@ func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 		)
 	}
 
-	header.Append(mtweb.NewJustifiedLR().L(header_left).R(header_right))
+	header.Append(dhtmlbs.NewJustifiedLR().L(header_left).R(header_right))
 
 	out.Append(header)
 	return out
@@ -167,7 +168,7 @@ func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 
 func (p *PageBuilder) renderFooter() (out dhtml.HtmlPiece) {
 	out.Append(dhtml.Div().Class("region-footer border bg-light p-3 mt-3").Append(
-		mtweb.NewJustifiedLR().
+		dhtmlbs.NewJustifiedLR().
 			L(fmt.Sprintf("%s v.%s", app.App.AppName, app.App.Version)).
 			R(
 				dhtml.Div().Class("small text-muted").

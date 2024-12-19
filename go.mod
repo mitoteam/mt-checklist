@@ -7,20 +7,13 @@ require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/mitoteam/dhtml v0.0.0-20241218154713-e5b8f4f01206
 	github.com/mitoteam/dhtmlform v0.0.0-20241218154743-8d2f924d4a88
-	github.com/mitoteam/goapp v0.0.0-20241217094645-cd419ad8e2e5
+	github.com/mitoteam/goapp v0.0.0-20241219033450-dfbf4daf9195
 	github.com/mitoteam/mttools v0.0.0-20241218140423-a3403a9ff8ad
 	github.com/mitoteam/mtweb v0.0.0-20241218154725-9b26d046632d
 	gorm.io/gorm v1.25.12
 )
 
-require (
-	github.com/elliotchance/orderedmap/v2 v2.6.0 // indirect
-	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
-	github.com/knz/go-libedit v1.10.1 // indirect
-	modernc.org/gc/v3 v3.0.0-20240107210532-573471604cb6 // indirect
-	modernc.org/strutil v1.2.0 // indirect
-	modernc.org/token v1.1.0 // indirect
-)
+require github.com/elliotchance/orderedmap/v2 v2.6.0 // indirect
 
 require (
 	github.com/alitto/pond v1.9.2 // indirect
@@ -56,7 +49,6 @@ require (
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/spf13/cobra v1.8.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.12.0 // indirect

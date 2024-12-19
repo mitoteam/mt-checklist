@@ -4,5 +4,6 @@ use .
 use ./pkg/mttools
 use ./pkg/dhtml
 use ./pkg/dhtmlform
+use ./pkg/dhtmlbs
 use ./internal/mtweb
 use ./internal/goapp
