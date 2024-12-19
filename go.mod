@@ -6,6 +6,7 @@ require (
 	github.com/gin-contrib/sessions v1.0.1
 	github.com/gin-gonic/gin v1.10.0
 	github.com/mitoteam/dhtml v0.0.0-20241218154713-e5b8f4f01206
+	github.com/mitoteam/dhtmlbs v0.0.0-20241219040431-ac54ea123b57
 	github.com/mitoteam/dhtmlform v0.0.0-20241218154743-8d2f924d4a88
 	github.com/mitoteam/goapp v0.0.0-20241219033450-dfbf4daf9195
 	github.com/mitoteam/mttools v0.0.0-20241218140423-a3403a9ff8ad
