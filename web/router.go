@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mttools"
-	"github.com/mitoteam/mtweb"
 )
 
 func BuildWebRouter(r *gin.Engine) {
@@ -17,14 +16,14 @@ func BuildWebRouter(r *gin.Engine) {
 	//r.StaticFS("/assets", webAssetsHttpFS)
 
 	// no auth required routes
-	r.GET("/logout", webLogout)
+	//r.GET("/logout", webLogout)
 
-	r.GET("/sign-in", webPageBuilder(PageLogin))
-	r.POST("/sign-in", webPageBuilder(PageLogin))
+	r.GET("/sign-in", webPageBuilder(PageLoginOLD))
+	r.POST("/sign-in", webPageBuilder(PageLoginOLD))
 
 	// auth required routes
 	authenticated_routes := r.Group("")
-	authenticated_routes.Use(authMiddleware())
+	authenticated_routes.Use(authMiddlewareOLD())
 	authenticated_routes.
 		//GET("/", webPageBuilder(PageDashboard)).
 		GET("/account", webPageBuilder(PageMyAccount)).
@@ -58,17 +57,17 @@ func BuildWebRouter(r *gin.Engine) {
 		GET("/templates/:id/items/:item_id/delete", webAdminChecklistTemplateDeleteItem)
 
 	//EXPERIMENTS
-	r.GET("/experiment", func(c *gin.Context) {
-		c.Header("Content-Type", "text/html;charset=utf-8")
-		c.String(http.StatusOK, mtweb.BuildExperimentHtml())
-	})
+	// r.GET("/experiment", func(c *gin.Context) {
+	// 	c.Header("Content-Type", "text/html;charset=utf-8")
+	// 	c.String(http.StatusOK, mtweb.BuildExperimentHtml())
+	// })
 
 	r.GET("/form", webPageBuilder(PageFormExperiment))
 	r.POST("/form", webPageBuilder(PageFormExperiment))
 }
 
 // checks if user authenticated, redirects to /login if not (except for excludedPaths).
-func authMiddleware() gin.HandlerFunc {
+func authMiddlewareOLD() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
 

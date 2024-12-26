@@ -5,6 +5,7 @@ import (
 
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/goapp"
+	"github.com/mitoteam/mbr"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
@@ -29,7 +30,10 @@ func PageFormExperiment(p *PageBuilderOLD) bool {
 func PageDashboard(p *PageBuilder) any {
 	cards_list := mtweb.NewCardList().Add(
 		mtweb.NewCard().Header(mtweb.Icon("vial").Label("Experiment")).
-			Body(dhtml.Div().Text("Html renderer ").Append(dhtml.NewLink("/experiment").Label("experiment")).Text(" link.")).
+			Body(
+				dhtml.Div().Text("Html renderer ").
+					Append(dhtml.NewLink(mbr.Url(RootCtl.Experiment)).Label("experiment")).Text(" link."),
+			).
 			Body(
 				dhtml.Div().Text("Confirm link ").Append(dhtml.NewConfirmLink("/experiment", "Are you sure?").Label("experiment")),
 			).
@@ -85,7 +89,7 @@ func renderStatistics() (out dhtml.HtmlPiece) {
 	return out
 }
 
-func PageLogin(p *PageBuilderOLD) bool {
+func PageLoginOLD(p *PageBuilderOLD) bool {
 	p.Title("Sign In")
 
 	session := p.GetSession()

@@ -31,21 +31,23 @@ func PageBuilderRouteHandler(buildPageF func(*PageBuilder) any) func(ctx *mbr.Mb
 
 		out := buildPageF(p)
 
-		switch v := out.(type) {
-		case error:
-			return v
-		default:
-			ctx.Request().Header.Add("Content-Type", "text/html;charset=utf-8")
-			return p.String()
+		if err, ok := out.(error); ok {
+			return err
 		}
 
+		if !p.GetMain().IsEmpty() {
+			ctx.Request().Header.Add("Content-Type", "text/html;charset=utf-8")
+			return p.String()
+		} else {
+			return nil
+		}
 	}
 }
 
 func (p *PageBuilder) User() (user *model.User) {
-	// if v, ok := p.context.Get("User"); ok {
-	// 	user = v.(*model.User)
-	// }
+	if v, ok := p.ctx.GetOk("User"); ok {
+		user = v.(*model.User)
+	}
 
 	return user
 }
@@ -122,7 +124,7 @@ func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 	header := dhtml.Div().Class("region-header border bg-light p-3 mb-3").Attribute("role", "header")
 
 	header_left := dhtml.Div().
-		Append(dhtml.Div().Append(dhtml.NewLink("/").Label(app.App.AppName).Class("text-decoration-none"))).
+		Append(dhtml.Div().Append(dhtml.NewLink(mbr.Url(RootCtl.Home)).Label(app.App.AppName).Class("text-decoration-none"))).
 		Append(dhtml.Div().Class("small text-muted").Append("v." + app.App.Version))
 
 	header_right := dhtml.Div().Class("text-end")
@@ -131,7 +133,7 @@ func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 		header_right.Append(dhtml.Div().
 			Text(user.GetDisplayName()).
 			Append(
-				dhtml.NewLink("/logout").Label(mtweb.Icon("arrow-right-from-bracket")).
+				dhtml.NewLink(mbr.Url(RootCtl.Logout)).Label(mtweb.Icon("arrow-right-from-bracket")).
 					Class("ms-1").Title("Sign Out"),
 			))
 
