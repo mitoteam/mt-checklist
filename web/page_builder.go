@@ -22,13 +22,24 @@ type PageBuilder struct {
 	regions dhtml.NamedHtmlPieces
 }
 
-func NewPageBuilder(context *mbr.MbrContext) *PageBuilder {
-	p := &PageBuilder{
-		regions: dhtml.NewNamedHtmlPieces(),
-		ctx:     context,
-	}
+func PageBuilderRouteHandler(buildPageF func(*PageBuilder) any) func(ctx *mbr.MbrContext) any {
+	return func(ctx *mbr.MbrContext) any {
+		p := &PageBuilder{
+			regions: dhtml.NewNamedHtmlPieces(),
+			ctx:     ctx,
+		}
 
-	return p
+		out := buildPageF(p)
+
+		switch v := out.(type) {
+		case error:
+			return v
+		default:
+			ctx.Request().Header.Add("Content-Type", "text/html;charset=utf-8")
+			return p.String()
+		}
+
+	}
 }
 
 func (p *PageBuilder) User() (user *model.User) {

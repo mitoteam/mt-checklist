@@ -26,7 +26,7 @@ func PageFormExperiment(p *PageBuilderOLD) bool {
 	return false
 }
 
-func PageDashboard(p *PageBuilder) bool {
+func PageDashboard(p *PageBuilder) any {
 	cards_list := mtweb.NewCardList().Add(
 		mtweb.NewCard().Header(mtweb.Icon("vial").Label("Experiment")).
 			Body(dhtml.Div().Text("Html renderer ").Append(dhtml.NewLink("/experiment").Label("experiment")).Text(" link.")).
@@ -62,7 +62,7 @@ func PageDashboard(p *PageBuilder) bool {
 	}
 
 	p.Main(cards_list)
-	return true
+	return nil
 }
 
 func renderStatistics() (out dhtml.HtmlPiece) {
