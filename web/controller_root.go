@@ -42,7 +42,7 @@ func (c *RootController) Login() mbr.Route {
 			user := p.User()
 
 			if user == nil {
-				p.Form(Forms.Login)
+				p.Main(Forms.Login.Render(p.FormContext()))
 			} else {
 				p.Main("Already authenticated")
 			}
@@ -68,6 +68,20 @@ func (c *RootController) Logout() mbr.Route {
 			return nil
 		},
 	}
+}
+
+func (c *RootController) MyAccount() mbr.Route {
+	route := mbr.Route{
+		PathPattern: "/account",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			p.Main(Forms.MyAccount.Render(p.FormContext()))
+			return nil
+		}),
+	}
+
+	route.With(AuthMiddleware)
+
+	return route
 }
 
 func (c *RootController) Experiment() mbr.Route {

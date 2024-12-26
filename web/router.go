@@ -10,8 +10,6 @@ import (
 )
 
 func BuildWebRouter(r *gin.Engine) {
-	r.GET("/sign-in", webPageBuilder(PageLoginOLD))
-	r.POST("/sign-in", webPageBuilder(PageLoginOLD))
 
 	// auth required routes
 	authenticated_routes := r.Group("")

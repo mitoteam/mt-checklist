@@ -35,7 +35,7 @@ func PageBuilderRouteHandler(buildPageF func(*PageBuilder) any) func(ctx *mbr.Mb
 			return err
 		}
 
-		if !p.GetMain().IsEmpty() {
+		if p.HasMain() {
 			ctx.Request().Header.Add("Content-Type", "text/html;charset=utf-8")
 			return p.String()
 		} else {
@@ -154,7 +154,7 @@ func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 		header_right.Append(
 			dhtml.Div().Class("text-muted").
 				Append(icon).
-				Append(dhtml.NewLink("/account").Label(mtweb.Icon("cog"))),
+				Append(dhtml.NewLink(mbr.Url(RootCtl.MyAccount, "destination", "/")).Label(mtweb.Icon("cog"))),
 		)
 	}
 
@@ -179,18 +179,18 @@ func (p *PageBuilder) renderFooter() (out dhtml.HtmlPiece) {
 
 // Builds new dhtml.FormContext to be used with form builder
 func (p *PageBuilder) FormContext() *dhtmlform.FormContext {
-	return dhtmlform.NewFormContext(p.ctx.Writer(), p.ctx.Request())
-}
+	fc := dhtmlform.NewFormContext(p.ctx.Writer(), p.ctx.Request())
 
-func (p *PageBuilder) Form(formHandler *dhtmlform.FormHandler) {
-	fc := p.FormContext().SetParam("MbrContext", p.ctx)
+	// some useful for every form things
+	fc.SetParam("MbrContext", p.ctx)
+	fc.SetParam("User", p.User())
 
-	//default redirect
-	if dstParam := p.ctx.Request().URL.Query()["destination"]; len(dstParam) == 1 {
-		fc.SetRedirect(dstParam[0])
+	//default redirect from "destination" query parameter
+	if destination := p.ctx.Request().URL.Query().Get("destination"); destination != "" {
+		fc.SetRedirect(destination)
 	}
 
-	p.Main(Forms.Login.Render(fc))
+	return fc
 }
 
 // ===================== PageBuilderOLD =================================
