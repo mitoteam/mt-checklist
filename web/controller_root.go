@@ -3,7 +3,10 @@ package web
 import (
 	"net/http"
 
+	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mbr"
+	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
 
@@ -28,11 +31,71 @@ func (c *RootController) FavIcon() mbr.Route {
 func (c *RootController) Home() mbr.Route {
 	route := mbr.Route{
 		PathPattern: "/",
-		HandleF:     PageBuilderRouteHandler(PageDashboard),
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			cards_list := mtweb.NewCardList().Add(
+				mtweb.NewCard().Header(mtweb.Icon("vial").Label("Experiment")).
+					Body(
+						dhtml.Div().Text("Html renderer ").
+							Append(dhtml.NewLink(mbr.Url(RootCtl.Experiment)).Label("experiment")).Text(" link."),
+					).
+					Body(
+						dhtml.Div().Text("Confirm link ").Append(dhtml.NewConfirmLink("/experiment", "Are you sure?").Label("experiment")),
+					).
+					Body(dhtml.Div().Text("Forms ").Append(dhtml.NewLink("/form").Label("experiment")).Text(" link.")),
+			).Add(
+				mtweb.NewCard().Header(mtweb.Icon("list-check").Label("Active checklists")).
+					Body("Some content"),
+			).Add(
+				mtweb.NewCard().Header(mtweb.Icon("user-check").Label("My issues")).
+					Body("Some content"),
+			).Add(
+				mtweb.NewCard().Header(mtweb.Icon("chart-simple").Label("Statistics")).Body(c.renderStatistics()),
+			)
+
+			if p.User().IsAdmin() {
+				cards_list.Add(
+					mtweb.NewCard().Header(mtweb.Icon("cog").Label("System management")).
+						Body(dhtml.Div().Append(
+							dhtml.NewLink("/admin/users").Label(mtweb.Icon(iconUser).Label("Users")),
+						)).
+						Body(dhtml.Div().Append(
+							dhtml.NewLink("/admin/templates").Label(mtweb.Icon(iconTemplate).Label("Templates")),
+						)).
+						Body(dhtml.Div().Append(
+							dhtml.Div().Append(
+								dhtml.NewLink("/admin/checklists").Label(mtweb.Icon(iconChecklist).Label("Checklists")),
+							).Append(" (administration)"),
+						)),
+				)
+			}
+
+			p.Main(cards_list)
+			return nil
+		}),
 	}
 
 	route.With(AuthMiddleware) //for home page only
 	return route
+}
+
+func (c *RootController) renderStatistics() (out dhtml.HtmlPiece) {
+	out.Append(
+		dhtml.RenderValue(mtweb.Icon(iconUser).Label("Users"), goapp.CountOL[model.User]()),
+		dhtml.RenderValueE(mtweb.Icon(iconChecklist).Label("Checklists"), goapp.CountOL[model.Checklist](), "no checklists created"),
+	)
+
+	goapp.PreQuery[model.Checklist]().Where("is_active = ?", true)
+	out.Append(
+		dhtml.RenderValueE(
+			mtweb.Icon("flag").Label("Active checklists"), goapp.CountOL[model.Checklist](), "no active checklists",
+		),
+	)
+
+	out.Append(
+		dhtml.RenderValueE(mtweb.Icon(iconTemplate).Label("Templates"), goapp.CountOL[model.ChecklistTemplate](), "no templates created"),
+	)
+
+	return out
 }
 
 func (c *RootController) Login() mbr.Route {
@@ -88,5 +151,15 @@ func (c *RootController) Experiment() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/experiment",
 		HandleF:     func(ctx *mbr.MbrContext) any { return mtweb.BuildExperimentHtml() },
+	}
+}
+
+func (c *RootController) TestForm() mbr.Route {
+	return mbr.Route{
+		PathPattern: "/form",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			p.Title("Form!").Main(mtweb.ExperimentFormHandler.Render(p.FormContext()))
+			return nil
+		}),
 	}
 }

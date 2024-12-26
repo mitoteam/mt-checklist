@@ -14,10 +14,6 @@ func BuildWebRouter(r *gin.Engine) {
 	// auth required routes
 	authenticated_routes := r.Group("")
 	authenticated_routes.Use(authMiddlewareOLD())
-	authenticated_routes.
-		//GET("/", webPageBuilder(PageDashboard)).
-		GET("/account", webPageBuilder(PageMyAccount)).
-		POST("/account", webPageBuilder(PageMyAccount))
 
 	// Subgroup: admin role required routes
 	admin_routes := authenticated_routes.Group("/admin")
@@ -45,15 +41,6 @@ func BuildWebRouter(r *gin.Engine) {
 		GET("/templates/:id/items/:item_id/edit", webPageBuilder(PageAdminChecklistTemplateItemEdit)).
 		POST("/templates/:id/items/:item_id/edit", webPageBuilder(PageAdminChecklistTemplateItemEdit)).
 		GET("/templates/:id/items/:item_id/delete", webAdminChecklistTemplateDeleteItem)
-
-	//EXPERIMENTS
-	// r.GET("/experiment", func(c *gin.Context) {
-	// 	c.Header("Content-Type", "text/html;charset=utf-8")
-	// 	c.String(http.StatusOK, mtweb.BuildExperimentHtml())
-	// })
-
-	r.GET("/form", webPageBuilder(PageFormExperiment))
-	r.POST("/form", webPageBuilder(PageFormExperiment))
 }
 
 // checks if user authenticated, redirects to /login if not (except for excludedPaths).
