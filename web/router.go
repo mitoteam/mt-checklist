@@ -10,14 +10,6 @@ import (
 )
 
 func BuildWebRouter(r *gin.Engine) {
-	//r.StaticFileFS("/favicon.ico", "/favicon.ico", webAssetsHttpFS)
-
-	//serve assets
-	//r.StaticFS("/assets", webAssetsHttpFS)
-
-	// no auth required routes
-	//r.GET("/logout", webLogout)
-
 	r.GET("/sign-in", webPageBuilder(PageLoginOLD))
 	r.POST("/sign-in", webPageBuilder(PageLoginOLD))
 
@@ -101,14 +93,6 @@ func adminRoleMiddleware() gin.HandlerFunc {
 		// Call the next handler
 		c.Next()
 	}
-}
-
-func webLogout(c *gin.Context) {
-	session := sessions.Default(c)
-	session.Delete("userID")
-	session.Save()
-
-	c.Redirect(http.StatusFound, "/")
 }
 
 func webPageBuilder(renderF func(*PageBuilderOLD) bool) gin.HandlerFunc {

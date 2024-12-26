@@ -3,10 +3,10 @@ package web
 import (
 	"strings"
 
-	"github.com/gin-contrib/sessions"
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/dhtmlform"
 	"github.com/mitoteam/goapp"
+	"github.com/mitoteam/mbr"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
@@ -43,23 +43,25 @@ func init() {
 
 				user := model.AuthorizeUser(username, password)
 
-				if user != nil {
-					fd.SetParam("userID", user.ID)
-				} else {
-					if session, ok := fd.GetParam("Session").(sessions.Session); ok {
-						session.Delete("userID")
-						session.Save()
-					}
+				ctx := fd.GetParam("MbrContext").(*mbr.MbrContext)
+
+				if user == nil {
+					session := Session(ctx.Request())
+					delete(session.Values, "userID") //remove old value if it was set
+					session.Save(ctx.Request(), ctx.Writer())
 
 					fd.SetError("", "User not found or wrong password given")
+				} else {
+					fd.SetParam("userID", user.ID)
 				}
 			}
 		},
 		SubmitF: func(fd *dhtmlform.FormData) {
-			if session, ok := fd.GetParam("Session").(sessions.Session); ok {
-				session.Set("userID", fd.GetParam("userID").(int64))
-				session.Save()
-			}
+			ctx := fd.GetParam("MbrContext").(*mbr.MbrContext)
+			session := Session(ctx.Request())
+
+			session.Values["userID"] = fd.GetParam("userID").(int64)
+			session.Save(ctx.Request(), ctx.Writer())
 		},
 	}
 

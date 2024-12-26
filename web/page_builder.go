@@ -39,7 +39,7 @@ func PageBuilderRouteHandler(buildPageF func(*PageBuilder) any) func(ctx *mbr.Mb
 			ctx.Request().Header.Add("Content-Type", "text/html;charset=utf-8")
 			return p.String()
 		} else {
-			return nil
+			return out
 		}
 	}
 }
@@ -68,6 +68,10 @@ func (p *PageBuilder) Main(v any) *PageBuilder {
 
 func (p *PageBuilder) GetMain() *dhtml.HtmlPiece {
 	return p.regions.Get("main")
+}
+
+func (p *PageBuilder) HasMain() bool {
+	return !p.regions.IsEmpty("main")
 }
 
 func (p *PageBuilder) String() string {
@@ -171,6 +175,22 @@ func (p *PageBuilder) renderFooter() (out dhtml.HtmlPiece) {
 			),
 	))
 	return out
+}
+
+// Builds new dhtml.FormContext to be used with form builder
+func (p *PageBuilder) FormContext() *dhtmlform.FormContext {
+	return dhtmlform.NewFormContext(p.ctx.Writer(), p.ctx.Request())
+}
+
+func (p *PageBuilder) Form(formHandler *dhtmlform.FormHandler) {
+	fc := p.FormContext().SetParam("MbrContext", p.ctx)
+
+	//default redirect
+	if dstParam := p.ctx.Request().URL.Query()["destination"]; len(dstParam) == 1 {
+		fc.SetRedirect(dstParam[0])
+	}
+
+	p.Main(Forms.Login.Render(fc))
 }
 
 // ===================== PageBuilderOLD =================================
