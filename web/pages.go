@@ -15,7 +15,7 @@ const (
 	iconChecklist = "list-check"
 )
 
-func PageFormExperiment(p *PageBuilder) bool {
+func PageFormExperiment(p *PageBuilderOLD) bool {
 	formOut := mtweb.ExperimentFormHandler.Render(p.FormContext())
 
 	if !formOut.IsEmpty() {
@@ -85,7 +85,7 @@ func renderStatistics() (out dhtml.HtmlPiece) {
 	return out
 }
 
-func PageLogin(p *PageBuilder) bool {
+func PageLogin(p *PageBuilderOLD) bool {
 	p.Title("Sign In")
 
 	session := p.GetSession()
@@ -120,7 +120,7 @@ func PageLogin(p *PageBuilder) bool {
 	return true
 }
 
-func PageMyAccount(p *PageBuilder) bool {
+func PageMyAccount(p *PageBuilderOLD) bool {
 	p.Title(p.User().GetDisplayName())
 
 	fc := p.FormContext().SetRedirect("/").

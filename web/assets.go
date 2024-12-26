@@ -3,7 +3,6 @@ package web
 import (
 	"embed"
 	"io/fs"
-	"net/http"
 )
 
 // embedded web assets
@@ -16,10 +15,9 @@ import (
 //go:embed assets/favicon.ico
 var embedFS embed.FS
 
-var webAssetsHttpFS http.FileSystem
+var webAssetsFS fs.FS
 
 func init() {
-	//prepare FS for subdirectory "/assets"
-	webAssetsFS, _ := fs.Sub(embedFS, "assets")
-	webAssetsHttpFS = http.FS(webAssetsFS)
+	//prepare fs.FS for embedded subdirectory "/assets"
+	webAssetsFS, _ = fs.Sub(embedFS, "assets")
 }

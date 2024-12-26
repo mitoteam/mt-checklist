@@ -11,10 +11,10 @@ import (
 )
 
 func BuildWebRouter(r *gin.Engine) {
-	r.StaticFileFS("/favicon.ico", "/favicon.ico", webAssetsHttpFS)
+	//r.StaticFileFS("/favicon.ico", "/favicon.ico", webAssetsHttpFS)
 
 	//serve assets
-	r.StaticFS("/assets", webAssetsHttpFS)
+	//r.StaticFS("/assets", webAssetsHttpFS)
 
 	// no auth required routes
 	r.GET("/logout", webLogout)
@@ -26,7 +26,7 @@ func BuildWebRouter(r *gin.Engine) {
 	authenticated_routes := r.Group("")
 	authenticated_routes.Use(authMiddleware())
 	authenticated_routes.
-		GET("/", webPageBuilder(PageDashboard)).
+		//GET("/", webPageBuilder(PageDashboard)).
 		GET("/account", webPageBuilder(PageMyAccount)).
 		POST("/account", webPageBuilder(PageMyAccount))
 
@@ -112,9 +112,9 @@ func webLogout(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/")
 }
 
-func webPageBuilder(renderF func(*PageBuilder) bool) gin.HandlerFunc {
+func webPageBuilder(renderF func(*PageBuilderOLD) bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		p := NewPageBuilder(c)
+		p := NewPageBuilderOLD(c)
 
 		if renderF(p) {
 			c.Header("Content-Type", "text/html;charset=utf-8")

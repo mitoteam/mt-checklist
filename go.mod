@@ -9,7 +9,7 @@ require (
 	github.com/mitoteam/dhtmlbs v0.0.0-20241219040431-ac54ea123b57
 	github.com/mitoteam/dhtmlform v0.0.0-20241218154743-8d2f924d4a88
 	github.com/mitoteam/goapp v0.0.0-20241219033450-dfbf4daf9195
-	github.com/mitoteam/mttools v0.0.0-20241218140423-a3403a9ff8ad
+	github.com/mitoteam/mttools v1.0.1
 	github.com/mitoteam/mtweb v0.0.0-20241218154725-9b26d046632d
 	gorm.io/gorm v1.25.12
 )

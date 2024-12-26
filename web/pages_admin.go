@@ -13,7 +13,7 @@ import (
 	"github.com/mitoteam/mtweb"
 )
 
-func PageAdminChecklists(p *PageBuilder) bool {
+func PageAdminChecklists(p *PageBuilderOLD) bool {
 	p.Main(
 		mtweb.NewBtnPanel().Class("mb-3").AddIconBtn(
 			"/", "home", "Home",
@@ -47,7 +47,7 @@ func PageAdminChecklists(p *PageBuilder) bool {
 	return true
 }
 
-func PageAdminChecklistEdit(p *PageBuilder) bool {
+func PageAdminChecklistEdit(p *PageBuilderOLD) bool {
 	cl := model.LoadChecklist(p.GetGinContext().Param("id"))
 
 	if cl == nil {
@@ -81,7 +81,7 @@ func webAdminChecklistDelete(c *gin.Context) {
 
 // ====================== user management ===================
 
-func PageAdminUsers(p *PageBuilder) bool {
+func PageAdminUsers(p *PageBuilderOLD) bool {
 	p.Main(
 		mtweb.NewBtnPanel().Class("mb-3").AddIconBtn(
 			"/", "home", "Home",
@@ -129,7 +129,7 @@ func PageAdminUsers(p *PageBuilder) bool {
 	return true
 }
 
-func PageAdminUserEdit(p *PageBuilder) bool {
+func PageAdminUserEdit(p *PageBuilderOLD) bool {
 	user := goapp.LoadOrCreateO[model.User](p.GetGinContext().Param("id"))
 
 	if user == nil {
@@ -152,7 +152,7 @@ func PageAdminUserEdit(p *PageBuilder) bool {
 	return true
 }
 
-func PageAdminUserPassword(p *PageBuilder) bool {
+func PageAdminUserPassword(p *PageBuilderOLD) bool {
 	user := goapp.LoadOMust[model.User](p.GetGinContext().Param("id"))
 	p.Title("User password: " + user.DisplayName)
 
@@ -177,7 +177,7 @@ func webAdminUserDelete(c *gin.Context) {
 
 // ====================== checklist templates management ===================
 
-func PageAdminChecklistTemplates(p *PageBuilder) bool {
+func PageAdminChecklistTemplates(p *PageBuilderOLD) bool {
 	p.Main(
 		mtweb.NewBtnPanel().Class("mb-3").AddIconBtn(
 			"/", "home", "Home",
@@ -215,7 +215,7 @@ func PageAdminChecklistTemplates(p *PageBuilder) bool {
 	return true
 }
 
-func PageAdminChecklistTemplateEdit(p *PageBuilder) bool {
+func PageAdminChecklistTemplateEdit(p *PageBuilderOLD) bool {
 	t := goapp.LoadOrCreateO[model.ChecklistTemplate](p.GetGinContext().Param("id"))
 
 	if t == nil {
@@ -243,7 +243,7 @@ func webAdminChecklistTemplateDelete(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/admin/templates")
 }
 
-func PageAdminChecklistTemplateItemList(p *PageBuilder) bool {
+func PageAdminChecklistTemplateItemList(p *PageBuilderOLD) bool {
 	t := goapp.LoadOMust[model.ChecklistTemplate](p.GetGinContext().Param("id"))
 
 	p.Main(
@@ -288,7 +288,7 @@ func PageAdminChecklistTemplateItemList(p *PageBuilder) bool {
 	return true
 }
 
-func PageAdminChecklistTemplateItemEdit(p *PageBuilder) bool {
+func PageAdminChecklistTemplateItemEdit(p *PageBuilderOLD) bool {
 	t := goapp.LoadOMust[model.ChecklistTemplate](p.GetGinContext().Param("id"))
 	item := goapp.LoadOrCreateO[model.ChecklistTemplateItem](p.GetGinContext().Param("item_id"))
 
