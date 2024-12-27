@@ -16,7 +16,7 @@ var formAdminUserEdit = &dhtmlform.FormHandler{
 		container := dhtml.Div().Class("border bg-light p-3").Append(
 			dhtmlbs.NewTextInput("username").Label("Username").Require().Default(user.UserName),
 			dhtmlbs.NewTextInput("displayname").Label("Display name").Default(user.DisplayName),
-			dhtmlform.NewCheckbox("is_active").Label("Active").Default(user.IsActive),
+			dhtmlbs.NewCheckbox("is_active").Label("Active").Default(user.IsActive).Note("Uncheck to disable sign-in"),
 			mtweb.NewDefaultSubmitBtn(),
 		)
 
