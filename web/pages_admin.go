@@ -3,7 +3,6 @@ package web
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mitoteam/dhtml"
@@ -77,97 +76,6 @@ func webAdminChecklistDelete(c *gin.Context) {
 	}
 
 	c.Redirect(http.StatusFound, "/admin/checklists")
-}
-
-// ====================== user management ===================
-
-func PageAdminUsers(p *PageBuilderOLD) bool {
-	p.Main(
-		mtweb.NewBtnPanel().Class("mb-3").AddIconBtn(
-			"/", "home", "Home",
-		).AddIconBtn(
-			"/admin/users/0/edit", "plus", "Create user",
-		),
-	)
-
-	table := dhtml.NewTable().Class("table table-hover table-sm").
-		Header("Username").
-		Header("Display name").
-		Header("Active").
-		Header("Admin").
-		Header("Last Login").
-		Header("")
-
-	p.Main(table)
-
-	for _, user := range goapp.LoadOL[model.User]() {
-		row := table.NewRow()
-
-		row.Cell(user.UserName).
-			Cell(user.DisplayName).
-			Cell(mtweb.IconYesNo(user.IsActive)).
-			Cell(mtweb.IconYesNo(user.IsAdmin()))
-
-		if user.LastLogin != nil {
-			row.Cell(user.LastLogin.Format(time.DateTime))
-		} else {
-			row.Cell(mtweb.IconNo())
-		}
-
-		var actions dhtml.HtmlPiece
-
-		actions.Append(mtweb.NewEditBtn(fmt.Sprintf("/admin/users/%d/edit", user.ID)))
-		actions.Append(
-			mtweb.NewBtn().Class("btn-sm p-1").Href(fmt.Sprintf("/admin/users/%d/password", user.ID)).
-				Title("Change password").Label(mtweb.Icon("key")),
-		)
-		actions.Append(mtweb.NewDeleteBtn(fmt.Sprintf("/admin/users/%d/delete", user.ID), ""))
-
-		row.Cell(actions)
-	}
-
-	return true
-}
-
-func PageAdminUserEdit(p *PageBuilderOLD) bool {
-	user := goapp.LoadOrCreateO[model.User](p.GetGinContext().Param("id"))
-
-	if user == nil {
-		p.Title("New user")
-	} else {
-		p.Title("Edit user: " + user.DisplayName)
-	}
-
-	fc := p.FormContext().SetRedirect("/admin/users").
-		SetParam("User", user)
-
-	formOut := Forms.AdminUserEdit.Render(fc)
-
-	if formOut.IsEmpty() {
-		return false
-	} else {
-		p.Main(formOut)
-	}
-
-	return true
-}
-
-func PageAdminUserPassword(p *PageBuilderOLD) bool {
-	user := goapp.LoadOMust[model.User](p.GetGinContext().Param("id"))
-	p.Title("User password: " + user.DisplayName)
-
-	fc := p.FormContext().SetRedirect("/admin/users").
-		SetParam("User", user)
-
-	formOut := Forms.AdminUserPassword.Render(fc)
-
-	if formOut.IsEmpty() {
-		return false
-	} else {
-		p.Main(formOut)
-	}
-
-	return true
 }
 
 func webAdminUserDelete(c *gin.Context) {

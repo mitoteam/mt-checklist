@@ -25,14 +25,6 @@ func BuildWebRouter(r *gin.Engine) {
 		GET("/checklists/:id/delete", webAdminChecklistDelete)
 
 	admin_routes.
-		GET("/users", webPageBuilder(PageAdminUsers)).
-		GET("/users/:id/edit", webPageBuilder(PageAdminUserEdit)).
-		POST("/users/:id/edit", webPageBuilder(PageAdminUserEdit)).
-		GET("/users/:id/password", webPageBuilder(PageAdminUserPassword)).
-		POST("/users/:id/password", webPageBuilder(PageAdminUserPassword)).
-		GET("/users/:id/delete", webAdminUserDelete)
-
-	admin_routes.
 		GET("/templates", webPageBuilder(PageAdminChecklistTemplates)).
 		GET("/templates/:id/edit", webPageBuilder(PageAdminChecklistTemplateEdit)).
 		POST("/templates/:id/edit", webPageBuilder(PageAdminChecklistTemplateEdit)).

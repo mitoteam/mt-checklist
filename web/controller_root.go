@@ -56,7 +56,7 @@ func (c *RootController) Home() mbr.Route {
 				cards_list.Add(
 					mtweb.NewCard().Header(mtweb.Icon("cog").Label("System management")).
 						Body(dhtml.Div().Append(
-							dhtml.NewLink("/admin/users").Label(mtweb.Icon(iconUser).Label("Users")),
+							dhtml.NewLink(mbr.Url(AdminCtl.Users)).Label(mtweb.Icon(iconUser).Label("Users")),
 						)).
 						Body(dhtml.Div().Append(
 							dhtml.NewLink("/admin/templates").Label(mtweb.Icon(iconTemplate).Label("Templates")),
@@ -105,7 +105,7 @@ func (c *RootController) Login() mbr.Route {
 			user := p.User()
 
 			if user == nil {
-				p.Main(Forms.Login.Render(p.FormContext()))
+				p.Main(formLogin.Render(p.FormContext()))
 			} else {
 				p.Main("Already authenticated")
 			}
@@ -137,7 +137,7 @@ func (c *RootController) MyAccount() mbr.Route {
 	route := mbr.Route{
 		PathPattern: "/account",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			p.Main(Forms.MyAccount.Render(p.FormContext()))
+			p.Main(formMyAccount.Render(p.FormContext()))
 			return nil
 		}),
 	}
@@ -145,6 +145,13 @@ func (c *RootController) MyAccount() mbr.Route {
 	route.With(AuthMiddleware)
 
 	return route
+}
+
+func (c *RootController) AdminSubroutes() mbr.Route {
+	return mbr.Route{
+		PathPattern:     "/admin",
+		ChildController: AdminCtl,
+	}
 }
 
 func (c *RootController) Experiment() mbr.Route {
