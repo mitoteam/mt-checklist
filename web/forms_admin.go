@@ -6,6 +6,7 @@ import (
 	"github.com/mitoteam/dhtmlform"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
+	"github.com/mitoteam/mttools"
 	"github.com/mitoteam/mtweb"
 )
 
@@ -72,7 +73,7 @@ var formAdminUserPassword = &dhtmlform.FormHandler{
 
 var formAdminChecklistTemplate = &dhtmlform.FormHandler{
 	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
-		t := fd.GetArg("Template").(*model.ChecklistTemplate)
+		t := fd.GetArg("Template").(*model.Template)
 
 		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
 			dhtmlbs.NewTextInput("name").Label("Template Name").Default(t.Name).Require(),
@@ -84,7 +85,7 @@ var formAdminChecklistTemplate = &dhtmlform.FormHandler{
 		))
 	},
 	SubmitF: func(fd *dhtmlform.FormData) {
-		t := fd.GetArg("Template").(*model.ChecklistTemplate)
+		t := fd.GetArg("Template").(*model.Template)
 
 		t.Name = fd.GetValue("name").(string)
 		t.ChecklistName = fd.GetValue("checklist_name").(string)
@@ -96,17 +97,17 @@ var formAdminChecklistTemplate = &dhtmlform.FormHandler{
 
 var formAdminChecklistTemplateItem = &dhtmlform.FormHandler{
 	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
-		item := fd.GetArg("Item").(*model.ChecklistTemplateItem)
+		item := fd.GetArg("Item").(*model.TemplateItem)
 
 		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
-			dhtml.RenderValue("Template", item.GetChecklistTemplate().Name).Class("mb-3"),
+			dhtml.RenderValue("Template", item.GetTemplate().Name).Class("mb-3"),
 			dhtmlbs.NewTextInput("caption").Label("Caption").Default(item.Caption).Require(),
 			dhtmlbs.NewTextInput("body").Label("Body").Default(item.Body),
 			mtweb.NewDefaultSubmitBtn(),
 		))
 	},
 	SubmitF: func(fd *dhtmlform.FormData) {
-		item := fd.GetArg("Item").(*model.ChecklistTemplateItem)
+		item := fd.GetArg("Item").(*model.TemplateItem)
 
 		item.Caption = fd.GetValue("caption").(string)
 		item.Body = fd.GetValue("body").(string)
@@ -123,7 +124,9 @@ var formAdminChecklist = &dhtmlform.FormHandler{
 		cl := fd.GetArg("Checklist").(*model.Checklist)
 
 		container := dhtml.Div().Class("border bg-light p-3").Append(
+			dhtmlbs.NewCheckbox("active").Label("Is Active").Default(cl.IsActive),
 			dhtmlbs.NewTextInput("name").Label("Name").Default(cl.Name).Require(),
+			dhtmlbs.NewTextarea("description").Label("Description").Default(cl.Description),
 			mtweb.NewDefaultSubmitBtn(),
 		)
 
@@ -132,8 +135,38 @@ var formAdminChecklist = &dhtmlform.FormHandler{
 	SubmitF: func(fd *dhtmlform.FormData) {
 		cl := fd.GetArg("Checklist").(*model.Checklist)
 
+		cl.IsActive = fd.GetValue("active").(bool)
 		cl.Name = fd.GetValue("name").(string)
+		cl.Description = fd.GetValue("description").(string)
 
 		goapp.SaveObject(cl)
+	},
+}
+
+var formAdminChecklistItem = &dhtmlform.FormHandler{
+	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
+		item := fd.GetArg("Item").(*model.ChecklistItem)
+
+		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
+			dhtml.RenderValue("Checklist", item.GetChecklist().Name).Class("mb-3"),
+			dhtmlbs.NewTextInput("caption").Label("Caption").Default(item.Caption).Require(),
+			dhtmlbs.NewTextarea("body").Label("Body").Default(item.Body),
+			dhtmlbs.NewNumberInput("sort_order").Label("Sort Order").Default(item.SortOrder),
+			dhtmlbs.NewNumberInput("weight").Label("Weight").Default(item.Weight),
+			mtweb.NewDefaultSubmitBtn(),
+		))
+	},
+	SubmitF: func(fd *dhtmlform.FormData) {
+		item := fd.GetArg("Item").(*model.ChecklistItem)
+
+		item.Caption = fd.GetValue("caption").(string)
+		item.Body = fd.GetValue("body").(string)
+		item.SortOrder = mttools.AnyToInt64OrZero(fd.GetValue("sort_order"))
+		item.Weight = mttools.AnyToInt64OrZero(fd.GetValue("weight"))
+
+		//current user
+		item.ResponsibleID = fd.GetParam("User").(*model.User).ID
+
+		goapp.SaveObject(item)
 	},
 }

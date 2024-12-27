@@ -85,7 +85,7 @@ func (c *RootController) renderStatistics() (out dhtml.HtmlPiece) {
 	)
 
 	out.Append(
-		dhtml.RenderValueE(mtweb.Icon(iconTemplate).Label("Templates"), goapp.CountOL[model.ChecklistTemplate](), "no templates created"),
+		dhtml.RenderValueE(mtweb.Icon(iconTemplate).Label("Templates"), goapp.CountOL[model.Template](), "no templates created"),
 	)
 
 	return out

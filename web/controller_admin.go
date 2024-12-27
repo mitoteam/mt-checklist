@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/mitoteam/dhtml"
-	"github.com/mitoteam/dhtmlbs"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mbr"
 	"github.com/mitoteam/mt-checklist/model"
@@ -57,10 +56,10 @@ func (c *AdminController) Users() mbr.Route {
 			for _, user := range goapp.LoadOL[model.User]() {
 				row := table.NewRow()
 
-				row.Cell(user.UserName).
-					Cell(user.DisplayName).
-					Cell(mtweb.IconYesNo(user.IsActive)).
-					Cell(mtweb.IconYesNo(user.IsAdmin()))
+				row.Cell(user.UserName)
+				row.Cell(user.DisplayName)
+				row.Cell(mtweb.IconYesNo(user.IsActive))
+				row.Cell(mtweb.IconYesNo(user.IsAdmin()))
 
 				if user.LastLogin != nil {
 					row.Cell(user.LastLogin.Format(time.DateTime))
@@ -156,21 +155,21 @@ func (c *AdminController) Templates() mbr.Route {
 					),
 			)
 
-			table := dhtml.NewTable().Class("table table-hover table-sm").EmptyLabel("no checklist templates created yet").
-				Header("Name").
+			table := mtweb.NewTable().EmptyLabel("no checklist templates created yet").
+				Header("Template Name").
 				Header("Checklist Name").
 				Header("Items").
 				Header("") //actions
 
-			for _, t := range goapp.LoadOL[model.ChecklistTemplate]() {
+			for _, t := range goapp.LoadOL[model.Template]() {
 				row := table.NewRow()
 
-				row.Cell(t.Name).
-					Cell(t.ChecklistName).
-					Cell(
-						mtweb.NewBtn().Href(mbr.Url(AdminCtl.TemplateItemList, "template_id", t.ID)).Class("btn-sm").
-							Label(mtweb.Icon("list-check").Label(t.ItemCount())),
-					)
+				row.Cell(t.Name)
+				row.Cell(t.ChecklistName)
+				row.Cell(
+					mtweb.NewBtn().Href(mbr.Url(AdminCtl.TemplateItemList, "template_id", t.ID)).Class("btn-sm").
+						Label(mtweb.Icon("list-check").Label(t.ItemCount())),
+				)
 
 				var actions dhtml.HtmlPiece
 
@@ -191,7 +190,7 @@ func (c *AdminController) TemplateEdit() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/edit",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			t := goapp.LoadOrCreateO[model.ChecklistTemplate](p.ctx.Request().PathValue("template_id"))
+			t := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
 
 			if t == nil {
 				p.Title("New template")
@@ -212,7 +211,7 @@ func (c *AdminController) TemplateDelete() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/delete",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			goapp.DeleteObject(goapp.LoadOMust[model.ChecklistTemplate](p.ctx.Request().PathValue("template_id")))
+			goapp.DeleteObject(goapp.LoadOMust[model.Template](p.ctx.Request().PathValue("template_id")))
 			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.Templates)
 			return nil
 		}),
@@ -223,7 +222,7 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/items",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			t := goapp.LoadOrCreateO[model.ChecklistTemplate](p.ctx.Request().PathValue("template_id"))
+			t := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
 
 			p.Main(
 				c.renderTemplatesToolbar().
@@ -244,10 +243,10 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 			for _, item := range t.Items() {
 				row := table.NewRow()
 
-				row.Cell(item.Caption).
-					Cell(item.Body).
-					Cell(item.SortOrder).
-					Cell(item.Weight)
+				row.Cell(item.Caption)
+				row.Cell(item.Body)
+				row.Cell(item.SortOrder)
+				row.Cell(item.Weight)
 
 				var actions dhtml.HtmlPiece
 
@@ -268,14 +267,14 @@ func (c *AdminController) TemplateItemEdit() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/item/{item_id}/edit",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			t := goapp.LoadOrCreateO[model.ChecklistTemplate](p.ctx.Request().PathValue("template_id"))
-			item := goapp.LoadOrCreateO[model.ChecklistTemplateItem](p.ctx.Request().PathValue("item_id"))
+			t := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
+			item := goapp.LoadOrCreateO[model.TemplateItem](p.ctx.Request().PathValue("item_id"))
 
 			if item.ID == 0 {
-				item.ChecklistTemplateID = t.ID
+				item.TemplateID = t.ID
 				p.Title("New item")
 			} else {
-				mttools.AssertEqual(item.ChecklistTemplateID, t.ID)
+				mttools.AssertEqual(item.TemplateID, t.ID)
 				p.Title("Edit item: " + item.Caption)
 			}
 
@@ -293,10 +292,10 @@ func (c *AdminController) TemplateItemDelete() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/item/{item_id}/delete",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			t := goapp.LoadOrCreateO[model.ChecklistTemplate](p.ctx.Request().PathValue("template_id"))
-			item := goapp.LoadOrCreateO[model.ChecklistTemplateItem](p.ctx.Request().PathValue("item_id"))
+			t := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
+			item := goapp.LoadOrCreateO[model.TemplateItem](p.ctx.Request().PathValue("item_id"))
 
-			mttools.AssertEqual(item.ChecklistTemplateID, t.ID)
+			mttools.AssertEqual(item.TemplateID, t.ID)
 			goapp.DeleteObject(item)
 
 			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.TemplateItemList, "template_id", t.ID)
@@ -307,6 +306,13 @@ func (c *AdminController) TemplateItemDelete() mbr.Route {
 }
 
 // ====================== checklists admin management ===================
+
+func (c *AdminController) renderChecklistsToolbar() *mtweb.BtnPanelElement {
+	return c.renderToolbar().
+		AddIconBtn(
+			mbr.Url(AdminCtl.Checklists), iconChecklist, "All Checklists",
+		)
+}
 
 func (c *AdminController) Checklists() mbr.Route {
 	return mbr.Route{
@@ -319,28 +325,32 @@ func (c *AdminController) Checklists() mbr.Route {
 					),
 			)
 
-			cardList := mtweb.NewCardList()
+			table := mtweb.NewTable().
+				Header("Active").
+				Header("Name").
+				Header("Description").
+				Header("Items").
+				Header("") //actions
 
 			list := goapp.LoadOL[model.Checklist]()
 
 			for _, cl := range list {
-				card := mtweb.NewCard().
-					Header(
-						dhtmlbs.NewJustifiedLR().
-							L(cl.Name).
-							R(
-								mtweb.NewEditBtn(mbr.Url(AdminCtl.ChecklistEdit, "checklist_id", cl.ID)),
-							).
-							R(
-								mtweb.NewDeleteBtn(mbr.Url(AdminCtl.ChecklistDelete, "checklist_id", cl.ID), ""),
-							),
-					).
-					Body("body")
+				row := table.NewRow()
 
-				cardList.Add(card)
+				row.Cell(mtweb.IconYesNo(cl.IsActive))
+				row.Cell(cl.Name)
+				row.Cell(cl.Description).Class("small text-muted")
+				row.Cell(cl.ItemCount())
+
+				var actions dhtml.HtmlPiece
+
+				actions.Append(mtweb.NewEditBtn(mbr.Url(AdminCtl.ChecklistEdit, "checklist_id", cl.ID)))
+				actions.Append(mtweb.NewDeleteBtn(mbr.Url(AdminCtl.ChecklistDelete, "checklist_id", cl.ID), ""))
+
+				row.Cell(actions)
 			}
 
-			p.Main(cardList)
+			p.Main(table)
 
 			return nil
 		}),
@@ -351,10 +361,9 @@ func (c *AdminController) ChecklistEdit() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/checklist/{checklist_id}/edit",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			cl := goapp.LoadO[model.Checklist](p.ctx.Request().PathValue("checklist_id"))
+			cl := goapp.LoadOrCreateO[model.Checklist](p.ctx.Request().PathValue("checklist_id"))
 
-			if cl == nil {
-				cl = &model.Checklist{}
+			if cl.ID == 0 {
 				p.Title("New checklist")
 			} else {
 				p.Title("Edit checklist: " + cl.Name)
@@ -374,6 +383,91 @@ func (c *AdminController) ChecklistDelete() mbr.Route {
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
 			goapp.DeleteObject(model.LoadChecklist(p.ctx.Request().PathValue("checklist_id")))
 			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.Checklists)
+
+			return nil
+		}),
+	}
+}
+
+func (c *AdminController) ChecklistItems() mbr.Route {
+	return mbr.Route{
+		PathPattern: "/checklist/{checklist_id}/items",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			cl := model.LoadChecklist(p.ctx.Request().PathValue("checklist_id"))
+
+			p.Title("Checklist Items").Main(
+				c.renderChecklistsToolbar().
+					AddIconBtn(
+						mbr.Url(AdminCtl.ChecklistItemEdit, "checklist_id", cl.ID, "item_id", 0), "plus", "Add item",
+					),
+			).Main(
+				dhtml.RenderValue("Checklist", cl.Name).Class("mb-3"),
+			)
+
+			table := mtweb.NewTable().
+				Header("Caption").
+				Header("Body").
+				Header("Sort Order").
+				Header("Weight").
+				Header("") //actions
+
+			for _, item := range cl.Items() {
+				row := table.NewRow()
+
+				row.Cell(item.Caption)
+				row.Cell(item.Body)
+				row.Cell(item.SortOrder)
+				row.Cell(item.Weight)
+
+				var actions dhtml.HtmlPiece
+
+				actions.Append(mtweb.NewEditBtn(mbr.Url(AdminCtl.ChecklistItemEdit, "checklist_id", cl.ID, "item_id", item.ID)))
+				actions.Append(mtweb.NewDeleteBtn(mbr.Url(AdminCtl.ChecklistItemDelete, "checklist_id", cl.ID, "item_id", item.ID), ""))
+
+				row.Cell(actions)
+			}
+
+			p.Main(table)
+
+			return nil
+		}),
+	}
+}
+
+func (c *AdminController) ChecklistItemEdit() mbr.Route {
+	return mbr.Route{
+		PathPattern: "/checklist/{checklist_id}/item/{item_id}/edit",
+		Method:      "GET POST",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			cl := model.LoadChecklist(p.ctx.Request().PathValue("checklist_id"))
+			item := goapp.LoadOrCreateO[model.ChecklistItem](p.ctx.Request().PathValue("item_id"))
+
+			if item.ChecklistID == 0 {
+				item.ChecklistID = cl.ID
+			} else {
+				mttools.AssertEqual(item.ChecklistID, cl.ID)
+			}
+
+			fc := p.FormContext().SetArg("Item", item).SetRedirect(mbr.Url(AdminCtl.ChecklistItems, "checklist_id", cl.ID))
+			p.Main(formAdminChecklistItem.Render(fc))
+
+			return nil
+		}),
+	}
+}
+
+func (c *AdminController) ChecklistItemDelete() mbr.Route {
+	return mbr.Route{
+		PathPattern: "/checklist/{checklist_id}/item/{item_id}/delete",
+		Method:      "GET",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			cl := model.LoadChecklist(p.ctx.Request().PathValue("checklist_id"))
+			item := goapp.LoadOrCreateO[model.ChecklistItem](p.ctx.Request().PathValue("item_id"))
+
+			mttools.AssertEqual(item.ChecklistID, cl.ID)
+			goapp.DeleteObject(item)
+
+			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.ChecklistItems, "checklist_id", cl.ID)
 
 			return nil
 		}),
