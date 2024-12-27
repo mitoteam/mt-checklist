@@ -114,25 +114,22 @@ var formAdminChecklistTemplateItem = &dhtmlform.FormHandler{
 	},
 }
 
-func init() {
-	Forms.AdminChecklist = &dhtmlform.FormHandler{
-		RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
-			cl := fd.GetParam("Checklist").(*model.Checklist)
+var formAdminChecklist = &dhtmlform.FormHandler{
+	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
+		cl := fd.GetArg("Checklist").(*model.Checklist)
 
-			container := dhtml.Div().Class("border bg-light p-3").Append(
-				dhtmlform.NewTextInput("name").Label("Name").Default(cl.Name).Require(),
-				dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
-			)
+		container := dhtml.Div().Class("border bg-light p-3").Append(
+			dhtmlform.NewTextInput("name").Label("Name").Default(cl.Name).Require(),
+			dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
+		)
 
-			formBody.Append(container)
-		},
-		SubmitF: func(fd *dhtmlform.FormData) {
-			cl := fd.GetParam("Checklist").(*model.Checklist)
+		formBody.Append(container)
+	},
+	SubmitF: func(fd *dhtmlform.FormData) {
+		cl := fd.GetArg("Checklist").(*model.Checklist)
 
-			cl.Name = fd.GetValue("name").(string)
+		cl.Name = fd.GetValue("name").(string)
 
-			goapp.SaveObject(cl)
-		},
-	}
-
+		goapp.SaveObject(cl)
+	},
 }

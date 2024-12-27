@@ -26,5 +26,5 @@ func init() {
 }
 
 func LoadChecklist(id any) *Checklist {
-	return goapp.LoadO[Checklist](id)
+	return goapp.LoadOMust[Checklist](id)
 }

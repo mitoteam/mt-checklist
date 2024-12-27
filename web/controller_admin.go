@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/dhtmlbs"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mbr"
 	"github.com/mitoteam/mt-checklist/model"
@@ -299,6 +300,80 @@ func (c *AdminController) TemplateItemDelete() mbr.Route {
 			goapp.DeleteObject(item)
 
 			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.TemplateItemList, "template_id", t.ID)
+
+			return nil
+		}),
+	}
+}
+
+// ====================== checklists admin management ===================
+
+func (c *AdminController) Checklists() mbr.Route {
+	return mbr.Route{
+		PathPattern: "/checklists",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			p.Main(
+				c.renderToolbar().
+					AddIconBtn(
+						mbr.Url(AdminCtl.ChecklistEdit, "checklist_id", 0), "plus", "Create checklist",
+					),
+			)
+
+			cardList := mtweb.NewCardList()
+
+			list := goapp.LoadOL[model.Checklist]()
+
+			for _, cl := range list {
+				card := mtweb.NewCard().
+					Header(
+						dhtmlbs.NewJustifiedLR().
+							L(cl.Name).
+							R(
+								mtweb.NewEditBtn(mbr.Url(AdminCtl.ChecklistEdit, "checklist_id", cl.ID)),
+							).
+							R(
+								mtweb.NewDeleteBtn(mbr.Url(AdminCtl.ChecklistDelete, "checklist_id", cl.ID), ""),
+							),
+					).
+					Body("body")
+
+				cardList.Add(card)
+			}
+
+			p.Main(cardList)
+
+			return nil
+		}),
+	}
+}
+
+func (c *AdminController) ChecklistEdit() mbr.Route {
+	return mbr.Route{
+		PathPattern: "/checklist/{checklist_id}/edit",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			cl := goapp.LoadO[model.Checklist](p.ctx.Request().PathValue("checklist_id"))
+
+			if cl == nil {
+				cl = &model.Checklist{}
+				p.Title("New checklist")
+			} else {
+				p.Title("Edit checklist: " + cl.Name)
+			}
+
+			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.Checklists)).SetArg("Checklist", cl)
+			p.Main(formAdminChecklist.Render(fc))
+
+			return nil
+		}),
+	}
+}
+
+func (c *AdminController) ChecklistDelete() mbr.Route {
+	return mbr.Route{
+		PathPattern: "/checklist/{checklist_id}/delete",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			goapp.DeleteObject(model.LoadChecklist(p.ctx.Request().PathValue("checklist_id")))
+			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.Checklists)
 
 			return nil
 		}),

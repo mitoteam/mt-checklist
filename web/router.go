@@ -18,12 +18,6 @@ func BuildWebRouter(r *gin.Engine) {
 	// Subgroup: admin role required routes
 	admin_routes := authenticated_routes.Group("/admin")
 	admin_routes.Use(adminRoleMiddleware())
-	admin_routes.
-		GET("/checklists", webPageBuilder(PageAdminChecklists)).
-		GET("/checklists/:id/edit", webPageBuilder(PageAdminChecklistEdit)).
-		POST("/checklists/:id/edit", webPageBuilder(PageAdminChecklistEdit)).
-		GET("/checklists/:id/delete", webAdminChecklistDelete)
-
 }
 
 // checks if user authenticated, redirects to /login if not (except for excludedPaths).

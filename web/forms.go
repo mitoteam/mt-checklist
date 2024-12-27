@@ -11,13 +11,6 @@ import (
 	"github.com/mitoteam/mtweb"
 )
 
-// helper type to have all form handlers in one place
-type formsType struct {
-	AdminChecklist *dhtmlform.FormHandler
-}
-
-var Forms formsType
-
 var formLogin = &dhtmlform.FormHandler{
 	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
 		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
