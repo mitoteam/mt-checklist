@@ -138,7 +138,7 @@ func (c *RootController) Logout() mbr.Route {
 				return err
 			}
 
-			ctx.RedirectUrl(http.StatusFound, RootCtl.Home)
+			ctx.RedirectRoute(http.StatusFound, RootCtl.Home)
 			return nil
 		},
 	}

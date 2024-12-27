@@ -69,6 +69,51 @@ var formAdminUserPassword = &dhtmlform.FormHandler{
 	},
 }
 
+var formAdminChecklistTemplate = &dhtmlform.FormHandler{
+	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
+		t := fd.GetArg("Template").(*model.ChecklistTemplate)
+
+		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
+			dhtmlform.NewTextInput("name").Label("Template Name").Default(t.Name).Require(),
+			dhtmlform.NewTextInput("checklist_name").Label("Checklist Name").
+				Default(t.ChecklistName).Note("Default name of created checklist"),
+			dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
+		))
+	},
+	SubmitF: func(fd *dhtmlform.FormData) {
+		t := fd.GetArg("Template").(*model.ChecklistTemplate)
+
+		t.Name = fd.GetValue("name").(string)
+		t.ChecklistName = fd.GetValue("checklist_name").(string)
+
+		goapp.SaveObject(t)
+	},
+}
+
+var formAdminChecklistTemplateItem = &dhtmlform.FormHandler{
+	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
+		item := fd.GetArg("Item").(*model.ChecklistTemplateItem)
+
+		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
+			dhtml.RenderValue("Template", item.GetChecklistTemplate().Name).Class("mb-3"),
+			dhtmlform.NewTextInput("caption").Label("Caption").Default(item.Caption).Require(),
+			dhtmlform.NewTextInput("body").Label("Body").Default(item.Body),
+			dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
+		))
+	},
+	SubmitF: func(fd *dhtmlform.FormData) {
+		item := fd.GetArg("Item").(*model.ChecklistTemplateItem)
+
+		item.Caption = fd.GetValue("caption").(string)
+		item.Body = fd.GetValue("body").(string)
+
+		//current user
+		item.ResponsibleID = fd.GetParam("User").(*model.User).ID
+
+		goapp.SaveObject(item)
+	},
+}
+
 func init() {
 	Forms.AdminChecklist = &dhtmlform.FormHandler{
 		RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
@@ -90,47 +135,4 @@ func init() {
 		},
 	}
 
-	Forms.AdminChecklistTemplate = &dhtmlform.FormHandler{
-		RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
-			t := fd.GetParam("Template").(*model.ChecklistTemplate)
-
-			formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
-				dhtmlform.NewTextInput("name").Label("Template Name").Default(t.Name).Require(),
-				dhtmlform.NewTextInput("checklist_name").Label("Checklist Name").
-					Default(t.ChecklistName).Note("Default name of created checklist"),
-				dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
-			))
-		},
-		SubmitF: func(fd *dhtmlform.FormData) {
-			t := fd.GetParam("Template").(*model.ChecklistTemplate)
-
-			t.Name = fd.GetValue("name").(string)
-			t.ChecklistName = fd.GetValue("checklist_name").(string)
-
-			goapp.SaveObject(t)
-		},
-	}
-
-	Forms.AdminChecklistTemplateItem = &dhtmlform.FormHandler{
-		RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
-			item := fd.GetParam("Item").(*model.ChecklistTemplateItem)
-
-			formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
-				dhtml.RenderValue("Template", item.GetChecklistTemplate().Name).Class("mb-3"),
-				dhtmlform.NewTextInput("caption").Label("Caption").Default(item.Caption).Require(),
-				dhtmlform.NewTextInput("body").Label("Body").Default(item.Body),
-				dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
-			))
-		},
-		SubmitF: func(fd *dhtmlform.FormData) {
-			item := fd.GetParam("Item").(*model.ChecklistTemplateItem)
-
-			item.Caption = fd.GetValue("caption").(string)
-			item.Body = fd.GetValue("body").(string)
-
-			item.ResponsibleID = fd.GetArg("User").(*model.User).ID
-
-			goapp.SaveObject(item)
-		},
-	}
 }

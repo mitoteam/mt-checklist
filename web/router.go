@@ -24,15 +24,6 @@ func BuildWebRouter(r *gin.Engine) {
 		POST("/checklists/:id/edit", webPageBuilder(PageAdminChecklistEdit)).
 		GET("/checklists/:id/delete", webAdminChecklistDelete)
 
-	admin_routes.
-		GET("/templates", webPageBuilder(PageAdminChecklistTemplates)).
-		GET("/templates/:id/edit", webPageBuilder(PageAdminChecklistTemplateEdit)).
-		POST("/templates/:id/edit", webPageBuilder(PageAdminChecklistTemplateEdit)).
-		GET("/templates/:id/delete", webAdminChecklistTemplateDelete).
-		GET("/templates/:id/items", webPageBuilder(PageAdminChecklistTemplateItemList)).
-		GET("/templates/:id/items/:item_id/edit", webPageBuilder(PageAdminChecklistTemplateItemEdit)).
-		POST("/templates/:id/items/:item_id/edit", webPageBuilder(PageAdminChecklistTemplateItemEdit)).
-		GET("/templates/:id/items/:item_id/delete", webAdminChecklistTemplateDeleteItem)
 }
 
 // checks if user authenticated, redirects to /login if not (except for excludedPaths).

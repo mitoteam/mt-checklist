@@ -14,9 +14,6 @@ import (
 // helper type to have all form handlers in one place
 type formsType struct {
 	AdminChecklist *dhtmlform.FormHandler
-
-	AdminChecklistTemplate     *dhtmlform.FormHandler
-	AdminChecklistTemplateItem *dhtmlform.FormHandler
 }
 
 var Forms formsType

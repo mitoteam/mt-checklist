@@ -39,6 +39,7 @@ func PageBuilderRouteHandler(buildPageF func(*PageBuilder) any) func(ctx *mbr.Mb
 			ctx.Request().Header.Add("Content-Type", "text/html;charset=utf-8")
 			return p.String()
 		} else {
+			ctx.Request().Header.Add("Content-Type", "text/plain;charset=utf-8")
 			return out
 		}
 	}
