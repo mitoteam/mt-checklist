@@ -78,6 +78,8 @@ var formAdminChecklistTemplate = &dhtmlform.FormHandler{
 			dhtmlbs.NewTextInput("name").Label("Template Name").Default(t.Name).Require(),
 			dhtmlbs.NewTextInput("checklist_name").Label("Checklist Name").
 				Default(t.ChecklistName).Note("Default name of created checklist"),
+			dhtmlbs.NewTextarea("checklist_description").Label("Checklist Description").
+				Default(t.ChecklistDescription).Note("Default description for created checklist"),
 			mtweb.NewDefaultSubmitBtn(),
 		))
 	},
@@ -86,6 +88,7 @@ var formAdminChecklistTemplate = &dhtmlform.FormHandler{
 
 		t.Name = fd.GetValue("name").(string)
 		t.ChecklistName = fd.GetValue("checklist_name").(string)
+		t.ChecklistDescription = fd.GetValue("checklist_description").(string)
 
 		goapp.SaveObject(t)
 	},

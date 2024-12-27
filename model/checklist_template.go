@@ -10,8 +10,9 @@ import (
 type ChecklistTemplate struct {
 	goapp.BaseModel
 
-	Name          string
-	ChecklistName string
+	Name                 string // template name
+	ChecklistName        string // initial name to create checklist
+	ChecklistDescription string // initial description to create checklist
 }
 
 func init() {
