@@ -101,7 +101,7 @@ func (c *RootController) renderManagement() (out dhtml.HtmlPiece) {
 	).Append(
 		dhtml.Div().Append(
 			dhtml.Div().Append(
-				dhtml.NewLink("/admin/checklists").Label(mtweb.Icon(iconChecklist).Label("Checklists")),
+				dhtml.NewLink(mbr.Url(AdminCtl.Checklists)).Label(mtweb.Icon(iconChecklist).Label("Checklists")),
 			).Append(" (administer)"),
 		),
 	)
@@ -159,10 +159,7 @@ func (c *RootController) MyAccount() mbr.Route {
 }
 
 func (c *RootController) AdminSubroutes() mbr.Route {
-	return mbr.Route{
-		PathPattern:     "/admin",
-		ChildController: AdminCtl,
-	}
+	return mbr.Route{PathPattern: "/admin", ChildController: AdminCtl}
 }
 
 func (c *RootController) Experiment() mbr.Route {
