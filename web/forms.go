@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/dhtmlbs"
 	"github.com/mitoteam/dhtmlform"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mbr"
@@ -14,9 +15,9 @@ import (
 var formLogin = &dhtmlform.FormHandler{
 	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
 		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
-			dhtmlform.NewTextInput("username").Placeholder("Username").Require(),
-			dhtmlform.NewPasswordInput("password").Placeholder("Password").Require(),
-			dhtmlform.NewSubmitBtn().Label(mtweb.Icon("arrow-right-to-bracket").Label("Sign In")),
+			dhtmlbs.NewFloatingTextInput("username").Label("Username").Require(),
+			dhtmlbs.NewFloatingPasswordInput("password").Label("Password").Require(),
+			mtweb.NewIconSubmitBtn("arrow-right-to-bracket", "Sign In"),
 		))
 	},
 	ValidateF: func(fd *dhtmlform.FormData) {
@@ -53,11 +54,11 @@ var formMyAccount = &dhtmlform.FormHandler{
 		user := fd.GetParam("User").(*model.User)
 
 		container := dhtml.Div().Class("border bg-light p-3").Append(
-			dhtmlform.NewTextInput("displayname").Label("Display name").
+			dhtmlbs.NewTextInput("displayname").Label("Display name").
 				Default(user.DisplayName).Note("empty = use username: "+user.UserName),
-			dhtmlform.NewPasswordInput("password1").Label("Password").Note("empty = do not change"),
-			dhtmlform.NewPasswordInput("password2").Label("Confirmation"),
-			dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
+			dhtmlbs.NewPasswordInput("password1").Label("Password").Note("empty = do not change"),
+			dhtmlbs.NewPasswordInput("password2").Label("Password confirmation"),
+			mtweb.NewDefaultSubmitBtn(),
 		)
 
 		formBody.Append(container)

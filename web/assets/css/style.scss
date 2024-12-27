@@ -9,7 +9,7 @@ body {
 }
 
 //override Bootstrap's font-weight: bolder; - it is too bold in Roboto.
-b, strong, th {
+.fw-bolder, b, strong, th, label.form-label {
   font-weight: 500;
 }
 

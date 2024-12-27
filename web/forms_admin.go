@@ -2,6 +2,7 @@ package web
 
 import (
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/dhtmlbs"
 	"github.com/mitoteam/dhtmlform"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
@@ -13,10 +14,10 @@ var formAdminUserEdit = &dhtmlform.FormHandler{
 		user := fd.GetArg("User").(*model.User)
 
 		container := dhtml.Div().Class("border bg-light p-3").Append(
-			dhtmlform.NewTextInput("username").Label("Username").Require().Default(user.UserName),
-			dhtmlform.NewTextInput("displayname").Label("Display name").Default(user.DisplayName),
+			dhtmlbs.NewTextInput("username").Label("Username").Require().Default(user.UserName),
+			dhtmlbs.NewTextInput("displayname").Label("Display name").Default(user.DisplayName),
 			dhtmlform.NewCheckbox("is_active").Label("Active").Default(user.IsActive),
-			dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
+			mtweb.NewDefaultSubmitBtn(),
 		)
 
 		formBody.Append(container)
@@ -41,9 +42,9 @@ var formAdminUserEdit = &dhtmlform.FormHandler{
 var formAdminUserPassword = &dhtmlform.FormHandler{
 	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
 		container := dhtml.Div().Class("border bg-light p-3").Append(
-			dhtmlform.NewPasswordInput("password1").Label("Password"),
-			dhtmlform.NewPasswordInput("password2").Label("Confirmation"),
-			dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
+			dhtmlbs.NewPasswordInput("password1").Label("Password"),
+			dhtmlbs.NewPasswordInput("password2").Label("Confirmation"),
+			mtweb.NewDefaultSubmitBtn(),
 		)
 
 		formBody.Append(container)
@@ -74,10 +75,10 @@ var formAdminChecklistTemplate = &dhtmlform.FormHandler{
 		t := fd.GetArg("Template").(*model.ChecklistTemplate)
 
 		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
-			dhtmlform.NewTextInput("name").Label("Template Name").Default(t.Name).Require(),
-			dhtmlform.NewTextInput("checklist_name").Label("Checklist Name").
+			dhtmlbs.NewTextInput("name").Label("Template Name").Default(t.Name).Require(),
+			dhtmlbs.NewTextInput("checklist_name").Label("Checklist Name").
 				Default(t.ChecklistName).Note("Default name of created checklist"),
-			dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
+			mtweb.NewDefaultSubmitBtn(),
 		))
 	},
 	SubmitF: func(fd *dhtmlform.FormData) {
@@ -96,9 +97,9 @@ var formAdminChecklistTemplateItem = &dhtmlform.FormHandler{
 
 		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
 			dhtml.RenderValue("Template", item.GetChecklistTemplate().Name).Class("mb-3"),
-			dhtmlform.NewTextInput("caption").Label("Caption").Default(item.Caption).Require(),
-			dhtmlform.NewTextInput("body").Label("Body").Default(item.Body),
-			dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
+			dhtmlbs.NewTextInput("caption").Label("Caption").Default(item.Caption).Require(),
+			dhtmlbs.NewTextInput("body").Label("Body").Default(item.Body),
+			mtweb.NewDefaultSubmitBtn(),
 		))
 	},
 	SubmitF: func(fd *dhtmlform.FormData) {
@@ -119,8 +120,8 @@ var formAdminChecklist = &dhtmlform.FormHandler{
 		cl := fd.GetArg("Checklist").(*model.Checklist)
 
 		container := dhtml.Div().Class("border bg-light p-3").Append(
-			dhtmlform.NewTextInput("name").Label("Name").Default(cl.Name).Require(),
-			dhtmlform.NewSubmitBtn().Label(mtweb.Icon("save").Label("Save")),
+			dhtmlbs.NewTextInput("name").Label("Name").Default(cl.Name).Require(),
+			mtweb.NewDefaultSubmitBtn(),
 		)
 
 		formBody.Append(container)
