@@ -3,6 +3,7 @@ package web
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mbr"
@@ -18,6 +19,9 @@ var RootCtl *RootController
 
 func init() {
 	RootCtl = &RootController{}
+
+	//using chi middlewares
+	RootCtl.With(middleware.Recoverer)
 }
 
 func (c *RootController) Assets() mbr.Route {
@@ -54,18 +58,7 @@ func (c *RootController) Home() mbr.Route {
 
 			if p.User().IsAdmin() {
 				cards_list.Add(
-					mtweb.NewCard().Header(mtweb.Icon("cog").Label("System management")).
-						Body(dhtml.Div().Append(
-							dhtml.NewLink(mbr.Url(AdminCtl.Users)).Label(mtweb.Icon(iconUser).Label("Users")),
-						)).
-						Body(dhtml.Div().Append(
-							dhtml.NewLink("/admin/templates").Label(mtweb.Icon(iconTemplate).Label("Templates")),
-						)).
-						Body(dhtml.Div().Append(
-							dhtml.Div().Append(
-								dhtml.NewLink("/admin/checklists").Label(mtweb.Icon(iconChecklist).Label("Checklists")),
-							).Append(" (administration)"),
-						)),
+					mtweb.NewCard().Header(mtweb.Icon("cog").Label("System management")).Body(c.renderManagement()),
 				)
 			}
 
@@ -93,6 +86,24 @@ func (c *RootController) renderStatistics() (out dhtml.HtmlPiece) {
 
 	out.Append(
 		dhtml.RenderValueE(mtweb.Icon(iconTemplate).Label("Templates"), goapp.CountOL[model.ChecklistTemplate](), "no templates created"),
+	)
+
+	return out
+}
+
+func (c *RootController) renderManagement() (out dhtml.HtmlPiece) {
+	out.Append(dhtml.Div().Append(
+		dhtml.NewLink(mbr.Url(AdminCtl.Users)).Label(mtweb.Icon(iconUser).Label("Users")),
+	)).Append(
+		dhtml.Div().Append(
+			dhtml.NewLink(mbr.Url(AdminCtl.Templates)).Label(mtweb.Icon(iconTemplate).Label("Templates")),
+		),
+	).Append(
+		dhtml.Div().Append(
+			dhtml.Div().Append(
+				dhtml.NewLink("/admin/checklists").Label(mtweb.Icon(iconChecklist).Label("Checklists")),
+			).Append(" (administer)"),
+		),
 	)
 
 	return out

@@ -5,10 +5,12 @@ go 1.23
 require (
 	github.com/gin-contrib/sessions v1.0.1
 	github.com/gin-gonic/gin v1.10.0
+	github.com/go-chi/chi/v5 v5.2.0
 	github.com/mitoteam/dhtml v0.0.0-20241218154713-e5b8f4f01206
 	github.com/mitoteam/dhtmlbs v0.0.0-20241219040431-ac54ea123b57
 	github.com/mitoteam/dhtmlform v0.0.0-20241218154743-8d2f924d4a88
 	github.com/mitoteam/goapp v0.0.0-20241219033450-dfbf4daf9195
+	github.com/mitoteam/mbr v0.0.0-20241227033435-a07d20bd8624
 	github.com/mitoteam/mttools v1.0.1
 	github.com/mitoteam/mtweb v0.0.0-20241218154725-9b26d046632d
 	gorm.io/gorm v1.25.12
@@ -35,7 +37,7 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/context v1.1.2 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
-	github.com/gorilla/sessions v1.4.0 // indirect
+	github.com/gorilla/sessions v1.4.0
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
