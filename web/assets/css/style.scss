@@ -24,11 +24,11 @@ body {
   }
 }
 
+.text-prewrap {
+  white-space: pre-wrap !important;
+}
+
 // no space after form labels
 .form-label {
   margin-bottom: 0;
-}
-
-.form-text {
-  margin-top: 0;
 }

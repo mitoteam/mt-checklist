@@ -37,21 +37,9 @@ func (c *RootController) Home() mbr.Route {
 		PathPattern: "/",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
 			cards_list := mtweb.NewCardList().Add(
-				mtweb.NewCard().Header(mtweb.Icon("vial").Label("Experiment")).
-					Body(
-						dhtml.Div().Text("Html renderer ").
-							Append(dhtml.NewLink(mbr.Url(RootCtl.Experiment)).Label("experiment")).Text(" link."),
-					).
-					Body(
-						dhtml.Div().Text("Confirm link ").Append(dhtml.NewConfirmLink("/experiment", "Are you sure?").Label("experiment")),
-					).
-					Body(dhtml.Div().Text("Forms ").Append(dhtml.NewLink("/form").Label("experiment")).Text(" link.")),
+				mtweb.NewCard().Header(mtweb.Icon(iconChecklist).Label("Active checklists")).Body(c.renderActiveChecklists()),
 			).Add(
-				mtweb.NewCard().Header(mtweb.Icon("list-check").Label("Active checklists")).
-					Body("Some content"),
-			).Add(
-				mtweb.NewCard().Header(mtweb.Icon("user-check").Label("My issues")).
-					Body("Some content"),
+				mtweb.NewCard().Header(mtweb.Icon("user-check").Label("My issues")).Body("Some content"),
 			).Add(
 				mtweb.NewCard().Header(mtweb.Icon("chart-simple").Label("Statistics")).Body(c.renderStatistics()),
 			)
@@ -59,6 +47,16 @@ func (c *RootController) Home() mbr.Route {
 			if p.User().IsAdmin() {
 				cards_list.Add(
 					mtweb.NewCard().Header(mtweb.Icon("cog").Label("System management")).Body(c.renderManagement()),
+				).Add(
+					mtweb.NewCard().Header(mtweb.Icon("vial").Label("Experiment")).
+						Body(
+							dhtml.Div().Text("Html renderer ").
+								Append(dhtml.NewLink(mbr.Url(RootCtl.Experiment)).Label("experiment")).Text(" link."),
+						).
+						Body(
+							dhtml.Div().Text("Confirm link ").Append(dhtml.NewConfirmLink("/experiment", "Are you sure?").Label("experiment")),
+						).
+						Body(dhtml.Div().Text("Forms ").Append(dhtml.NewLink("/form").Label("experiment")).Text(" link.")),
 				)
 			}
 
@@ -105,6 +103,19 @@ func (c *RootController) renderManagement() (out dhtml.HtmlPiece) {
 			).Append(" (administer)"),
 		),
 	)
+
+	return out
+}
+
+func (c *RootController) renderActiveChecklists() (out dhtml.HtmlPiece) {
+	goapp.PreQuery[model.Checklist]().Where("is_active = ?", true)
+	list := goapp.LoadOL[model.Checklist]()
+
+	for _, cl := range list {
+		out.Append(dhtml.Div().Append(
+			mtweb.NewIconBtn(mbr.Url(ClCtl.Checklist, "checklist_id", cl.ID), iconChecklist, cl.Name),
+		))
+	}
 
 	return out
 }

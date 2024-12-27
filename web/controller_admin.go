@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/dhtmlbs"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mbr"
 	"github.com/mitoteam/mt-checklist/model"
@@ -36,7 +37,7 @@ func (c *AdminController) Users() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/users",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			p.Main(
+			p.Title("Users").Main(
 				c.renderToolbar().
 					AddIconBtn(
 						mbr.Url(AdminCtl.UserEdit, "user_id", 0), "plus", "Create user",
@@ -71,7 +72,7 @@ func (c *AdminController) Users() mbr.Route {
 
 				actions.Append(mtweb.NewEditBtn(mbr.Url(AdminCtl.UserEdit, "user_id", user.ID)))
 				actions.Append(
-					mtweb.NewBtn().Class("btn-sm p-1").Href(mbr.Url(AdminCtl.UserPassword, "user_id", user.ID)).
+					dhtmlbs.NewBtn().Class("btn-sm p-1").Href(mbr.Url(AdminCtl.UserPassword, "user_id", user.ID)).
 						Title("Change password").Label(mtweb.Icon("key")),
 				)
 				actions.Append(mtweb.NewDeleteBtn(mbr.Url(AdminCtl.UserDelete, "user_id", user.ID), ""))
@@ -148,7 +149,7 @@ func (c *AdminController) Templates() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			p.Main(
+			p.Title("Checklist templates").Main(
 				c.renderToolbar().
 					AddIconBtn(
 						mbr.Url(AdminCtl.TemplateEdit, "template_id", 0), "plus", "Create template",
@@ -167,7 +168,7 @@ func (c *AdminController) Templates() mbr.Route {
 				row.Cell(t.Name)
 				row.Cell(t.ChecklistName)
 				row.Cell(
-					mtweb.NewBtn().Href(mbr.Url(AdminCtl.TemplateItemList, "template_id", t.ID)).Class("btn-sm").
+					dhtmlbs.NewBtn().Href(mbr.Url(AdminCtl.TemplateItemList, "template_id", t.ID)).Class("btn-sm").
 						Label(mtweb.Icon("list-check").Label(t.ItemCount())),
 				)
 
@@ -224,13 +225,16 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
 			t := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
 
-			p.Main(
+			p.Title("Checklist template items").Main(
 				c.renderTemplatesToolbar().
 					AddIconBtn(
 						mbr.Url(AdminCtl.TemplateItemEdit, "template_id", t.ID, "item_id", 0), "plus", "Add item",
 					),
 			).Main(
-				dhtml.RenderValue("Template", t.Name).Class("mb-3"),
+				dhtml.RenderValue(
+					"Template",
+					dhtml.NewLink(mbr.Url(AdminCtl.TemplateEdit, "template_id", t.ID)).Label(mtweb.Icon(iconTemplate).Label(t.Name)),
+				).Class("mb-3"),
 			)
 
 			table := dhtml.NewTable().Class("table table-hover table-sm").EmptyLabel("no items added yet").
@@ -340,7 +344,9 @@ func (c *AdminController) Checklists() mbr.Route {
 				row.Cell(mtweb.IconYesNo(cl.IsActive))
 				row.Cell(cl.Name)
 				row.Cell(cl.Description).Class("small text-muted")
-				row.Cell(cl.ItemCount())
+				row.Cell(
+					mtweb.NewIconBtn(mbr.Url(AdminCtl.ChecklistItems, "checklist_id", cl.ID), iconChecklist, cl.ItemCount()).Class("btn-sm"),
+				)
 
 				var actions dhtml.HtmlPiece
 
@@ -415,7 +421,7 @@ func (c *AdminController) ChecklistItems() mbr.Route {
 				row := table.NewRow()
 
 				row.Cell(item.Caption)
-				row.Cell(item.Body)
+				row.Cell(item.Body).Class("small text-prewrap")
 				row.Cell(item.SortOrder)
 				row.Cell(item.Weight)
 
