@@ -11,12 +11,15 @@ require (
 	github.com/mitoteam/dhtmlform v0.0.0-20241218154743-8d2f924d4a88
 	github.com/mitoteam/goapp v0.0.0-20241219033450-dfbf4daf9195
 	github.com/mitoteam/mbr v0.0.0-20241227033435-a07d20bd8624
-	github.com/mitoteam/mttools v1.0.1
+	github.com/mitoteam/mttools v1.0.2
 	github.com/mitoteam/mtweb v0.0.0-20241218154725-9b26d046632d
 	gorm.io/gorm v1.25.12
 )
 
-require github.com/elliotchance/orderedmap/v2 v2.6.0 // indirect
+require (
+	github.com/elliotchance/orderedmap/v2 v2.6.0 // indirect
+	github.com/yuin/goldmark v1.7.8 // indirect
+)
 
 require (
 	github.com/alitto/pond v1.9.2 // indirect

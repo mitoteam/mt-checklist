@@ -33,7 +33,7 @@ func (c *ChecklistController) Checklist() mbr.Route {
 			descriptionOut := dhtml.Div().Class("mb-3")
 
 			if cl.Description != "" {
-				descriptionOut.Append(dhtml.Div().Class("text-prewrap").Append(cl.Description))
+				descriptionOut.Append(dhtml.Div().Append(MdEngine.ToDhtml(cl.Description)))
 			}
 
 			p.Main(descriptionOut)
@@ -46,7 +46,7 @@ func (c *ChecklistController) Checklist() mbr.Route {
 					bodyOut := dhtml.NewHtmlPiece()
 
 					if item.Body != "" {
-						bodyOut.Append(dhtml.Div().Class("text-prewrap").Append(item.Body))
+						bodyOut.Append(dhtml.Div().Append(MdEngine.ToDhtml(item.Body)))
 					}
 
 					card := dhtmlbs.NewCard().
