@@ -2,9 +2,9 @@ package web
 
 import (
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/dhtmlbs"
 	"github.com/mitoteam/mbr"
 	"github.com/mitoteam/mt-checklist/model"
-	"github.com/mitoteam/mtweb"
 )
 
 type ChecklistController struct {
@@ -40,7 +40,7 @@ func (c *ChecklistController) Checklist() mbr.Route {
 
 			if len(cl.Items()) > 0 {
 
-				cardList := mtweb.NewCardList()
+				cardList := dhtmlbs.NewCardList()
 
 				for _, item := range cl.Items() {
 					bodyOut := dhtml.NewHtmlPiece()
@@ -49,7 +49,7 @@ func (c *ChecklistController) Checklist() mbr.Route {
 						bodyOut.Append(dhtml.Div().Class("text-prewrap").Append(item.Body))
 					}
 
-					card := mtweb.NewCard().
+					card := dhtmlbs.NewCard().
 						Header(item.Caption).
 						Body(bodyOut)
 

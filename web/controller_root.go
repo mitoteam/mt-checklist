@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/dhtmlbs"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mbr"
 	"github.com/mitoteam/mt-checklist/model"
@@ -36,19 +37,19 @@ func (c *RootController) Home() mbr.Route {
 	route := mbr.Route{
 		PathPattern: "/",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			cards_list := mtweb.NewCardList().Add(
-				mtweb.NewCard().Header(mtweb.Icon(iconChecklist).Label("Active checklists")).Body(c.renderActiveChecklists()),
+			cards_list := dhtmlbs.NewCardList().Add(
+				dhtmlbs.NewCard().Header(mtweb.Icon(iconChecklist).Label("Active checklists")).Body(c.renderActiveChecklists()),
 			).Add(
-				mtweb.NewCard().Header(mtweb.Icon("user-check").Label("My issues")).Body("Some content"),
+				dhtmlbs.NewCard().Header(mtweb.Icon("user-check").Label("My issues")).Body("Some content"),
 			).Add(
-				mtweb.NewCard().Header(mtweb.Icon("chart-simple").Label("Statistics")).Body(c.renderStatistics()),
+				dhtmlbs.NewCard().Header(mtweb.Icon("chart-simple").Label("Statistics")).Body(c.renderStatistics()),
 			)
 
 			if p.User().IsAdmin() {
 				cards_list.Add(
-					mtweb.NewCard().Header(mtweb.Icon("cog").Label("System management")).Body(c.renderManagement()),
+					dhtmlbs.NewCard().Header(mtweb.Icon("cog").Label("System management")).Body(c.renderManagement()),
 				).Add(
-					mtweb.NewCard().Header(mtweb.Icon("vial").Label("Experiment")).
+					dhtmlbs.NewCard().Header(mtweb.Icon("vial").Label("Experiment")).
 						Body(
 							dhtml.Div().Text("Html renderer ").
 								Append(dhtml.NewLink(mbr.Url(RootCtl.Experiment)).Label("experiment")).Text(" link."),
