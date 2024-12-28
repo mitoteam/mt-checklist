@@ -34,7 +34,7 @@ func (t *Checklist) BeforeDelete(tx *gorm.DB) (err error) {
 }
 
 func (t *Checklist) Items() []*ChecklistItem {
-	goapp.PreQuery[ChecklistItem]().Where("checklist_id", t.ID)
+	goapp.PreQuery[ChecklistItem]().Where("checklist_id", t.ID).Order("sort_order")
 	return goapp.LoadOL[ChecklistItem]()
 }
 

@@ -43,15 +43,9 @@ func (c *ChecklistController) Checklist() mbr.Route {
 				cardList := dhtmlbs.NewCardList()
 
 				for _, item := range cl.Items() {
-					bodyOut := dhtml.NewHtmlPiece()
-
-					if item.Body != "" {
-						bodyOut.Append(dhtml.Div().Append(MdEngine.ToDhtml(item.Body)))
-					}
-
 					card := dhtmlbs.NewCard().
 						Header(item.Caption).
-						Body(bodyOut)
+						Body(renderChecklistItemBody(item))
 
 					cardList.Add(card)
 				}

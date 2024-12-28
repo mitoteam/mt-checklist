@@ -30,7 +30,7 @@ func (t *Template) BeforeDelete(tx *gorm.DB) (err error) {
 }
 
 func (t *Template) Items() []*TemplateItem {
-	goapp.PreQuery[TemplateItem]().Where("template_id", t.ID)
+	goapp.PreQuery[TemplateItem]().Where("template_id", t.ID).Order("sort_order")
 	return goapp.LoadOL[TemplateItem]()
 }
 
