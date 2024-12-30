@@ -240,6 +240,7 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 			table := dhtml.NewTable().Class("table table-hover table-sm").EmptyLabel("no items added yet").
 				Header("Caption").
 				Header("Body").
+				Header("Responsible").
 				Header("Sort Order").
 				Header("Weight").
 				Header("") //actions
@@ -249,6 +250,7 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 
 				row.Cell(item.Caption)
 				row.Cell(item.Body)
+				row.Cell(model.LoadUser(item.ResponsibleID).GetDisplayName())
 				row.Cell(item.SortOrder)
 				row.Cell(item.Weight)
 
@@ -275,10 +277,14 @@ func (c *AdminController) TemplateItemEdit() mbr.Route {
 			item := goapp.LoadOrCreateO[model.TemplateItem](p.ctx.Request().PathValue("item_id"))
 
 			if item.ID == 0 {
-				item.TemplateID = t.ID
 				p.Title("New item")
+
+				item.TemplateID = t.ID
+				item.ResponsibleID = p.User().ID //current user by default
+
 			} else {
 				mttools.AssertEqual(item.TemplateID, t.ID)
+
 				p.Title("Edit item: " + item.Caption)
 			}
 

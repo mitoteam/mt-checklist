@@ -99,10 +99,19 @@ var formAdminChecklistTemplateItem = &dhtmlform.FormHandler{
 	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
 		item := fd.GetArg("Item").(*model.TemplateItem)
 
+		responsibleSelect := dhtmlbs.NewSelect("responsible")
+		responsibleSelect.Label("Responsible").Default(item.ResponsibleID)
+
+		goapp.PreQuery[model.User]().Order("user_name")
+		for _, user := range goapp.LoadOL[model.User]() {
+			responsibleSelect.Option(user.ID, user.GetDisplayName())
+		}
+
 		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
 			dhtml.RenderValue("Template", item.GetTemplate().Name).Class("mb-3"),
 			dhtmlbs.NewTextInput("caption").Label("Caption").Default(item.Caption).Require(),
 			dhtmlbs.NewTextInput("body").Label("Body").Default(item.Body),
+			responsibleSelect,
 			mtweb.NewDefaultSubmitBtn(),
 		))
 	},
@@ -112,8 +121,9 @@ var formAdminChecklistTemplateItem = &dhtmlform.FormHandler{
 		item.Caption = fd.GetValue("caption").(string)
 		item.Body = fd.GetValue("body").(string)
 
-		//current user
-		item.ResponsibleID = fd.GetParam("User").(*model.User).ID
+		if id, ok := mttools.AnyToInt64Ok(fd.GetValue("responsible")); ok {
+			item.ResponsibleID = id
+		}
 
 		goapp.SaveObject(item)
 	},
