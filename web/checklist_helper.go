@@ -12,5 +12,7 @@ func renderChecklistItemBody(item *model.ChecklistItem) (out dhtml.HtmlPiece) {
 		out.Append(dhtml.Div().Append(MdEngine.ToDhtml(item.Body)))
 	}
 
+	out.Append(dhtml.RenderValue("Responsible", model.LoadUser(item.ResponsibleID).GetDisplayName()).Class("mt-3"))
+
 	return out
 }

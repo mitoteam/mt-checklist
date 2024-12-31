@@ -55,7 +55,8 @@ type ChecklistItem struct {
 	SortOrder int64 `gorm:"not null,index"`
 	Weight    int64
 
-	ResponsibleID int64
+	ResponsibleID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
+	Responsible   *User
 }
 
 func init() {

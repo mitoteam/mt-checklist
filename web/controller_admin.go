@@ -281,7 +281,6 @@ func (c *AdminController) TemplateItemEdit() mbr.Route {
 
 				item.TemplateID = t.ID
 				item.ResponsibleID = p.User().ID //current user by default
-
 			} else {
 				mttools.AssertEqual(item.TemplateID, t.ID)
 
@@ -419,6 +418,7 @@ func (c *AdminController) ChecklistItems() mbr.Route {
 			table := mtweb.NewTable().
 				Header("Caption").
 				Header("Body").
+				Header("Responsible").
 				Header("Sort Order").
 				Header("Weight").
 				Header("") //actions
@@ -428,6 +428,7 @@ func (c *AdminController) ChecklistItems() mbr.Route {
 
 				row.Cell(item.Caption)
 				row.Cell(item.Body).Class("small text-prewrap")
+				row.Cell(model.LoadUser(item.ResponsibleID).GetDisplayName())
 				row.Cell(item.SortOrder)
 				row.Cell(item.Weight)
 
@@ -454,9 +455,12 @@ func (c *AdminController) ChecklistItemEdit() mbr.Route {
 			cl := model.LoadChecklist(p.ctx.Request().PathValue("checklist_id"))
 			item := goapp.LoadOrCreateO[model.ChecklistItem](p.ctx.Request().PathValue("item_id"))
 
-			if item.ChecklistID == 0 {
+			if item.ID == 0 {
+				//new item
 				item.ChecklistID = cl.ID
+				item.ResponsibleID = p.User().ID //current user by default
 			} else {
+				//existing
 				mttools.AssertEqual(item.ChecklistID, cl.ID)
 			}
 
