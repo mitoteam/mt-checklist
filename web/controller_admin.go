@@ -241,6 +241,7 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 				Header("Caption").
 				Header("Body").
 				Header("Responsible").
+				Header("Depends").
 				Header("Sort Order").
 				Header("Weight").
 				Header("") //actions
@@ -251,6 +252,25 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 				row.Cell(item.Caption)
 				row.Cell(item.Body)
 				row.Cell(model.LoadUser(item.ResponsibleID).GetDisplayName())
+
+				//dependencies
+				dOut := dhtml.Div().Class("d-flex")
+				if item.RequiredItemsCount() > 0 {
+					depsList := dhtml.NewUnorderedList()
+
+					for _, dep := range item.RequiredItems() {
+						depsList.AppendItem(dhtml.NewListItem().Append(dep.GetRequireTemplateItem().Caption))
+					}
+
+					dOut.Append(depsList)
+				} else {
+					dOut.Append(dhtml.Div().Append(dhtml.EmptyLabel("no dependencies")))
+				}
+				dOut.Append(dhtml.Div().Class("ms-2").Append(
+					mtweb.NewIconBtn(mbr.Url(AdminCtl.TemplateItemDependencies, "template_id", t.ID, "item_id", item.ID), "diagram-nested", "").Class("btn-sm").Title("Edit dependencies"),
+				))
+				row.Cell(dOut)
+
 				row.Cell(item.SortOrder)
 				row.Cell(item.Weight)
 
@@ -291,6 +311,26 @@ func (c *AdminController) TemplateItemEdit() mbr.Route {
 				SetArg("Item", item)
 
 			p.Main(formAdminChecklistTemplateItem.Render(fc))
+
+			return nil
+		}),
+	}
+}
+
+func (c *AdminController) TemplateItemDependencies() mbr.Route {
+	return mbr.Route{
+		PathPattern: "/template/{template_id}/item/{item_id}/deps",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			t := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
+			item := goapp.LoadOrCreateO[model.TemplateItem](p.ctx.Request().PathValue("item_id"))
+
+			mttools.AssertEqual(item.TemplateID, t.ID)
+			p.Title("Item dependencies: " + item.Caption)
+
+			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.TemplateItemList, "template_id", t.ID)).
+				SetArg("Item", item)
+
+			p.Main(formAdminChecklistTemplateItemDeps.Render(fc))
 
 			return nil
 		}),

@@ -1,6 +1,8 @@
 package web
 
 import (
+	"slices"
+
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/dhtmlbs"
 	"github.com/mitoteam/dhtmlform"
@@ -118,6 +120,66 @@ var formAdminChecklistTemplateItem = &dhtmlform.FormHandler{
 		}
 
 		goapp.SaveObject(item)
+	},
+}
+
+var formAdminChecklistTemplateItemDeps = &dhtmlform.FormHandler{
+	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
+		item := fd.GetArg("Item").(*model.TemplateItem)
+		template := item.GetTemplate()
+
+		bodyOut := dhtml.Div().Class("border bg-light p-3").Append(
+			dhtml.RenderValue("Template", item.GetTemplate().Name).Class("mb-3"),
+		)
+
+		requiredIds := make([]int64, 0)
+
+		for _, dep := range item.RequiredItems() {
+			requiredIds = append(requiredIds, dep.RequireTemplateItemID)
+		}
+
+		for _, dItem := range template.Items() {
+			if item.ID == dItem.ID {
+				continue //exclude self
+			}
+
+			bodyOut.Append(
+				dhtmlbs.NewCheckbox("dep_" + mttools.AnyToString(dItem.ID)).Label(dItem.Caption).
+					Default(slices.Contains(requiredIds, dItem.ID)),
+			)
+		}
+
+		bodyOut.Append(
+			mtweb.NewDefaultSubmitBtn(),
+		)
+
+		formBody.Append(bodyOut)
+	},
+	SubmitF: func(fd *dhtmlform.FormData) {
+		item := fd.GetArg("Item").(*model.TemplateItem)
+		template := item.GetTemplate()
+
+		goapp.Transaction(func() error {
+			//delete existing ones
+			goapp.DbSchema.Db().Where("template_item_id = ?", item.ID).Delete(&model.TemplateItemDependency{})
+
+			//add checked ones
+			for _, dItem := range template.Items() {
+				if item.ID == dItem.ID {
+					continue //exclude self
+				}
+
+				if fd.GetValue("dep_" + mttools.AnyToString(dItem.ID)).(bool) {
+					dep := &model.TemplateItemDependency{}
+					dep.TemplateItemID = item.ID
+					dep.RequireTemplateItemID = dItem.ID
+
+					goapp.SaveObject(dep)
+				}
+			}
+
+			return nil // no error = commit
+		})
 	},
 }
 

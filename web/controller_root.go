@@ -37,7 +37,7 @@ func (c *RootController) Home() mbr.Route {
 	route := mbr.Route{
 		PathPattern: "/",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			cards_list := dhtmlbs.NewCardList().Add(
+			cards_list := dhtmlbs.NewCardList().Class("row-cols-xl-2").Add(
 				dhtmlbs.NewCard().Header(mtweb.Icon(iconChecklist).Label("Active checklists")).Body(c.renderActiveChecklists()),
 			).Add(
 				dhtmlbs.NewCard().Header(mtweb.Icon("user-check").Label("My issues")).Body("Some content"),

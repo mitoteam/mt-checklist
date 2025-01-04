@@ -39,6 +39,8 @@ func (t *Template) ItemCount() int64 {
 	return goapp.CountOL[TemplateItem]()
 }
 
+// ===================== template items ========================
+
 type TemplateItem struct {
 	goapp.BaseModel
 
@@ -65,4 +67,50 @@ func (item *TemplateItem) GetTemplate() *Template {
 	}
 
 	return item.Template
+}
+
+func (item *TemplateItem) RequiredItemsCount() int64 {
+	goapp.PreQuery[TemplateItemDependency]().Where("template_item_id", item.ID)
+
+	return goapp.CountOL[TemplateItemDependency]()
+}
+
+func (item *TemplateItem) RequiredItems() []*TemplateItemDependency {
+	goapp.PreQuery[TemplateItemDependency]().Where("template_item_id", item.ID) //.Order("sort_order")
+
+	return goapp.LoadOL[TemplateItemDependency]()
+}
+
+// ======================= item dependencies ============================
+
+type TemplateItemDependency struct {
+	goapp.BaseModel
+
+	//this item
+	TemplateItemID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
+	TemplateItem   *TemplateItem
+
+	//depends on this one
+	RequireTemplateItemID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
+	RequireTemplateItem   *TemplateItem
+}
+
+func init() {
+	goapp.DbSchema.AddModel(reflect.TypeFor[TemplateItemDependency]())
+}
+
+func (item *TemplateItemDependency) GetTemplateItem() *TemplateItem {
+	if item.TemplateItem == nil {
+		item.TemplateItem = goapp.LoadOMust[TemplateItem](item.TemplateItemID)
+	}
+
+	return item.TemplateItem
+}
+
+func (item *TemplateItemDependency) GetRequireTemplateItem() *TemplateItem {
+	if item.RequireTemplateItem == nil {
+		item.RequireTemplateItem = goapp.LoadOMust[TemplateItem](item.RequireTemplateItemID)
+	}
+
+	return item.RequireTemplateItem
 }
