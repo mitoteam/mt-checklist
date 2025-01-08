@@ -11,17 +11,19 @@ type ChecklistController struct {
 	mbr.ControllerBase
 }
 
-var ClCtl *ChecklistController
+var ChecklistCtl *ChecklistController
 
 func init() {
-	ClCtl = &ChecklistController{}
-	ClCtl.With(AuthMiddleware)
+	ChecklistCtl = &ChecklistController{}
+	ChecklistCtl.With(AuthMiddleware)
 }
 
+// base route for ChecklistController
 func (c *RootController) Checklist() mbr.Route {
-	return mbr.Route{PathPattern: "/checklist/{checklist_id}", ChildController: ClCtl}
+	return mbr.Route{PathPattern: "/checklist/{checklist_id}", ChildController: ChecklistCtl}
 }
 
+// checklist page
 func (c *ChecklistController) Checklist() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/",

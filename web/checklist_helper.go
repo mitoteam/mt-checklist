@@ -2,6 +2,7 @@ package web
 
 import (
 	"github.com/mitoteam/dhtml"
+	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
 )
 
@@ -30,4 +31,32 @@ func renderChecklistItemBody(item *model.ChecklistItem) (out dhtml.HtmlPiece) {
 	}
 
 	return out
+}
+
+func createChecklistFromTemplate(template *model.Template) *model.Checklist {
+	checklist := &model.Checklist{}
+	checklist.IsActive = true
+	checklist.Name = template.ChecklistName
+	checklist.Description = template.ChecklistDescription
+
+	goapp.Transaction(func() error {
+		goapp.SaveObject(checklist) //we need an ID to create items
+
+		for _, templateItem := range template.Items() {
+			checklistItem := &model.ChecklistItem{
+				ChecklistID:   checklist.ID,
+				Caption:       templateItem.Caption,
+				Body:          templateItem.Body,
+				Weight:        templateItem.Weight,
+				SortOrder:     templateItem.SortOrder,
+				ResponsibleID: templateItem.ResponsibleID,
+			}
+
+			goapp.SaveObject(checklistItem)
+		}
+
+		return nil
+	})
+
+	return checklist
 }

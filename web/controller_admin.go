@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -129,7 +130,7 @@ func (c *AdminController) UserDelete() mbr.Route {
 		PathPattern: "/users/{user_id}/delete",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
 			goapp.DeleteObject(goapp.LoadOMust[model.User](p.ctx.Request().PathValue("user_id")))
-			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.Users)
+			p.RedirectRoute(AdminCtl.Users)
 
 			return nil
 		}),
@@ -174,8 +175,14 @@ func (c *AdminController) Templates() mbr.Route {
 
 				var actions dhtml.HtmlPiece
 
-				actions.Append(mtweb.NewEditBtn(mbr.Url(AdminCtl.TemplateEdit, "template_id", t.ID))).
-					Append(mtweb.NewDeleteBtn(mbr.Url(AdminCtl.TemplateDelete, "template_id", t.ID), ""))
+				actions.
+					Append(mtweb.NewEditBtn(mbr.Url(AdminCtl.TemplateEdit, "template_id", t.ID))).
+					Append(mtweb.NewDeleteBtn(mbr.Url(AdminCtl.TemplateDelete, "template_id", t.ID), "")).
+					Append(
+						mtweb.NewIconBtn(mbr.Url(AdminCtl.CreateChecklistFromTemplate, "template_id", t.ID), "plus", "Create checklist").
+							Class("btn-success btn-sm").
+							Confirm(fmt.Sprintf("Do you want to create new checklist from %s template?", t.Name)),
+					)
 
 				row.Cell(actions)
 			}
@@ -231,7 +238,7 @@ func (c *AdminController) TemplateDelete() mbr.Route {
 		PathPattern: "/template/{template_id}/delete",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
 			goapp.DeleteObject(goapp.LoadOMust[model.Template](p.ctx.Request().PathValue("template_id")))
-			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.Templates)
+			p.RedirectRoute(AdminCtl.Templates)
 			return nil
 		}),
 	}
@@ -368,7 +375,22 @@ func (c *AdminController) TemplateItemDelete() mbr.Route {
 			mttools.AssertEqual(item.TemplateID, t.ID)
 			goapp.DeleteObject(item)
 
-			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.TemplateItemList, "template_id", t.ID)
+			p.RedirectRoute(AdminCtl.TemplateItemList, "template_id", t.ID)
+
+			return nil
+		}),
+	}
+}
+
+func (c *AdminController) CreateChecklistFromTemplate() mbr.Route {
+	return mbr.Route{
+		PathPattern: "/template/{template_id}/create-checklist",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			template := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
+
+			checklist := createChecklistFromTemplate(template)
+
+			p.RedirectRoute(AdminCtl.ChecklistEdit, "checklist_id", checklist.ID)
 
 			return nil
 		}),
@@ -416,6 +438,10 @@ func (c *AdminController) Checklists() mbr.Route {
 
 				var actions dhtml.HtmlPiece
 
+				actions.Append(
+					mtweb.NewIconBtn(mbr.Url(ChecklistCtl.Checklist, "checklist_id", cl.ID), iconView, nil).
+						Class("btn-sm px-1").Title("View checklist"),
+				)
 				actions.Append(mtweb.NewEditBtn(mbr.Url(AdminCtl.ChecklistEdit, "checklist_id", cl.ID)))
 				actions.Append(mtweb.NewDeleteBtn(mbr.Url(AdminCtl.ChecklistDelete, "checklist_id", cl.ID), ""))
 
