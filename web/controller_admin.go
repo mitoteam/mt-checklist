@@ -254,7 +254,7 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 				row.Cell(model.LoadUser(item.ResponsibleID).GetDisplayName())
 
 				//dependencies
-				dOut := dhtml.Div().Class("d-flex")
+				cellOut := dhtml.Div().Class("d-flex")
 				if item.RequiredItemsCount() > 0 {
 					depsList := dhtml.NewUnorderedList()
 
@@ -262,14 +262,14 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 						depsList.AppendItem(dhtml.NewListItem().Append(dep.GetRequireTemplateItem().Caption))
 					}
 
-					dOut.Append(depsList)
+					cellOut.Append(depsList)
 				} else {
-					dOut.Append(dhtml.Div().Append(dhtml.EmptyLabel("no dependencies")))
+					cellOut.Append(dhtml.Div().Append(dhtml.EmptyLabel("no dependencies")))
 				}
-				dOut.Append(dhtml.Div().Class("ms-2").Append(
-					mtweb.NewIconBtn(mbr.Url(AdminCtl.TemplateItemDependencies, "template_id", t.ID, "item_id", item.ID), "diagram-nested", "").Class("btn-sm").Title("Edit dependencies"),
+				cellOut.Append(dhtml.Div().Class("ms-2").Append(
+					mtweb.NewIconBtn(mbr.Url(AdminCtl.TemplateItemDependencies, "template_id", t.ID, "item_id", item.ID), iconDependencies, "").Class("btn-sm").Title("Edit dependencies"),
 				))
-				row.Cell(dOut)
+				row.Cell(cellOut)
 
 				row.Cell(item.SortOrder)
 				row.Cell(item.Weight)
@@ -321,8 +321,8 @@ func (c *AdminController) TemplateItemDependencies() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/item/{item_id}/deps",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			t := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
-			item := goapp.LoadOrCreateO[model.TemplateItem](p.ctx.Request().PathValue("item_id"))
+			t := goapp.LoadOMust[model.Template](p.ctx.Request().PathValue("template_id"))
+			item := goapp.LoadOMust[model.TemplateItem](p.ctx.Request().PathValue("item_id"))
 
 			mttools.AssertEqual(item.TemplateID, t.ID)
 			p.Title("Item dependencies: " + item.Caption)
@@ -459,6 +459,7 @@ func (c *AdminController) ChecklistItems() mbr.Route {
 				Header("Caption").
 				Header("Body").
 				Header("Responsible").
+				Header("Depends").
 				Header("Sort Order").
 				Header("Weight").
 				Header("") //actions
@@ -468,7 +469,26 @@ func (c *AdminController) ChecklistItems() mbr.Route {
 
 				row.Cell(item.Caption)
 				row.Cell(item.Body).Class("small text-prewrap")
-				row.Cell(model.LoadUser(item.ResponsibleID).GetDisplayName())
+				row.Cell(item.GetResponsible().GetDisplayName())
+
+				//dependencies
+				cellOut := dhtml.Div().Class("d-flex")
+				if item.RequiredItemsCount() > 0 {
+					depsList := dhtml.NewUnorderedList()
+
+					for _, dep := range item.RequiredItems() {
+						depsList.AppendItem(dhtml.NewListItem().Append(dep.GetRequireChecklistItem().Caption))
+					}
+
+					cellOut.Append(depsList)
+				} else {
+					cellOut.Append(dhtml.Div().Append(dhtml.EmptyLabel("no dependencies")))
+				}
+				cellOut.Append(dhtml.Div().Class("ms-2").Append(
+					mtweb.NewIconBtn(mbr.Url(AdminCtl.ChecklistItemDependencies, "checklist_id", cl.ID, "item_id", item.ID), iconDependencies, "").Class("btn-sm").Title("Edit dependencies"),
+				))
+				row.Cell(cellOut)
+
 				row.Cell(item.SortOrder)
 				row.Cell(item.Weight)
 
@@ -524,6 +544,26 @@ func (c *AdminController) ChecklistItemDelete() mbr.Route {
 			goapp.DeleteObject(item)
 
 			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.ChecklistItems, "checklist_id", cl.ID)
+
+			return nil
+		}),
+	}
+}
+
+func (c *AdminController) ChecklistItemDependencies() mbr.Route {
+	return mbr.Route{
+		PathPattern: "/checklist/{checklist_id}/item/{item_id}/deps",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			cl := goapp.LoadOMust[model.Checklist](p.ctx.Request().PathValue("checklist_id"))
+			item := goapp.LoadOMust[model.ChecklistItem](p.ctx.Request().PathValue("item_id"))
+
+			mttools.AssertEqual(item.ChecklistID, cl.ID)
+			p.Title("Item dependencies: " + item.Caption)
+
+			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.ChecklistItems, "checklist_id", cl.ID)).
+				SetArg("Item", item)
+
+			p.Main(formAdminChecklistItemDeps.Render(fc))
 
 			return nil
 		}),

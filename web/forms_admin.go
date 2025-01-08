@@ -133,7 +133,7 @@ var formAdminChecklistTemplateItemDeps = &dhtmlform.FormHandler{
 		template := item.GetTemplate()
 
 		bodyOut := dhtml.Div().Class("border bg-light p-3").Append(
-			dhtml.RenderValue("Template", item.GetTemplate().Name).Class("mb-3"),
+			dhtml.RenderValue("Template", template.Name).Class("mb-3"),
 		)
 
 		requiredIds := make([]int64, 0)
@@ -238,5 +238,65 @@ var formAdminChecklistItem = &dhtmlform.FormHandler{
 		}
 
 		goapp.SaveObject(item)
+	},
+}
+
+var formAdminChecklistItemDeps = &dhtmlform.FormHandler{
+	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
+		ci := fd.GetArg("Item").(*model.ChecklistItem)
+		cl := ci.GetChecklist()
+
+		bodyOut := dhtml.Div().Class("border bg-light p-3").Append(
+			dhtml.RenderValue("Checklist", cl.Name).Class("mb-3"),
+		)
+
+		requiredIds := make([]int64, 0)
+
+		for _, dep := range ci.RequiredItems() {
+			requiredIds = append(requiredIds, dep.RequireChecklistItemID)
+		}
+
+		for _, dItem := range cl.Items() {
+			if ci.ID == dItem.ID {
+				continue //exclude self
+			}
+
+			bodyOut.Append(
+				dhtmlbs.NewCheckbox("dep_" + mttools.AnyToString(dItem.ID)).Label(dItem.Caption).
+					Default(slices.Contains(requiredIds, dItem.ID)),
+			)
+		}
+
+		bodyOut.Append(
+			mtweb.NewDefaultSubmitBtn(),
+		)
+
+		formBody.Append(bodyOut)
+	},
+	SubmitF: func(fd *dhtmlform.FormData) {
+		ci := fd.GetArg("Item").(*model.ChecklistItem)
+		cl := ci.GetChecklist()
+
+		goapp.Transaction(func() error {
+			//delete existing ones
+			goapp.DbSchema.Db().Where("checklist_item_id = ?", ci.ID).Delete(&model.ChecklistItemDependency{})
+
+			//add checked ones
+			for _, dItem := range cl.Items() {
+				if ci.ID == dItem.ID {
+					continue //exclude self
+				}
+
+				if fd.GetValue("dep_" + mttools.AnyToString(dItem.ID)).(bool) {
+					dep := &model.ChecklistItemDependency{}
+					dep.ChecklistItemID = ci.ID
+					dep.RequireChecklistItemID = dItem.ID
+
+					goapp.SaveObject(dep)
+				}
+			}
+
+			return nil // no error = commit
+		})
 	},
 }

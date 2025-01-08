@@ -40,7 +40,6 @@ func (t *Template) ItemCount() int64 {
 }
 
 // ===================== template items ========================
-
 type TemplateItem struct {
 	goapp.BaseModel
 
@@ -59,6 +58,16 @@ type TemplateItem struct {
 
 func init() {
 	goapp.DbSchema.AddModel(reflect.TypeFor[TemplateItem]())
+}
+
+func (ti *TemplateItem) BeforeDelete(tx *gorm.DB) (err error) {
+	for _, item := range ti.RequiredItems() {
+		if err := goapp.DeleteObject(item); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (item *TemplateItem) GetTemplate() *Template {
@@ -84,7 +93,6 @@ func (item *TemplateItem) RequiredItems() []*TemplateItemDependency {
 }
 
 // ======================= item dependencies ============================
-
 type TemplateItemDependency struct {
 	goapp.BaseModel
 
