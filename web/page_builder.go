@@ -2,6 +2,7 @@ package web
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/dhtmlbs"
@@ -33,7 +34,9 @@ func PageBuilderRouteHandler(buildPageF func(*PageBuilder) any) func(ctx *mbr.Mb
 			return err
 		}
 
-		if p.HasMain() {
+		if p.ctx.IsRedirect() {
+			return nil
+		} else if p.HasMain() {
 			ctx.Request().Header.Add("Content-Type", "text/html;charset=utf-8")
 			return p.String()
 		} else {
@@ -75,6 +78,11 @@ func (p *PageBuilder) HasMain() bool {
 
 func (p *PageBuilder) String() string {
 	return p.render().String()
+}
+
+// Performs redirect to passed route
+func (p *PageBuilder) RedirectRoute(routeRef any, args ...any) {
+	p.ctx.RedirectRoute(http.StatusFound, routeRef, args...)
 }
 
 func (p *PageBuilder) render() (out *dhtml.HtmlPiece) {
