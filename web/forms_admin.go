@@ -97,6 +97,44 @@ var formAdminChecklistTemplate = &dhtmlform.FormHandler{
 	},
 }
 
+var formAdminTemplateRenumber = &dhtmlform.FormHandler{
+	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
+		t := fd.GetArg("Template").(*model.Template)
+
+		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
+			dhtml.RenderValue("Template", t.Name).Class("mb-3"),
+
+			dhtmlbs.NewNumberInput("step").Label("Renumber step").Default(10).Require(),
+
+			mtweb.NewDefaultSubmitBtn(),
+		))
+	},
+	ValidateF: func(fd *dhtmlform.FormData) {
+		if step, ok := mttools.AnyToInt64Ok(fd.GetValue("step")); ok {
+			if step < 1 {
+				fd.SetError("step", "Step should be positive number")
+			}
+		} else {
+			fd.SetError("step", "Step should be a number")
+		}
+	},
+	SubmitF: func(fd *dhtmlform.FormData) {
+		t := fd.GetArg("Template").(*model.Template)
+
+		step := mttools.AnyToInt64OrZero(fd.GetValue("step"))
+
+		sortOrder := step
+		for _, ti := range t.Items() {
+			ti.SortOrder = sortOrder
+			goapp.SaveObject(ti)
+
+			sortOrder += step
+		}
+
+		goapp.SaveObject(t)
+	},
+}
+
 var formAdminChecklistTemplateItem = &dhtmlform.FormHandler{
 	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
 		item := fd.GetArg("Item").(*model.TemplateItem)

@@ -208,6 +208,24 @@ func (c *AdminController) TemplateEdit() mbr.Route {
 	}
 }
 
+func (c *AdminController) TemplateRenumber() mbr.Route {
+	return mbr.Route{
+		PathPattern: "/template/{template_id}/renumber",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			t := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
+
+			p.Title("Renumber template items: " + t.Name)
+
+			fc := p.FormContext().SetArg("Template", t).
+				SetRedirect(mbr.Url(AdminCtl.TemplateItemList, "template_id", t.ID))
+
+			p.Main(formAdminTemplateRenumber.Render(fc))
+
+			return nil
+		}),
+	}
+}
+
 func (c *AdminController) TemplateDelete() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/delete",
@@ -229,6 +247,9 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 				c.renderTemplatesToolbar().
 					AddIconBtn(
 						mbr.Url(AdminCtl.TemplateItemEdit, "template_id", t.ID, "item_id", 0), "plus", "Add item",
+					).
+					AddIconBtn(
+						mbr.Url(AdminCtl.TemplateRenumber, "template_id", t.ID), "list-ol", "Renumber items",
 					),
 			).Main(
 				dhtml.RenderValue(
