@@ -22,7 +22,7 @@ func InitApp() *goapp.AppBase {
 
 func DoPreRun() (err error) {
 	// open database and migrate schema
-	if err = goapp.DbSchema.Open(); err != nil {
+	if err = goapp.DbSchema.Open(App.AppSettings.(*AppSettingsType).LogSql); err != nil {
 		return err
 	}
 

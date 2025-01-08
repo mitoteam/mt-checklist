@@ -106,6 +106,8 @@ var formAdminChecklistTemplateItem = &dhtmlform.FormHandler{
 			dhtmlbs.NewTextInput("caption").Label("Caption").Default(item.Caption).Require(),
 			dhtmlbs.NewTextInput("body").Label("Body").Default(item.Body),
 			NewUserSelect("responsible").Label("Responsible").Default(item.ResponsibleID),
+			dhtmlbs.NewNumberInput("sort_order").Label("Sort Order").Default(item.SortOrder),
+			dhtmlbs.NewNumberInput("weight").Label("Weight").Default(item.Weight),
 			mtweb.NewDefaultSubmitBtn(),
 		))
 	},
@@ -114,6 +116,8 @@ var formAdminChecklistTemplateItem = &dhtmlform.FormHandler{
 
 		item.Caption = fd.GetValue("caption").(string)
 		item.Body = fd.GetValue("body").(string)
+		item.SortOrder = mttools.AnyToInt64OrZero(fd.GetValue("sort_order"))
+		item.Weight = mttools.AnyToInt64OrZero(fd.GetValue("weight"))
 
 		if id, ok := mttools.AnyToInt64Ok(fd.GetValue("responsible")); ok {
 			item.ResponsibleID = id

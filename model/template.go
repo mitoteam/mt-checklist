@@ -50,8 +50,8 @@ type TemplateItem struct {
 
 	Caption   string
 	Body      string
-	SortOrder int `gorm:"not null,index"`
-	Weight    int
+	SortOrder int64 `gorm:"not null,index"`
+	Weight    int64
 
 	ResponsibleID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 	Responsible   *User
@@ -76,7 +76,9 @@ func (item *TemplateItem) RequiredItemsCount() int64 {
 }
 
 func (item *TemplateItem) RequiredItems() []*TemplateItemDependency {
-	goapp.PreQuery[TemplateItemDependency]().Where("template_item_id", item.ID) //.Order("sort_order")
+	goapp.PreQuery[TemplateItemDependency]().Where("template_item_id", item.ID).
+		Joins("JOIN template_item ti ON ti.ID=template_item_id").
+		Order("ti.sort_order")
 
 	return goapp.LoadOL[TemplateItemDependency]()
 }
