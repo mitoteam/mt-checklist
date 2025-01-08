@@ -58,6 +58,10 @@ type ChecklistItem struct {
 
 	ResponsibleID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 	Responsible   *User
+
+	// user who marked this item as "Done"
+	DoneByID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
+	DoneBy   *User
 }
 
 func init() {
@@ -102,6 +106,14 @@ func (item *ChecklistItem) RequiredItems() []*ChecklistItemDependency {
 		Order("ci.sort_order")
 
 	return goapp.LoadOL[ChecklistItemDependency]()
+}
+
+func (item *ChecklistItem) GetDoneBy() *User {
+	if item.DoneBy == nil {
+		item.DoneBy = goapp.LoadOMust[User](item.DoneByID)
+	}
+
+	return item.DoneBy
 }
 
 // ====================== checklist item deps ================================
