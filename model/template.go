@@ -94,7 +94,7 @@ func (item *TemplateItem) RequiredItems() []*TemplateItemDependency {
 
 // ======================= item dependencies ============================
 type TemplateItemDependency struct {
-	goapp.BaseModel
+	goapp.DbModel // no ID field
 
 	//this item
 	TemplateItemID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`

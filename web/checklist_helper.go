@@ -12,7 +12,22 @@ func renderChecklistItemBody(item *model.ChecklistItem) (out dhtml.HtmlPiece) {
 		out.Append(dhtml.Div().Append(MdEngine.ToDhtml(item.Body)))
 	}
 
-	out.Append(dhtml.RenderValue("Responsible", model.LoadUser(item.ResponsibleID).GetDisplayName()).Class("mt-3"))
+	out.Append(dhtml.RenderValue("Responsible", item.GetResponsible().GetDisplayName()).Class("mt-3"))
+
+	//dependencies
+	cellOut := dhtml.Div()
+	if item.RequiredItemsCount() > 0 {
+		depsList := dhtml.NewUnorderedList().Class("mb-0")
+
+		for _, dep := range item.RequiredItems() {
+			depsList.AppendItem(dhtml.NewListItem().Append(dep.GetRequireChecklistItem().Caption))
+		}
+
+		cellOut.Append(dhtml.Div().Class("fs-5").Append("Depends"))
+		cellOut.Append(depsList)
+
+		out.Append(cellOut)
+	}
 
 	return out
 }

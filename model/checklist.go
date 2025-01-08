@@ -107,7 +107,7 @@ func (item *ChecklistItem) RequiredItems() []*ChecklistItemDependency {
 // ====================== checklist item deps ================================
 
 type ChecklistItemDependency struct {
-	goapp.BaseModel
+	goapp.DbModel // no ID field
 
 	//this item
 	ChecklistItemID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
