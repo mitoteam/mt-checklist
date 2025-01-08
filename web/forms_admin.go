@@ -216,7 +216,7 @@ var formAdminChecklistTemplateItemDeps = &dhtmlform.FormHandler{
 					dep.TemplateItemID = item.ID
 					dep.RequireTemplateItemID = dItem.ID
 
-					goapp.SaveObject(dep)
+					goapp.CreateObject(dep) // TemplateItemDependency{} has no ID, so force creation rather then use SaveObject()
 				}
 			}
 
@@ -330,7 +330,7 @@ var formAdminChecklistItemDeps = &dhtmlform.FormHandler{
 					dep.ChecklistItemID = ci.ID
 					dep.RequireChecklistItemID = dItem.ID
 
-					goapp.SaveObject(dep)
+					goapp.CreateObject(dep)
 				}
 			}
 
