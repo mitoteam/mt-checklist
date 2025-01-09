@@ -61,12 +61,7 @@ func init() {
 }
 
 func (ti *TemplateItem) BeforeDelete(tx *gorm.DB) (err error) {
-	for _, item := range ti.DependenciesList() {
-		if err := goapp.DeleteObject(item); err != nil {
-			return err
-		}
-	}
-
+	tx.Where("template_item_id = ?", ti.ID).Delete(&TemplateItemDependency{})
 	return nil
 }
 
@@ -78,7 +73,15 @@ func (item *TemplateItem) GetTemplate() *Template {
 	return item.Template
 }
 
-func (item *TemplateItem) RequiredItemsCount() int64 {
+func (item *TemplateItem) GetResponsible() *User {
+	if item.Responsible == nil {
+		item.Responsible = goapp.LoadOMust[User](item.ResponsibleID)
+	}
+
+	return item.Responsible
+}
+
+func (item *TemplateItem) DependenciesCount() int64 {
 	goapp.PreQuery[TemplateItemDependency]().Where("template_item_id", item.ID)
 
 	return goapp.CountOL[TemplateItemDependency]()

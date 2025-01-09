@@ -61,9 +61,10 @@ type ChecklistItem struct {
 	Responsible   *User `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 
 	// user who marked this item as "Done"
-	DoneByID int64
-	DoneBy   *User `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
-	DoneAt   *time.Time
+	DoneByID    int64
+	DoneBy      *User `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
+	DoneAt      *time.Time
+	DoneComment string
 }
 
 func init() {
@@ -71,12 +72,7 @@ func init() {
 }
 
 func (ci *ChecklistItem) BeforeDelete(tx *gorm.DB) (err error) {
-	for _, item := range ci.DependenciesList() {
-		if err := goapp.DeleteObject(item); err != nil {
-			return err
-		}
-	}
-
+	tx.Where("checklist_item_id = ?", ci.ID).Delete(&ChecklistItemDependency{})
 	return nil
 }
 
@@ -96,7 +92,7 @@ func (item *ChecklistItem) GetResponsible() *User {
 	return item.Responsible
 }
 
-func (item *ChecklistItem) RequiredItemsCount() int64 {
+func (item *ChecklistItem) DependenciesCount() int64 {
 	goapp.PreQuery[ChecklistItemDependency]().Where("checklist_item_id", item.ID)
 
 	return goapp.CountOL[ChecklistItemDependency]()

@@ -17,7 +17,7 @@ func renderChecklistItemBody(item *model.ChecklistItem) (out dhtml.HtmlPiece) {
 
 	//dependencies
 	cellOut := dhtml.Div()
-	if item.RequiredItemsCount() > 0 {
+	if item.DependenciesCount() > 0 {
 		depsList := dhtml.NewUnorderedList().Class("mb-0")
 
 		for _, dep := range item.DependenciesList() {

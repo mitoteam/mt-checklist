@@ -279,11 +279,11 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 
 				row.Cell(item.Caption)
 				row.Cell(item.Body)
-				row.Cell(model.LoadUser(item.ResponsibleID).GetDisplayName())
+				row.Cell(item.GetResponsible().GetDisplayName())
 
 				//dependencies
 				cellOut := dhtml.Div().Class("d-flex")
-				if item.RequiredItemsCount() > 0 {
+				if item.DependenciesCount() > 0 {
 					depsList := dhtml.NewUnorderedList()
 
 					for _, dep := range item.DependenciesList() {
@@ -520,7 +520,7 @@ func (c *AdminController) ChecklistItems() mbr.Route {
 
 				//dependencies
 				cellOut := dhtml.Div().Class("d-flex")
-				if item.RequiredItemsCount() > 0 {
+				if item.DependenciesCount() > 0 {
 					depsList := dhtml.NewUnorderedList()
 
 					for _, dep := range item.DependenciesList() {
