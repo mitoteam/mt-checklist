@@ -1,9 +1,12 @@
 package web
 
 const (
-	iconAdd          = "plus"
-	iconView         = "eye"
-	iconHome         = "home"
+	iconAdd   = "plus"
+	iconView  = "eye"
+	iconCount = "abacus"
+
+	iconHome = "home"
+
 	iconTemplate     = "pen-ruler"
 	iconUser         = "person"
 	iconChecklist    = "list-check"

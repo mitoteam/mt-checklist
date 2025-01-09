@@ -53,8 +53,6 @@ func (c *AdminController) Users() mbr.Route {
 				Header("Last Login").
 				Header("")
 
-			p.Main(table)
-
 			for _, user := range goapp.LoadOL[model.User]() {
 				row := table.NewRow()
 
@@ -80,6 +78,10 @@ func (c *AdminController) Users() mbr.Route {
 
 				row.Cell(actions)
 			}
+
+			p.Main(mtweb.RenderTableCount(table, "Users count"))
+
+			p.Main(table)
 
 			return nil
 		}),
@@ -187,6 +189,7 @@ func (c *AdminController) Templates() mbr.Route {
 				row.Cell(actions)
 			}
 
+			p.Main(mtweb.RenderTableCount(table, "Templates count"))
 			p.Main(table)
 
 			return nil
@@ -310,6 +313,7 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 				row.Cell(actions)
 			}
 
+			p.Main(mtweb.RenderTableCount(table, "Template items count"))
 			p.Main(table)
 
 			return nil
@@ -448,6 +452,7 @@ func (c *AdminController) Checklists() mbr.Route {
 				row.Cell(actions)
 			}
 
+			p.Main(mtweb.RenderTableCount(table, "Checklists count"))
 			p.Main(table)
 
 			return nil
@@ -547,6 +552,7 @@ func (c *AdminController) ChecklistItems() mbr.Route {
 				row.Cell(actions)
 			}
 
+			p.Main(mtweb.RenderTableCount(table, "Checklist items count"))
 			p.Main(table)
 
 			return nil
