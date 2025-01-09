@@ -49,20 +49,20 @@ type ChecklistItem struct {
 	goapp.BaseModel
 
 	//fk
-	ChecklistID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
-	Checklist   *Checklist
+	ChecklistID int64      `gorm:"not null;index"`
+	Checklist   *Checklist `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 
 	Caption   string
 	Body      string
-	SortOrder int64 `gorm:"not null,index"`
+	SortOrder int64 `gorm:"not null;index"`
 	Weight    int64
 
-	ResponsibleID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
-	Responsible   *User
+	ResponsibleID int64 `gorm:"not null"`
+	Responsible   *User `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 
 	// user who marked this item as "Done"
-	DoneByID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
-	DoneBy   *User
+	DoneByID int64
+	DoneBy   *User `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 	DoneAt   *time.Time
 }
 
@@ -124,12 +124,12 @@ type ChecklistItemDependency struct {
 	goapp.DbModel // no ID field
 
 	//this item
-	ChecklistItemID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
-	ChecklistItem   *ChecklistItem
+	ChecklistItemID int64          `gorm:"not null;index"`
+	ChecklistItem   *ChecklistItem `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 
 	//depends on this one
-	RequireChecklistItemID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
-	RequireChecklistItem   *ChecklistItem
+	RequireChecklistItemID int64          `gorm:"not null;index"`
+	RequireChecklistItem   *ChecklistItem `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 }
 
 func init() {

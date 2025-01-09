@@ -38,7 +38,8 @@ func (c *RootController) Home() mbr.Route {
 		PathPattern: "/",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
 			cards_list := dhtmlbs.NewCardList().Class("row-cols-xl-2").Add(
-				dhtmlbs.NewCard().Header(mtweb.Icon(iconChecklist).Label("Active checklists")).Body(c.renderActiveChecklists()),
+				dhtmlbs.NewCard().Header(mtweb.Icon(iconChecklist).Label("Active checklists")).
+					Body(c.renderActiveChecklists()),
 			).Add(
 				dhtmlbs.NewCard().Header(mtweb.Icon("user-check").Label("My issues")).Body("Some content"),
 			).Add(
@@ -112,11 +113,15 @@ func (c *RootController) renderActiveChecklists() (out dhtml.HtmlPiece) {
 	goapp.PreQuery[model.Checklist]().Where("is_active = ?", true)
 	list := goapp.LoadOL[model.Checklist]()
 
+	div := dhtml.Div().Class("d-flex gap-3")
+
 	for _, cl := range list {
-		out.Append(dhtml.Div().Append(
+		div.Append(
 			mtweb.NewIconBtn(mbr.Url(ChecklistCtl.Checklist, "checklist_id", cl.ID), iconChecklist, cl.Name),
-		))
+		)
 	}
+
+	out.Append(div)
 
 	return out
 }

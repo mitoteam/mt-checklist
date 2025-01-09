@@ -44,16 +44,16 @@ type TemplateItem struct {
 	goapp.BaseModel
 
 	//fk
-	TemplateID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
-	Template   *Template
+	TemplateID int64     `gorm:"not null;index"`
+	Template   *Template `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 
 	Caption   string
 	Body      string
-	SortOrder int64 `gorm:"not null,index"`
+	SortOrder int64 `gorm:"not null;index"`
 	Weight    int64
 
-	ResponsibleID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
-	Responsible   *User
+	ResponsibleID int64 `gorm:"not null;index"`
+	Responsible   *User `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 }
 
 func init() {
@@ -97,12 +97,12 @@ type TemplateItemDependency struct {
 	goapp.DbModel // no ID field
 
 	//this item
-	TemplateItemID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
-	TemplateItem   *TemplateItem
+	TemplateItemID int64         `gorm:"not null;index"`
+	TemplateItem   *TemplateItem `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 
 	//depends on this one
-	RequireTemplateItemID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
-	RequireTemplateItem   *TemplateItem
+	RequireTemplateItemID int64         `gorm:"not null"`
+	RequireTemplateItem   *TemplateItem `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 }
 
 func init() {
