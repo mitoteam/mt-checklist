@@ -54,6 +54,16 @@ func (cl *Checklist) GetCreatedBy() *User {
 	return cl.CreatedBy
 }
 
+func (cl *Checklist) MaxItemSortOrder() int64 {
+	sortOrder := int64(0)
+
+	for _, item := range cl.Items() {
+		sortOrder = max(sortOrder, item.SortOrder)
+	}
+
+	return sortOrder
+}
+
 func (cl *Checklist) IsActive() bool {
 	return true
 }

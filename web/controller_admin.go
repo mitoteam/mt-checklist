@@ -9,6 +9,7 @@ import (
 	"github.com/mitoteam/dhtmlbs"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mbr"
+	"github.com/mitoteam/mt-checklist/app"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mttools"
 	"github.com/mitoteam/mtweb"
@@ -211,7 +212,7 @@ func (c *AdminController) TemplateEdit() mbr.Route {
 
 			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.Templates)).SetArg("Template", t)
 
-			p.Main(formAdminChecklistTemplate.Render(fc))
+			p.Main(formAdminTemplate.Render(fc))
 
 			return nil
 		}),
@@ -281,7 +282,7 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 				row := table.NewRow()
 
 				row.Cell(item.Caption)
-				row.Cell(item.Body)
+				row.Cell(item.Body).Class("small text-prewrap")
 				row.Cell(item.GetResponsible().GetDisplayName())
 
 				//dependencies
@@ -333,6 +334,8 @@ func (c *AdminController) TemplateItemEdit() mbr.Route {
 
 				item.TemplateID = t.ID
 				item.ResponsibleID = p.User().ID //current user by default
+				item.Weight = 1
+				item.SortOrder = t.MaxItemSortOrder() + app.App.AppSettings.(*app.AppSettingsType).SortOrderStep
 			} else {
 				mttools.AssertEqual(item.TemplateID, t.ID)
 
@@ -510,7 +513,7 @@ func (c *AdminController) ChecklistItems() mbr.Route {
 						mbr.Url(AdminCtl.ChecklistItemEdit, "checklist_id", cl.ID, "item_id", 0), "plus", "Add item",
 					),
 			).Main(
-				dhtml.RenderValue("Checklist", cl.Name).Class("mb-3"),
+				dhtml.RenderValue("Checklist", mtweb.Icon(iconChecklist).Label(cl.Name)).Class("mb-3"),
 			)
 
 			table := mtweb.NewTable().
@@ -578,6 +581,8 @@ func (c *AdminController) ChecklistItemEdit() mbr.Route {
 				//new item
 				item.ChecklistID = cl.ID
 				item.ResponsibleID = p.User().ID //current user by default
+				item.Weight = 1
+				item.SortOrder = cl.MaxItemSortOrder() + app.App.AppSettings.(*app.AppSettingsType).SortOrderStep
 			} else {
 				//existing
 				mttools.AssertEqual(item.ChecklistID, cl.ID)

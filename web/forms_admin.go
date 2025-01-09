@@ -7,6 +7,7 @@ import (
 	"github.com/mitoteam/dhtmlbs"
 	"github.com/mitoteam/dhtmlform"
 	"github.com/mitoteam/goapp"
+	"github.com/mitoteam/mt-checklist/app"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mttools"
 	"github.com/mitoteam/mtweb"
@@ -73,13 +74,13 @@ var formAdminUserPassword = &dhtmlform.FormHandler{
 	},
 }
 
-var formAdminChecklistTemplate = &dhtmlform.FormHandler{
+var formAdminTemplate = &dhtmlform.FormHandler{
 	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
 		t := fd.GetArg("Template").(*model.Template)
 
 		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
 			dhtmlbs.NewTextInput("name").Label("Template Name").Default(t.Name).Require(),
-			dhtmlbs.NewTextInput("checklist_name").Label("Checklist Name").
+			dhtmlbs.NewTextInput("checklist_name").Label("Checklist Name").Require().
 				Default(t.ChecklistName).Note("Default name of created checklist"),
 			dhtmlbs.NewTextarea("checklist_description").Label("Checklist Description").
 				Default(t.ChecklistDescription).Note("Default description for created checklist"),
@@ -103,7 +104,8 @@ var formAdminTemplateRenumber = &dhtmlform.FormHandler{
 
 		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
 			dhtml.RenderValue("Template", t.Name).Class("mb-3"),
-			dhtmlbs.NewNumberInput("step").Label("Renumber step").Default(10).Require(),
+			dhtmlbs.NewNumberInput("step").Label("Renumber step").Require().
+				Default(app.App.AppSettings.(*app.AppSettingsType).SortOrderStep),
 			mtweb.NewDefaultSubmitBtn(),
 		))
 	},
@@ -139,11 +141,13 @@ var formAdminChecklistTemplateItem = &dhtmlform.FormHandler{
 
 		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
 			dhtml.RenderValue("Template", item.GetTemplate().Name).Class("mb-3"),
+
 			dhtmlbs.NewTextInput("caption").Label("Caption").Default(item.Caption).Require(),
-			dhtmlbs.NewTextInput("body").Label("Body").Default(item.Body),
+			dhtmlbs.NewTextarea("body").Label("Body").Default(item.Body),
 			NewUserSelect("responsible").Label("Responsible").Default(item.ResponsibleID),
 			dhtmlbs.NewNumberInput("sort_order").Label("Sort Order").Default(item.SortOrder),
 			dhtmlbs.NewNumberInput("weight").Label("Weight").Default(item.Weight),
+
 			mtweb.NewDefaultSubmitBtn(),
 		))
 	},

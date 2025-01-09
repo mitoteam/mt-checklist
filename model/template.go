@@ -39,6 +39,16 @@ func (t *Template) ItemCount() int64 {
 	return goapp.CountOL[TemplateItem]()
 }
 
+func (t *Template) MaxItemSortOrder() int64 {
+	sortOrder := int64(0)
+
+	for _, item := range t.Items() {
+		sortOrder = max(sortOrder, item.SortOrder)
+	}
+
+	return sortOrder
+}
+
 // ===================== template items ========================
 type TemplateItem struct {
 	goapp.BaseModel
