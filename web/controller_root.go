@@ -77,13 +77,6 @@ func (c *RootController) renderStatistics() (out dhtml.HtmlPiece) {
 		dhtml.RenderValueE(mtweb.Icon(iconChecklist).Label("Checklists"), goapp.CountOL[model.Checklist](), "no checklists created"),
 	)
 
-	goapp.PreQuery[model.Checklist]().Where("is_active = ?", true)
-	out.Append(
-		dhtml.RenderValueE(
-			mtweb.Icon("flag").Label("Active checklists"), goapp.CountOL[model.Checklist](), "no active checklists",
-		),
-	)
-
 	out.Append(
 		dhtml.RenderValueE(mtweb.Icon(iconTemplate).Label("Templates"), goapp.CountOL[model.Template](), "no templates created"),
 	)
@@ -110,7 +103,6 @@ func (c *RootController) renderManagement() (out dhtml.HtmlPiece) {
 }
 
 func (c *RootController) renderActiveChecklists() (out dhtml.HtmlPiece) {
-	goapp.PreQuery[model.Checklist]().Where("is_active = ?", true)
 	list := goapp.LoadOL[model.Checklist]()
 
 	div := dhtml.Div().Class("d-flex gap-3")
@@ -119,6 +111,10 @@ func (c *RootController) renderActiveChecklists() (out dhtml.HtmlPiece) {
 		div.Append(
 			mtweb.NewIconBtn(mbr.Url(ChecklistCtl.Checklist, "checklist_id", cl.ID), iconChecklist, cl.Name),
 		)
+	}
+
+	if !div.HasChildren() {
+		div.Append(dhtml.EmptyLabel("no active checklists"))
 	}
 
 	out.Append(div)

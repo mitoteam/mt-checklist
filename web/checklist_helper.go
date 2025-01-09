@@ -33,10 +33,11 @@ func renderChecklistItemBody(item *model.ChecklistItem) (out dhtml.HtmlPiece) {
 	return out
 }
 
-func createChecklistFromTemplate(template *model.Template) *model.Checklist {
+func createChecklistFromTemplate(template *model.Template, user *model.User) *model.Checklist {
 	checklist := &model.Checklist{}
 	checklist.Name = template.ChecklistName
 	checklist.Description = template.ChecklistDescription
+	checklist.CreatedByID = user.ID
 
 	goapp.Transaction(func() error {
 		goapp.SaveObject(checklist) //we need an ID to create items

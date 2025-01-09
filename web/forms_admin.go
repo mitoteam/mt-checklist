@@ -103,9 +103,7 @@ var formAdminTemplateRenumber = &dhtmlform.FormHandler{
 
 		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
 			dhtml.RenderValue("Template", t.Name).Class("mb-3"),
-
 			dhtmlbs.NewNumberInput("step").Label("Renumber step").Default(10).Require(),
-
 			mtweb.NewDefaultSubmitBtn(),
 		))
 	},
@@ -230,6 +228,12 @@ var formAdminChecklist = &dhtmlform.FormHandler{
 		cl := fd.GetArg("Checklist").(*model.Checklist)
 
 		container := dhtml.Div().Class("border bg-light p-3").Append(
+			dhtml.RenderValue(
+				"Created By",
+				dhtml.Piece(cl.GetCreatedBy().GetDisplayName()).Append(
+					dhtml.Div().Append(mtweb.RenderTimestamp(cl.CreatedAt)),
+				),
+			),
 			dhtmlbs.NewTextInput("name").Label("Name").Default(cl.Name).Require(),
 			dhtmlbs.NewTextarea("description").Label("Description").Default(cl.Description),
 			mtweb.NewDefaultSubmitBtn(),

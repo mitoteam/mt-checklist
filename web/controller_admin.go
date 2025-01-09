@@ -181,7 +181,7 @@ func (c *AdminController) Templates() mbr.Route {
 					Append(mtweb.NewEditBtn(mbr.Url(AdminCtl.TemplateEdit, "template_id", t.ID))).
 					Append(mtweb.NewDeleteBtn(mbr.Url(AdminCtl.TemplateDelete, "template_id", t.ID), "")).
 					Append(
-						mtweb.NewIconBtn(mbr.Url(AdminCtl.CreateChecklistFromTemplate, "template_id", t.ID), "plus", "Create checklist").
+						mtweb.NewIconBtn(mbr.Url(AdminCtl.TemplateCreateChecklist, "template_id", t.ID), "plus", "Create checklist").
 							Class("btn-success btn-sm").
 							Confirm(fmt.Sprintf("Do you want to create new checklist from %s template?", t.Name)),
 					)
@@ -386,13 +386,13 @@ func (c *AdminController) TemplateItemDelete() mbr.Route {
 	}
 }
 
-func (c *AdminController) CreateChecklistFromTemplate() mbr.Route {
+func (c *AdminController) TemplateCreateChecklist() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/create-checklist",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
 			template := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
 
-			checklist := createChecklistFromTemplate(template)
+			checklist := createChecklistFromTemplate(template, p.User())
 
 			p.RedirectRoute(AdminCtl.ChecklistEdit, "checklist_id", checklist.ID)
 
@@ -437,7 +437,11 @@ func (c *AdminController) Checklists() mbr.Route {
 				row.Cell(mtweb.IconYesNo(cl.IsActive()))
 				row.Cell(cl.Name)
 				row.Cell(cl.Description).Class("small text-muted")
-				row.Cell(cl.GetCreatedBy().GetDisplayName())
+
+				cellOut := dhtml.Piece(cl.GetCreatedBy().GetDisplayName())
+				cellOut.Append(dhtml.Div().Append(mtweb.RenderTimestamp(cl.CreatedAt)))
+				row.Cell(cellOut)
+
 				row.Cell(
 					mtweb.NewIconBtn(mbr.Url(AdminCtl.ChecklistItems, "checklist_id", cl.ID), iconChecklist, cl.ItemCount()).Class("btn-sm"),
 				)
