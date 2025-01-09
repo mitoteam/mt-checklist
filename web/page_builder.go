@@ -76,13 +76,29 @@ func (p *PageBuilder) HasMain() bool {
 	return !p.regions.IsEmpty("main")
 }
 
-func (p *PageBuilder) String() string {
-	return p.render().String()
+// Builds new dhtml.FormContext to be used with form builder
+func (p *PageBuilder) FormContext() *dhtmlform.FormContext {
+	fc := dhtmlform.NewFormContext(p.ctx.Writer(), p.ctx.Request())
+
+	// some useful for every form things
+	fc.SetParam("MbrContext", p.ctx)
+	fc.SetParam("User", p.User())
+
+	//default redirect from "destination" query parameter
+	if destination := p.ctx.Request().URL.Query().Get("destination"); destination != "" {
+		fc.SetRedirect(destination)
+	}
+
+	return fc
 }
 
 // Performs redirect to passed route
 func (p *PageBuilder) RedirectRoute(routeRef any, args ...any) {
 	p.ctx.RedirectRoute(http.StatusFound, routeRef, args...)
+}
+
+func (p *PageBuilder) String() string {
+	return p.render().String()
 }
 
 func (p *PageBuilder) render() (out *dhtml.HtmlPiece) {
@@ -182,20 +198,4 @@ func (p *PageBuilder) renderFooter() (out dhtml.HtmlPiece) {
 			),
 	))
 	return out
-}
-
-// Builds new dhtml.FormContext to be used with form builder
-func (p *PageBuilder) FormContext() *dhtmlform.FormContext {
-	fc := dhtmlform.NewFormContext(p.ctx.Writer(), p.ctx.Request())
-
-	// some useful for every form things
-	fc.SetParam("MbrContext", p.ctx)
-	fc.SetParam("User", p.User())
-
-	//default redirect from "destination" query parameter
-	if destination := p.ctx.Request().URL.Query().Get("destination"); destination != "" {
-		fc.SetRedirect(destination)
-	}
-
-	return fc
 }

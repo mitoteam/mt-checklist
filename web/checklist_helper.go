@@ -35,7 +35,6 @@ func renderChecklistItemBody(item *model.ChecklistItem) (out dhtml.HtmlPiece) {
 
 func createChecklistFromTemplate(template *model.Template) *model.Checklist {
 	checklist := &model.Checklist{}
-	checklist.IsActive = true
 	checklist.Name = template.ChecklistName
 	checklist.Description = template.ChecklistDescription
 

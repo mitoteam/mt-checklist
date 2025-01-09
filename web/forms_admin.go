@@ -230,7 +230,6 @@ var formAdminChecklist = &dhtmlform.FormHandler{
 		cl := fd.GetArg("Checklist").(*model.Checklist)
 
 		container := dhtml.Div().Class("border bg-light p-3").Append(
-			dhtmlbs.NewCheckbox("active").Label("Is Active").Default(cl.IsActive),
 			dhtmlbs.NewTextInput("name").Label("Name").Default(cl.Name).Require(),
 			dhtmlbs.NewTextarea("description").Label("Description").Default(cl.Description),
 			mtweb.NewDefaultSubmitBtn(),
@@ -241,9 +240,9 @@ var formAdminChecklist = &dhtmlform.FormHandler{
 	SubmitF: func(fd *dhtmlform.FormData) {
 		cl := fd.GetArg("Checklist").(*model.Checklist)
 
-		cl.IsActive = fd.GetValue("active").(bool)
 		cl.Name = fd.GetValue("name").(string)
 		cl.Description = fd.GetValue("description").(string)
+		cl.CreatedByID = fd.GetParam("User").(*model.User).ID //current user
 
 		goapp.SaveObject(cl)
 	},

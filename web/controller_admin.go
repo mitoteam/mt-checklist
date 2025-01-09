@@ -414,7 +414,7 @@ func (c *AdminController) Checklists() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/checklists",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			p.Main(
+			p.Title("Checklists (admin)").Main(
 				c.renderToolbar().
 					AddIconBtn(
 						mbr.Url(AdminCtl.ChecklistEdit, "checklist_id", 0), "plus", "Create checklist",
@@ -425,6 +425,7 @@ func (c *AdminController) Checklists() mbr.Route {
 				Header("Active").
 				Header("Name").
 				Header("Description").
+				Header("Created").
 				Header("Items").
 				Header("") //actions
 
@@ -433,9 +434,10 @@ func (c *AdminController) Checklists() mbr.Route {
 			for _, cl := range list {
 				row := table.NewRow()
 
-				row.Cell(mtweb.IconYesNo(cl.IsActive))
+				row.Cell(mtweb.IconYesNo(cl.IsActive()))
 				row.Cell(cl.Name)
 				row.Cell(cl.Description).Class("small text-muted")
+				row.Cell(cl.GetCreatedBy().GetDisplayName())
 				row.Cell(
 					mtweb.NewIconBtn(mbr.Url(AdminCtl.ChecklistItems, "checklist_id", cl.ID), iconChecklist, cl.ItemCount()).Class("btn-sm"),
 				)

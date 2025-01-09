@@ -13,7 +13,9 @@ type Checklist struct {
 
 	Name        string
 	Description string
-	IsActive    bool
+
+	CreatedByID int64 `gorm:"not null"`
+	CreatedBy   *User `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 }
 
 func init() {
@@ -42,6 +44,18 @@ func (cl *Checklist) Items() []*ChecklistItem {
 func (cl *Checklist) ItemCount() int64 {
 	goapp.PreQuery[ChecklistItem]().Where("checklist_id", cl.ID)
 	return goapp.CountOL[ChecklistItem]()
+}
+
+func (cl *Checklist) GetCreatedBy() *User {
+	if cl.CreatedBy == nil {
+		cl.CreatedBy = goapp.LoadOMust[User](cl.CreatedByID)
+	}
+
+	return cl.CreatedBy
+}
+
+func (cl *Checklist) IsActive() bool {
+	return true
 }
 
 // ====================== checklist items ================================
