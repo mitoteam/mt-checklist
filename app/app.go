@@ -31,6 +31,9 @@ func DoPreRun() (err error) {
 		return err
 	}
 
+	//experiment: migrate old data
+	//MySqlMigrate()
+
 	return nil //no errors
 }
 

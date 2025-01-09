@@ -17,7 +17,9 @@ require (
 )
 
 require (
+	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/elliotchance/orderedmap/v2 v2.6.0 // indirect
+	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/yuin/goldmark v1.7.8 // indirect
 )
 
