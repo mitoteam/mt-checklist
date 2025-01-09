@@ -7,7 +7,7 @@ import (
 type AppSettingsType struct {
 	goapp.AppSettingsBase `yaml:",inline"`
 
-	ExampleOption string `yaml:"example_option" yaml_comment:"TODO: remove"`
+	SortOrderStep int64 `yaml:"sort_order_step" yaml_comment:"Default step for sort order items numbers"`
 }
 
 var defaultSettings *AppSettingsType
@@ -15,6 +15,8 @@ var defaultSettings *AppSettingsType
 func init() {
 	//default settings (no defaults for now)
 	defaultSettings = &AppSettingsType{}
+
+	defaultSettings.SortOrderStep = 10
 
 	//default values for goapp.AppSettingsBase options
 	defaultSettings.WebserverPort = 15119
