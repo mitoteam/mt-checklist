@@ -6,6 +6,11 @@ body {
   font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-style: normal;
+
+  background-color: white;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.5)),
+    url(/assets/images/bg.png);
 }
 
 //override Bootstrap's font-weight: bolder; - it is too bold in Roboto.
