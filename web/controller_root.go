@@ -105,12 +105,14 @@ func (c *RootController) renderManagement() (out dhtml.HtmlPiece) {
 func (c *RootController) renderActiveChecklists() (out dhtml.HtmlPiece) {
 	list := goapp.LoadOL[model.Checklist]()
 
-	div := dhtml.Div().Class("d-flex gap-3")
+	div := dhtml.Div().Class("d-flex flex-wrap gap-2")
 
 	for _, cl := range list {
-		div.Append(
-			mtweb.NewIconBtn(mbr.Url(ChecklistCtl.Checklist, "checklist_id", cl.ID), iconChecklist, cl.Name),
-		)
+		if cl.IsActive() {
+			div.Append(
+				mtweb.NewIconBtn(mbr.Url(ChecklistCtl.Checklist, "checklist_id", cl.ID), iconChecklist, cl.Name),
+			)
+		}
 	}
 
 	if !div.HasChildren() {

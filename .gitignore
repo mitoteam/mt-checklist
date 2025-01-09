@@ -12,6 +12,7 @@
 
 # data files
 data.db
+data.db-journal
 
 # temporary files
 *.*~

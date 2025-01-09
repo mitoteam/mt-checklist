@@ -144,6 +144,7 @@ func MySqlMigrate() {
 			checklist := &model.Checklist{
 				Name:        checklistName,
 				Description: "imported from old version",
+				CreatedByID: 1, // root
 			}
 
 			checklist.CreatedAt, _ = time.Parse(time.DateTime, datetimeStr)
@@ -162,6 +163,8 @@ func MySqlMigrate() {
 				if err != nil {
 					panic(err)
 				}
+
+				//TODO CheckedBy&CheckedAt migration!
 
 				goapp.SaveObject(checklistItem)
 
