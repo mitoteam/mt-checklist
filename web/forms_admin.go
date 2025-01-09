@@ -176,7 +176,7 @@ var formAdminChecklistTemplateItemDeps = &dhtmlform.FormHandler{
 
 		requiredIds := make([]int64, 0)
 
-		for _, dep := range item.RequiredItems() {
+		for _, dep := range item.DependenciesList() {
 			requiredIds = append(requiredIds, dep.RequireTemplateItemID)
 		}
 
@@ -290,7 +290,7 @@ var formAdminChecklistItemDeps = &dhtmlform.FormHandler{
 
 		requiredIds := make([]int64, 0)
 
-		for _, dep := range ci.RequiredItems() {
+		for _, dep := range ci.DependenciesList() {
 			requiredIds = append(requiredIds, dep.RequireChecklistItemID)
 		}
 

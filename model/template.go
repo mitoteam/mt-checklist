@@ -61,7 +61,7 @@ func init() {
 }
 
 func (ti *TemplateItem) BeforeDelete(tx *gorm.DB) (err error) {
-	for _, item := range ti.RequiredItems() {
+	for _, item := range ti.DependenciesList() {
 		if err := goapp.DeleteObject(item); err != nil {
 			return err
 		}
@@ -84,7 +84,7 @@ func (item *TemplateItem) RequiredItemsCount() int64 {
 	return goapp.CountOL[TemplateItemDependency]()
 }
 
-func (item *TemplateItem) RequiredItems() []*TemplateItemDependency {
+func (item *TemplateItem) DependenciesList() []*TemplateItemDependency {
 	goapp.PreQuery[TemplateItemDependency]().Where("template_item_id", item.ID).
 		Joins("JOIN template_item ti ON ti.ID=template_item_id").
 		Order("ti.sort_order")

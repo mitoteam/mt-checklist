@@ -286,7 +286,7 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 				if item.RequiredItemsCount() > 0 {
 					depsList := dhtml.NewUnorderedList()
 
-					for _, dep := range item.RequiredItems() {
+					for _, dep := range item.DependenciesList() {
 						depsList.AppendItem(dhtml.NewListItem().Append(dep.GetRequireTemplateItem().Caption))
 					}
 
@@ -523,7 +523,7 @@ func (c *AdminController) ChecklistItems() mbr.Route {
 				if item.RequiredItemsCount() > 0 {
 					depsList := dhtml.NewUnorderedList()
 
-					for _, dep := range item.RequiredItems() {
+					for _, dep := range item.DependenciesList() {
 						depsList.AppendItem(dhtml.NewListItem().Append(dep.GetRequireChecklistItem().Caption))
 					}
 

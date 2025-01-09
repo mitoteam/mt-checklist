@@ -2,6 +2,7 @@ package model
 
 import (
 	"reflect"
+	"time"
 
 	"github.com/mitoteam/goapp"
 	"gorm.io/gorm"
@@ -62,6 +63,7 @@ type ChecklistItem struct {
 	// user who marked this item as "Done"
 	DoneByID int64 //`gorm:"not null,index,constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 	DoneBy   *User
+	DoneAt   *time.Time
 }
 
 func init() {
@@ -69,7 +71,7 @@ func init() {
 }
 
 func (ci *ChecklistItem) BeforeDelete(tx *gorm.DB) (err error) {
-	for _, item := range ci.RequiredItems() {
+	for _, item := range ci.DependenciesList() {
 		if err := goapp.DeleteObject(item); err != nil {
 			return err
 		}
@@ -100,7 +102,7 @@ func (item *ChecklistItem) RequiredItemsCount() int64 {
 	return goapp.CountOL[ChecklistItemDependency]()
 }
 
-func (item *ChecklistItem) RequiredItems() []*ChecklistItemDependency {
+func (item *ChecklistItem) DependenciesList() []*ChecklistItemDependency {
 	goapp.PreQuery[ChecklistItemDependency]().Where("checklist_item_id", item.ID).
 		Joins("JOIN checklist_item ci ON ci.ID=checklist_item_id").
 		Order("ci.sort_order")

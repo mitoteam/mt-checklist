@@ -20,7 +20,7 @@ func renderChecklistItemBody(item *model.ChecklistItem) (out dhtml.HtmlPiece) {
 	if item.RequiredItemsCount() > 0 {
 		depsList := dhtml.NewUnorderedList().Class("mb-0")
 
-		for _, dep := range item.RequiredItems() {
+		for _, dep := range item.DependenciesList() {
 			depsList.AppendItem(dhtml.NewListItem().Append(dep.GetRequireChecklistItem().Caption))
 		}
 
@@ -42,6 +42,10 @@ func createChecklistFromTemplate(template *model.Template) *model.Checklist {
 	goapp.Transaction(func() error {
 		goapp.SaveObject(checklist) //we need an ID to create items
 
+		// templateItemID => checklistItem
+		itemMap := make(map[int64]*model.ChecklistItem, template.ItemCount())
+
+		//create items
 		for _, templateItem := range template.Items() {
 			checklistItem := &model.ChecklistItem{
 				ChecklistID:   checklist.ID,
@@ -53,6 +57,22 @@ func createChecklistFromTemplate(template *model.Template) *model.Checklist {
 			}
 
 			goapp.SaveObject(checklistItem)
+
+			itemMap[templateItem.ID] = checklistItem
+		}
+
+		//create dependencies
+		for _, templateItem := range template.Items() {
+			checklistItem := itemMap[templateItem.ID]
+
+			for _, requiredTemplateItem := range templateItem.DependenciesList() {
+				dep := &model.ChecklistItemDependency{
+					ChecklistItemID:        checklistItem.ID,
+					RequireChecklistItemID: itemMap[requiredTemplateItem.RequireTemplateItemID].ID,
+				}
+
+				goapp.CreateObject(dep)
+			}
 		}
 
 		return nil
