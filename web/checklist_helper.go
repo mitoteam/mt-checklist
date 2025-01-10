@@ -1,31 +1,39 @@
 package web
 
 import (
+	"time"
+
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
+	"github.com/mitoteam/mtweb"
 )
 
 func renderChecklistItemBody(item *model.ChecklistItem) (out dhtml.HtmlPiece) {
-	if item.Body == "" {
-		out.Append(dhtml.Div().Append(dhtml.EmptyLabel("no description")))
+	if item.DoneByID != nil {
+		out.Append(dhtml.Div().Append(mtweb.Icon(iconUser).Label(item.GetDoneBy().GetDisplayName())))
+		out.Append(dhtml.Div().Append(mtweb.Icon("square-check").Label(item.DoneAt.Format(time.DateTime))))
 	} else {
-		out.Append(dhtml.Div().Append(MdEngine.ToDhtml(item.Body)))
+		out.Append(dhtml.Div().Append(mtweb.Icon(iconUser).Label(item.GetResponsible().GetDisplayName())))
 	}
 
-	out.Append(dhtml.RenderValue("Responsible", item.GetResponsible().GetDisplayName()).Class("mt-3"))
+	if item.Body != "" {
+		out.Append(dhtml.Div().Class("mt-3").Append(MdEngine.ToDhtml(item.Body)))
+	}
 
 	//dependencies
 	cellOut := dhtml.Div()
-	if item.DependenciesCount() > 0 {
+	if len(item.GetUnresolvedDepItemList()) > 0 {
 		depsList := dhtml.NewUnorderedList().Class("mb-0")
 
-		for _, dep := range item.DependenciesList() {
-			depsList.AppendItem(dhtml.NewListItem().Append(dep.GetRequireChecklistItem().Caption))
+		for _, depItem := range item.GetUnresolvedDepItemList() {
+			depsList.AppendItem(dhtml.NewListItem().Append(depItem.Caption))
 		}
 
-		cellOut.Append(dhtml.Div().Class("fs-5").Append("Depends"))
-		cellOut.Append(depsList)
+		cellOut.Append(
+			dhtml.Div().Append(mtweb.Icon(mtweb.IconNameNo).Label("Unresolved:").ElementClass("fw-bold text-danger")),
+			depsList,
+		)
 
 		out.Append(cellOut)
 	}

@@ -78,6 +78,7 @@ func (cl *Checklist) IsActive() bool {
 }
 
 // ====================== checklist items ================================
+
 type ChecklistItem struct {
 	goapp.BaseModel
 
@@ -145,6 +146,63 @@ func (item *ChecklistItem) GetDoneBy() *User {
 	}
 
 	return item.DoneBy
+}
+
+// Is done
+func (item *ChecklistItem) IsDone() bool {
+	return item.DoneAt != nil
+}
+
+// Can be marked as done
+func (item *ChecklistItem) CanDone() bool {
+	if item.IsDone() { //already done
+		return false
+	}
+
+	return !item.HasUnresolvedDep()
+}
+
+func (item *ChecklistItem) GetUnresolvedDepItemList() (list []*ChecklistItem) {
+	for _, dep := range item.DependenciesList() {
+		if !dep.GetRequireChecklistItem().IsDone() {
+			list = append(list, dep.GetRequireChecklistItem())
+		}
+	}
+
+	return list
+}
+
+func (item *ChecklistItem) HasUnresolvedDep() bool {
+	for _, dep := range item.DependenciesList() {
+		if !dep.GetRequireChecklistItem().IsDone() {
+			return true
+		}
+	}
+
+	return false
+}
+
+const (
+	ITEM_STATUS_NORMAL = iota
+	ITEM_STATUS_YELLOW
+	ITEM_STATUS_RED
+	ITEM_STATUS_GREEN
+)
+
+func (item *ChecklistItem) GetStatus(user *User) int {
+	if item.IsDone() {
+		return ITEM_STATUS_GREEN
+	}
+
+	if item.HasUnresolvedDep() {
+		return ITEM_STATUS_RED
+	}
+
+	if item.ResponsibleID != user.ID {
+		return ITEM_STATUS_YELLOW
+	}
+
+	return ITEM_STATUS_NORMAL
 }
 
 // ====================== checklist item deps ================================
