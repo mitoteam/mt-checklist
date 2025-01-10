@@ -41,9 +41,17 @@ func (cl *Checklist) Items() []*ChecklistItem {
 	return goapp.LoadOL[ChecklistItem]()
 }
 
-func (cl *Checklist) ItemCount() int64 {
-	goapp.PreQuery[ChecklistItem]().Where("checklist_id", cl.ID)
-	return goapp.CountOL[ChecklistItem]()
+// Count of "done" items and total items count
+func (cl *Checklist) DoneItemsCount() (done int64, total int64) {
+	for _, item := range cl.Items() {
+		if item.DoneAt != nil {
+			done++
+		}
+
+		total++
+	}
+
+	return
 }
 
 func (cl *Checklist) GetCreatedBy() *User {
@@ -65,7 +73,8 @@ func (cl *Checklist) MaxItemSortOrder() int64 {
 }
 
 func (cl *Checklist) IsActive() bool {
-	return true
+	done, total := cl.DoneItemsCount()
+	return done < total
 }
 
 // ====================== checklist items ================================

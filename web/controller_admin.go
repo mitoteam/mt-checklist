@@ -457,8 +457,11 @@ func (c *AdminController) Checklists() mbr.Route {
 				cellOut.Append(dhtml.Div().Append(mtweb.RenderTimestamp(cl.CreatedAt)))
 				row.Cell(cellOut)
 
+				//items
+				done, total := cl.DoneItemsCount()
+				label := dhtml.Piece(done).Append("/").Append(dhtml.NewTag("b").Append(total))
 				row.Cell(
-					mtweb.NewIconBtn(mbr.Url(AdminCtl.ChecklistItemsList, "checklist_id", cl.ID), iconChecklist, cl.ItemCount()).Class("btn-sm"),
+					mtweb.NewIconBtn(mbr.Url(AdminCtl.ChecklistItemsList, "checklist_id", cl.ID), iconChecklist, label).Class("btn-sm"),
 				)
 
 				var actions dhtml.HtmlPiece
