@@ -235,7 +235,7 @@ var formAdminChecklist = &dhtmlform.FormHandler{
 			dhtml.RenderValue(
 				"Created By",
 				dhtml.Piece(cl.GetCreatedBy().GetDisplayName()).Append(
-					dhtml.Div().Append(mtweb.RenderTimestamp(cl.CreatedAt)),
+					mtweb.NewTimestamp(cl.CreatedAt).SmallMuted(),
 				),
 			),
 			dhtmlbs.NewTextInput("name").Label("Name").Default(cl.Name).Require(),

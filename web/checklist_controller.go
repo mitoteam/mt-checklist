@@ -37,13 +37,15 @@ func (c *ChecklistController) Checklist() mbr.Route {
 
 			p.Title(cl.Name)
 
+			/// INFO and DESCRIPTION
 			descriptionOut := dhtml.Div().Class("mb-3")
 			descriptionOut.Append(
 				dhtml.Div().Class("mb-3").Append(
 					dhtml.RenderValue(
-						"Created by", cl.GetCreatedBy().GetDisplayName(),
+						"Created by",
+						cl.GetCreatedBy().GetDisplayName(),
 					),
-					mtweb.RenderTimestamp(cl.CreatedAt),
+					mtweb.NewTimestamp(cl.CreatedAt).SmallMuted(),
 				),
 			)
 
@@ -53,6 +55,7 @@ func (c *ChecklistController) Checklist() mbr.Route {
 
 			p.Main(descriptionOut)
 
+			/// ITEMS
 			if len(cl.Items()) > 0 {
 				cardList := dhtmlbs.NewCardList().Class("row-cols-1", "row-cols-lg-2", "row-cols-xxl-3")
 

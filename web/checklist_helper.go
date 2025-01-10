@@ -1,8 +1,6 @@
 package web
 
 import (
-	"time"
-
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
@@ -12,7 +10,7 @@ import (
 func renderChecklistItemBody(item *model.ChecklistItem) (out dhtml.HtmlPiece) {
 	if item.DoneByID != nil {
 		out.Append(dhtml.Div().Append(mtweb.Icon(iconUser).Label(item.GetDoneBy().GetDisplayName())))
-		out.Append(dhtml.Div().Append(mtweb.Icon("square-check").Label(item.DoneAt.Format(time.DateTime))))
+		out.Append(mtweb.NewTimestamp(*item.DoneAt).Icon("square-check"))
 	} else {
 		out.Append(dhtml.Div().Append(mtweb.Icon(iconUser).Label(item.GetResponsible().GetDisplayName())))
 	}

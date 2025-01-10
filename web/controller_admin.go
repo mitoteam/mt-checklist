@@ -454,7 +454,7 @@ func (c *AdminController) Checklists() mbr.Route {
 				row.Cell(cl.Description).Class("small text-muted")
 
 				cellOut := dhtml.Piece(cl.GetCreatedBy().GetDisplayName())
-				cellOut.Append(dhtml.Div().Append(mtweb.RenderTimestamp(cl.CreatedAt)))
+				cellOut.Append(mtweb.NewTimestamp(cl.CreatedAt).SmallMuted())
 				row.Cell(cellOut)
 
 				//items
@@ -560,7 +560,7 @@ func (c *AdminController) ChecklistItemsList() mbr.Route {
 
 					flexC.Append(dhtml.Div().Append(
 						item.GetDoneBy().GetDisplayName(),
-						dhtml.Div().Append(mtweb.RenderTimestamp(*item.DoneAt)),
+						mtweb.NewTimestamp(*item.DoneAt).SmallMuted(),
 					))
 
 					flexC.Append(dhtml.Div().Class("ms-1").Append(
