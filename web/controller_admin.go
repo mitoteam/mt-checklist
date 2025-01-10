@@ -27,6 +27,12 @@ func init() {
 	AdminCtl.With(AdminRoleMiddleware)
 }
 
+// base path fo all admin routes
+func (root *RootController) AdminSubroutes() mbr.Route {
+	return mbr.Route{PathPattern: "/admin", ChildController: AdminCtl}
+}
+
+// toolbar helper
 func (c *AdminController) renderToolbar() *mtweb.BtnPanelElement {
 	return mtweb.NewBtnPanel().Class("mb-3").AddIconBtn(
 		mbr.Url(RootCtl.Home), iconHome, "Home",
@@ -172,7 +178,7 @@ func (c *AdminController) Templates() mbr.Route {
 				row.Cell(t.Name)
 				row.Cell(t.ChecklistName)
 				row.Cell(
-					dhtmlbs.NewBtn().Href(mbr.Url(AdminCtl.TemplateItemList, "template_id", t.ID)).Class("btn-sm").
+					dhtmlbs.NewBtn().Href(mbr.Url(AdminCtl.TemplateItemsList, "template_id", t.ID)).Class("btn-sm").
 						Label(mtweb.Icon("list-check").Label(t.ItemCount())),
 				)
 
@@ -228,7 +234,7 @@ func (c *AdminController) TemplateRenumber() mbr.Route {
 			p.Title("Renumber template items: " + t.Name)
 
 			fc := p.FormContext().SetArg("Template", t).
-				SetRedirect(mbr.Url(AdminCtl.TemplateItemList, "template_id", t.ID))
+				SetRedirect(mbr.Url(AdminCtl.TemplateItemsList, "template_id", t.ID))
 
 			p.Main(formAdminTemplateRenumber.Render(fc))
 
@@ -248,7 +254,7 @@ func (c *AdminController) TemplateDelete() mbr.Route {
 	}
 }
 
-func (c *AdminController) TemplateItemList() mbr.Route {
+func (c *AdminController) TemplateItemsList() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/items",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
@@ -270,8 +276,7 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 			)
 
 			table := dhtml.NewTable().Class("table table-hover table-sm").EmptyLabel("no items added yet").
-				Header("Caption").
-				Header("Body").
+				Header("Caption / Body").
 				Header("Responsible").
 				Header("Depends").
 				Header("Sort Order").
@@ -281,12 +286,16 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 			for _, item := range t.Items() {
 				row := table.NewRow()
 
-				row.Cell(item.Caption)
-				row.Cell(item.Body).Class("small text-prewrap")
+				//caption and body
+				cellOut := dhtml.Piece(dhtml.Div().Class("fw-bold mb-1").Append(item.Caption))
+				cellOut.Append(dhtml.Div().Class("small text-prewrap").Append(item.Body))
+				row.Cell(cellOut)
+
+				//responsible
 				row.Cell(item.GetResponsible().GetDisplayName())
 
 				//dependencies
-				cellOut := dhtml.Div().Class("d-flex")
+				flexContainer := dhtml.Div().Class("d-flex")
 				if item.DependenciesCount() > 0 {
 					depsList := dhtml.NewUnorderedList()
 
@@ -294,14 +303,17 @@ func (c *AdminController) TemplateItemList() mbr.Route {
 						depsList.AppendItem(dhtml.NewListItem().Append(dep.GetRequireTemplateItem().Caption))
 					}
 
-					cellOut.Append(depsList)
+					flexContainer.Append(depsList)
 				} else {
-					cellOut.Append(dhtml.Div().Append(dhtml.EmptyLabel("no dependencies")))
+					flexContainer.Append(dhtml.Div().Append(dhtml.EmptyLabel("no dependencies")))
 				}
-				cellOut.Append(dhtml.Div().Class("ms-2").Append(
-					mtweb.NewIconBtn(mbr.Url(AdminCtl.TemplateItemDependencies, "template_id", t.ID, "item_id", item.ID), iconDependencies, "").Class("btn-sm").Title("Edit dependencies"),
+				flexContainer.Append(dhtml.Div().Class("ms-1").Append(
+					mtweb.NewIconBtn(
+						mbr.Url(AdminCtl.TemplateItemDependencies, "template_id", t.ID, "item_id", item.ID),
+						iconDependencies, "",
+					).Class("btn-sm p-1").Title("Edit dependencies"),
 				))
-				row.Cell(cellOut)
+				row.Cell(flexContainer)
 
 				row.Cell(item.SortOrder)
 				row.Cell(item.Weight)
@@ -342,7 +354,7 @@ func (c *AdminController) TemplateItemEdit() mbr.Route {
 				p.Title("Edit item: " + item.Caption)
 			}
 
-			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.TemplateItemList, "template_id", t.ID)).
+			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.TemplateItemsList, "template_id", t.ID)).
 				SetArg("Item", item)
 
 			p.Main(formAdminChecklistTemplateItem.Render(fc))
@@ -362,7 +374,7 @@ func (c *AdminController) TemplateItemDependencies() mbr.Route {
 			mttools.AssertEqual(item.TemplateID, t.ID)
 			p.Title("Item dependencies: " + item.Caption)
 
-			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.TemplateItemList, "template_id", t.ID)).
+			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.TemplateItemsList, "template_id", t.ID)).
 				SetArg("Item", item)
 
 			p.Main(formAdminChecklistTemplateItemDeps.Render(fc))
@@ -382,7 +394,7 @@ func (c *AdminController) TemplateItemDelete() mbr.Route {
 			mttools.AssertEqual(item.TemplateID, t.ID)
 			goapp.DeleteObject(item)
 
-			p.RedirectRoute(AdminCtl.TemplateItemList, "template_id", t.ID)
+			p.RedirectRoute(AdminCtl.TemplateItemsList, "template_id", t.ID)
 
 			return nil
 		}),
@@ -446,7 +458,7 @@ func (c *AdminController) Checklists() mbr.Route {
 				row.Cell(cellOut)
 
 				row.Cell(
-					mtweb.NewIconBtn(mbr.Url(AdminCtl.ChecklistItems, "checklist_id", cl.ID), iconChecklist, cl.ItemCount()).Class("btn-sm"),
+					mtweb.NewIconBtn(mbr.Url(AdminCtl.ChecklistItemsList, "checklist_id", cl.ID), iconChecklist, cl.ItemCount()).Class("btn-sm"),
 				)
 
 				var actions dhtml.HtmlPiece
@@ -501,25 +513,25 @@ func (c *AdminController) ChecklistDelete() mbr.Route {
 	}
 }
 
-func (c *AdminController) ChecklistItems() mbr.Route {
+func (c *AdminController) ChecklistItemsList() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/checklist/{checklist_id}/items",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
 			cl := model.LoadChecklist(p.ctx.Request().PathValue("checklist_id"))
 
-			p.Title("Checklist Items").Main(
+			p.Title("Checklist Items: " + cl.Name).Main(
 				c.renderChecklistsToolbar().
 					AddIconBtn(
 						mbr.Url(AdminCtl.ChecklistItemEdit, "checklist_id", cl.ID, "item_id", 0), "plus", "Add item",
 					),
 			).Main(
-				dhtml.RenderValue("Checklist", mtweb.Icon(iconChecklist).Label(cl.Name)).Class("mb-3"),
+				dhtml.RenderValue(mtweb.Icon(iconChecklist).Label("Checklist"), cl.Name).Class("mb-3"),
 			)
 
 			table := mtweb.NewTable().
-				Header("Caption").
-				Header("Body").
+				Header("Caption / Body").
 				Header("Responsible").
+				Header("Done").
 				Header("Depends").
 				Header("Sort Order").
 				Header("Weight").
@@ -528,12 +540,27 @@ func (c *AdminController) ChecklistItems() mbr.Route {
 			for _, item := range cl.Items() {
 				row := table.NewRow()
 
-				row.Cell(item.Caption)
-				row.Cell(item.Body).Class("small text-prewrap")
+				//caption and body
+				cellOut := dhtml.Piece(dhtml.Div().Class("fw-bold mb-1").Append(item.Caption))
+				cellOut.Append(dhtml.Div().Class("small text-prewrap").Append(item.Body))
+				row.Cell(cellOut)
+
+				//responsible
 				row.Cell(item.GetResponsible().GetDisplayName())
 
+				//done
+				cellOut.Clear()
+				if item.DoneAt == nil {
+					cellOut.Append(mtweb.IconNo())
+				} else {
+					cellOut.Append(item.GetDoneBy().GetDisplayName()).Append(
+						dhtml.Div().Append(mtweb.RenderTimestamp(*item.DoneAt)),
+					)
+				}
+				row.Cell(cellOut)
+
 				//dependencies
-				cellOut := dhtml.Div().Class("d-flex")
+				flexC := dhtml.Div().Class("d-flex")
 				if item.DependenciesCount() > 0 {
 					depsList := dhtml.NewUnorderedList()
 
@@ -541,14 +568,16 @@ func (c *AdminController) ChecklistItems() mbr.Route {
 						depsList.AppendItem(dhtml.NewListItem().Append(dep.GetRequireChecklistItem().Caption))
 					}
 
-					cellOut.Append(depsList)
+					flexC.Append(depsList)
 				} else {
-					cellOut.Append(dhtml.Div().Append(dhtml.EmptyLabel("no dependencies")))
+					flexC.Append(dhtml.Div().Append(dhtml.EmptyLabel("no dependencies")))
 				}
-				cellOut.Append(dhtml.Div().Class("ms-2").Append(
-					mtweb.NewIconBtn(mbr.Url(AdminCtl.ChecklistItemDependencies, "checklist_id", cl.ID, "item_id", item.ID), iconDependencies, "").Class("btn-sm").Title("Edit dependencies"),
+				flexC.Append(dhtml.Div().Class("ms-2").Append(
+					mtweb.NewIconBtn(
+						mbr.Url(AdminCtl.ChecklistItemDependencies, "checklist_id", cl.ID, "item_id", item.ID), iconDependencies, "",
+					).Class("btn-sm p-1").Title("Edit dependencies"),
 				))
-				row.Cell(cellOut)
+				row.Cell(flexC)
 
 				row.Cell(item.SortOrder)
 				row.Cell(item.Weight)
@@ -588,7 +617,7 @@ func (c *AdminController) ChecklistItemEdit() mbr.Route {
 				mttools.AssertEqual(item.ChecklistID, cl.ID)
 			}
 
-			fc := p.FormContext().SetArg("Item", item).SetRedirect(mbr.Url(AdminCtl.ChecklistItems, "checklist_id", cl.ID))
+			fc := p.FormContext().SetArg("Item", item).SetRedirect(mbr.Url(AdminCtl.ChecklistItemsList, "checklist_id", cl.ID))
 			p.Main(formAdminChecklistItem.Render(fc))
 
 			return nil
@@ -607,7 +636,7 @@ func (c *AdminController) ChecklistItemDelete() mbr.Route {
 			mttools.AssertEqual(item.ChecklistID, cl.ID)
 			goapp.DeleteObject(item)
 
-			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.ChecklistItems, "checklist_id", cl.ID)
+			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.ChecklistItemsList, "checklist_id", cl.ID)
 
 			return nil
 		}),
@@ -624,7 +653,7 @@ func (c *AdminController) ChecklistItemDependencies() mbr.Route {
 			mttools.AssertEqual(item.ChecklistID, cl.ID)
 			p.Title("Item dependencies: " + item.Caption)
 
-			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.ChecklistItems, "checklist_id", cl.ID)).
+			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.ChecklistItemsList, "checklist_id", cl.ID)).
 				SetArg("Item", item)
 
 			p.Main(formAdminChecklistItemDeps.Render(fc))

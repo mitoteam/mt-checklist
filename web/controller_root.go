@@ -173,10 +173,6 @@ func (c *RootController) MyAccount() mbr.Route {
 	return route
 }
 
-func (c *RootController) AdminSubroutes() mbr.Route {
-	return mbr.Route{PathPattern: "/admin", ChildController: AdminCtl}
-}
-
 func (c *RootController) Experiment() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/experiment",
