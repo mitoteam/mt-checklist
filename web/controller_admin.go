@@ -573,9 +573,9 @@ func (c *AdminController) ChecklistItemsList() mbr.Route {
 					flexC.Append(dhtml.Div().Append(dhtml.EmptyLabel("no dependencies")))
 				}
 				flexC.Append(dhtml.Div().Class("ms-2").Append(
-					mtweb.NewIconBtn(
-						mbr.Url(AdminCtl.ChecklistItemDependencies, "checklist_id", cl.ID, "item_id", item.ID), iconDependencies, "",
-					).Class("btn-sm p-1").Title("Edit dependencies"),
+					mtweb.NewSmBtnR(
+						iconDependencies, AdminCtl.ChecklistItemDependencies, "checklist_id", cl.ID, "item_id", item.ID,
+					).Title("Edit dependencies"),
 				))
 				row.Cell(flexC)
 
