@@ -123,7 +123,8 @@ func MySqlMigrate() {
 		}
 
 		itemRows, err = db.Query(
-			"SELECT ID, ShortName, Name, Sequence, Weight FROM mtc_Items WHERE ChecklistID=?", checklistId,
+			"SELECT ID, ShortName, Name, Sequence, Weight, IFNULL(CheckedDate, ''), IFNULL(Comment, '') FROM mtc_Items WHERE ChecklistID=?",
+			checklistId,
 		)
 		if err != nil {
 			panic(err)
@@ -158,13 +159,18 @@ func MySqlMigrate() {
 				}
 
 				err = itemRows.Scan(
-					&itemId, &checklistItem.Caption, &checklistItem.Body, &checklistItem.SortOrder, &checklistItem.Weight,
+					&itemId, &checklistItem.Caption, &checklistItem.Body, &checklistItem.SortOrder,
+					&checklistItem.Weight, &datetimeStr, &checklistItem.DoneComment,
 				)
 				if err != nil {
 					panic(err)
 				}
 
-				//TODO CheckedBy&CheckedAt migration!
+				if datetimeStr != "" {
+					timeValue, _ := time.Parse(time.DateTime, datetimeStr)
+					checklistItem.DoneAt = &timeValue
+					checklistItem.DoneByID = 1 //root
+				}
 
 				goapp.SaveObject(checklistItem)
 
