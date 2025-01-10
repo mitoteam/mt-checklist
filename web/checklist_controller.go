@@ -61,7 +61,7 @@ func (c *ChecklistController) Checklist() mbr.Route {
 			if len(cl.Items()) > 0 {
 				cardList := dhtmlbs.NewCardList().Class("row-cols-1", "row-cols-lg-2", "row-cols-xxl-3")
 
-				for _, item := range cl.Items() {
+				for _, item := range orderedChecklistItems(cl, p.User()) {
 					status := item.GetStatus(p.User())
 
 					var captionOut dhtml.HtmlPiece

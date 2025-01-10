@@ -40,6 +40,41 @@ func renderChecklistItemBody(item *model.ChecklistItem) (out dhtml.HtmlPiece) {
 	return out
 }
 
+func orderedChecklistItems(cl *model.Checklist, user *model.User) (list []*model.ChecklistItem) {
+	oriList := cl.Items()
+	list = make([]*model.ChecklistItem, 0, len(oriList))
+
+	// available items first
+	for _, item := range oriList {
+		if item.GetStatus(user) == model.ITEM_STATUS_NORMAL {
+			list = append(list, item)
+		}
+	}
+
+	// warning items next
+	for _, item := range oriList {
+		if item.GetStatus(user) == model.ITEM_STATUS_YELLOW {
+			list = append(list, item)
+		}
+	}
+
+	// unavailable items next
+	for _, item := range oriList {
+		if item.GetStatus(user) == model.ITEM_STATUS_RED {
+			list = append(list, item)
+		}
+	}
+
+	// done items finally
+	for _, item := range oriList {
+		if item.GetStatus(user) == model.ITEM_STATUS_GREEN {
+			list = append(list, item)
+		}
+	}
+
+	return list
+}
+
 func createChecklistFromTemplate(template *model.Template, user *model.User) *model.Checklist {
 	checklist := &model.Checklist{}
 	checklist.Name = template.ChecklistName
