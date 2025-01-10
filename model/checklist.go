@@ -85,7 +85,7 @@ type ChecklistItem struct {
 	Responsible   *User `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 
 	// user who marked this item as "Done"
-	DoneByID    int64
+	DoneByID    *int64
 	DoneBy      *User `gorm:"constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT"`
 	DoneAt      *time.Time
 	DoneComment string
@@ -131,8 +131,8 @@ func (item *ChecklistItem) DependenciesList() []*ChecklistItemDependency {
 }
 
 func (item *ChecklistItem) GetDoneBy() *User {
-	if item.DoneBy == nil {
-		item.DoneBy = goapp.LoadOMust[User](item.DoneByID)
+	if item.DoneBy == nil && item.DoneByID != nil {
+		item.DoneBy = goapp.LoadOMust[User](*item.DoneByID)
 	}
 
 	return item.DoneBy

@@ -8,6 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
+	"github.com/mitoteam/mttools"
 )
 
 func MySqlMigrate() {
@@ -169,7 +170,7 @@ func MySqlMigrate() {
 				if datetimeStr != "" {
 					timeValue, _ := time.Parse(time.DateTime, datetimeStr)
 					checklistItem.DoneAt = &timeValue
-					checklistItem.DoneByID = 1 //root
+					checklistItem.DoneByID = mttools.Ptr(int64(1)) //root
 				}
 
 				goapp.SaveObject(checklistItem)

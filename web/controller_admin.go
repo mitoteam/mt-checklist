@@ -551,11 +551,20 @@ func (c *AdminController) ChecklistItemsList() mbr.Route {
 				//done
 				cellOut.Clear()
 				if item.DoneAt == nil {
-					cellOut.Append(mtweb.IconNo())
+					cellOut.Append(mtweb.IconNo().Class("text-muted"))
 				} else {
-					cellOut.Append(item.GetDoneBy().GetDisplayName()).Append(
+					flexC := dhtml.Div().Class("d-flex")
+
+					flexC.Append(dhtml.Div().Append(
+						item.GetDoneBy().GetDisplayName(),
 						dhtml.Div().Append(mtweb.RenderTimestamp(*item.DoneAt)),
-					)
+					))
+
+					flexC.Append(dhtml.Div().Class("ms-1").Append(
+						mtweb.NewSmBtnR("ban", AdminCtl.ChecklistItemUndone, "checklist_id", cl.ID, "item_id", item.ID).Confirm("You sure want to undone this item?").Title("Undone item"),
+					))
+
+					cellOut.Append(flexC)
 				}
 				row.Cell(cellOut)
 
@@ -635,6 +644,28 @@ func (c *AdminController) ChecklistItemDelete() mbr.Route {
 
 			mttools.AssertEqual(item.ChecklistID, cl.ID)
 			goapp.DeleteObject(item)
+
+			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.ChecklistItemsList, "checklist_id", cl.ID)
+
+			return nil
+		}),
+	}
+}
+
+func (c *AdminController) ChecklistItemUndone() mbr.Route {
+	return mbr.Route{
+		PathPattern: "/checklist/{checklist_id}/item/{item_id}/undone",
+		Method:      "GET",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			cl := model.LoadChecklist(p.ctx.Request().PathValue("checklist_id"))
+			item := goapp.LoadOrCreateO[model.ChecklistItem](p.ctx.Request().PathValue("item_id"))
+
+			mttools.AssertEqual(item.ChecklistID, cl.ID)
+
+			item.DoneAt = nil
+			item.DoneByID = nil
+			item.DoneComment = ""
+			goapp.SaveObject(item)
 
 			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.ChecklistItemsList, "checklist_id", cl.ID)
 
