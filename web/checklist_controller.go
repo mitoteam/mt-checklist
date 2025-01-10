@@ -40,17 +40,19 @@ func (c *ChecklistController) Checklist() mbr.Route {
 			/// INFO and DESCRIPTION
 			descriptionOut := dhtml.Div().Class("mb-3")
 			descriptionOut.Append(
-				dhtml.Div().Class("mb-3").Append(
-					dhtml.RenderValue(
-						"Created by",
+				dhtml.RenderValue(
+					"Created by",
+					dhtml.Span().Append(
 						cl.GetCreatedBy().GetDisplayName(),
+						mtweb.NewTimestamp(cl.CreatedAt).SmallMuted().Class("d-inline ms-3"),
 					),
-					mtweb.NewTimestamp(cl.CreatedAt).SmallMuted(),
 				),
 			)
 
+			descriptionOut.Append(dhtml.RenderValue("Progress", cl.GetProgress()))
+
 			if cl.Description != "" {
-				descriptionOut.Append(dhtml.Div().Append(MdEngine.ToDhtml(cl.Description)))
+				descriptionOut.Append(dhtml.Div().Class("mt-3").Append(MdEngine.ToDhtml(cl.Description)))
 			}
 
 			p.Main(descriptionOut)

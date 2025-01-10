@@ -1,7 +1,9 @@
 package model
 
 import (
+	"fmt"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/mitoteam/goapp"
@@ -52,6 +54,22 @@ func (cl *Checklist) DoneItemsCount() (done int64, total int64) {
 	}
 
 	return
+}
+
+// Progress in percents
+func (cl *Checklist) GetProgress() string {
+	done, total := cl.DoneItemsCount()
+
+	if total == 0 {
+		return "0%"
+	}
+
+	r := fmt.Sprintf("%.1f", float64(done)/float64(total)*100)
+	r = strings.TrimRight(r, "0")
+	r = strings.TrimRight(r, ".")
+	r = fmt.Sprintf("%d of %d (%s%%)", done, total, r)
+
+	return r
 }
 
 func (cl *Checklist) GetCreatedBy() *User {
