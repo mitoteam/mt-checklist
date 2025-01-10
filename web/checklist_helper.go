@@ -16,24 +16,25 @@ func renderChecklistItemBody(item *model.ChecklistItem) (out dhtml.HtmlPiece) {
 	}
 
 	if item.Body != "" {
-		out.Append(dhtml.Div().Class("mt-3").Append(MdEngine.ToDhtml(item.Body)))
+		out.Append(dhtml.Div().Class("mt-3", "mt-no-last-p-margin").Append(MdEngine.ToDhtml(item.Body)))
 	}
 
-	//dependencies
-	cellOut := dhtml.Div()
+	//unresolved dependencies
 	if len(item.GetUnresolvedDepItemList()) > 0 {
+		depsOut := dhtml.Div().Class("mt-3")
+
 		depsList := dhtml.NewUnorderedList().Class("mb-0")
 
 		for _, depItem := range item.GetUnresolvedDepItemList() {
 			depsList.AppendItem(dhtml.NewListItem().Append(depItem.Caption))
 		}
 
-		cellOut.Append(
+		depsOut.Append(
 			dhtml.Div().Append(mtweb.Icon(mtweb.IconNameNo).Label("Unresolved:").ElementClass("fw-bold text-danger")),
 			depsList,
 		)
 
-		out.Append(cellOut)
+		out.Append(depsOut)
 	}
 
 	return out

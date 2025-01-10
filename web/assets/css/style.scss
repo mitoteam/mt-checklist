@@ -37,3 +37,9 @@ body {
 .form-label {
   margin-bottom: 0;
 }
+
+.mt-no-last-p-margin {
+  & > p:last-child {
+    margin-bottom: 0 !important;
+  }
+}
