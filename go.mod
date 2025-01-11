@@ -3,41 +3,36 @@ module github.com/mitoteam/mt-checklist
 go 1.23
 
 require (
-	github.com/gin-contrib/sessions v1.0.1
-	github.com/gin-gonic/gin v1.10.0
 	github.com/go-chi/chi/v5 v5.2.0
-	github.com/mitoteam/dhtml v0.0.0-20241218154713-e5b8f4f01206
-	github.com/mitoteam/dhtmlbs v0.0.0-20241219040431-ac54ea123b57
-	github.com/mitoteam/dhtmlform v0.0.0-20241218154743-8d2f924d4a88
-	github.com/mitoteam/goapp v0.0.0-20241219033450-dfbf4daf9195
-	github.com/mitoteam/mbr v0.0.0-20241227033435-a07d20bd8624
-	github.com/mitoteam/mttools v1.0.2
-	github.com/mitoteam/mtweb v0.0.0-20241218154725-9b26d046632d
+	github.com/mitoteam/dhtml v0.9.0-beta
+	github.com/mitoteam/dhtmlbs v0.9.0-beta
+	github.com/mitoteam/dhtmlform v0.9.0-beta
+	github.com/mitoteam/goapp v0.0.0-20250109143639-775f66b8a753
+	github.com/mitoteam/mbr v0.9.0-beta
+	github.com/mitoteam/mttools v1.0.3
+	github.com/mitoteam/mtweb v0.0.0-20250111114509-9a7fd1faeb59
 	gorm.io/gorm v1.25.12
 )
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
-	github.com/elliotchance/orderedmap/v2 v2.6.0 // indirect
-	github.com/go-sql-driver/mysql v1.8.1 // indirect
-	github.com/yuin/goldmark v1.7.8 // indirect
-)
-
-require (
 	github.com/alitto/pond v1.9.2 // indirect
-	github.com/bytedance/sonic v1.12.6 // indirect
-	github.com/bytedance/sonic/loader v0.2.1 // indirect
+	github.com/bytedance/sonic v1.12.7 // indirect
+	github.com/bytedance/sonic/loader v0.2.2 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
-	github.com/cloudwego/iasm v0.2.0 // indirect
 	github.com/drhodes/golorem v0.0.0-20220328165741-da82e5b29246 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
-	github.com/gabriel-vasile/mimetype v1.4.7 // indirect
-	github.com/gin-contrib/sse v0.1.0 // indirect
+	github.com/elliotchance/orderedmap/v2 v2.7.0 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
+	github.com/gin-contrib/sessions v1.0.2 // indirect
+	github.com/gin-contrib/sse v1.0.0 // indirect
+	github.com/gin-gonic/gin v1.10.0 // indirect
 	github.com/glebarez/go-sqlite v1.22.0 // indirect
 	github.com/glebarez/sqlite v1.11.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.23.0 // indirect
+	github.com/go-sql-driver/mysql v1.8.1
 	github.com/goccy/go-json v0.10.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/context v1.1.2 // indirect
@@ -59,16 +54,17 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
-	golang.org/x/arch v0.12.0 // indirect
-	golang.org/x/crypto v0.31.0
-	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 // indirect
-	golang.org/x/net v0.33.0 // indirect
-	golang.org/x/sys v0.28.0 // indirect
+	github.com/yuin/goldmark v1.7.8
+	golang.org/x/arch v0.13.0 // indirect
+	golang.org/x/crypto v0.32.0
+	golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8 // indirect
+	golang.org/x/net v0.34.0 // indirect
+	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
-	google.golang.org/protobuf v1.36.0 // indirect
+	google.golang.org/protobuf v1.36.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	modernc.org/libc v1.61.4 // indirect
-	modernc.org/mathutil v1.6.0 // indirect
-	modernc.org/memory v1.8.0 // indirect
-	modernc.org/sqlite v1.34.3 // indirect
+	modernc.org/libc v1.61.7 // indirect
+	modernc.org/mathutil v1.7.1 // indirect
+	modernc.org/memory v1.8.1 // indirect
+	modernc.org/sqlite v1.34.4 // indirect
 )
