@@ -14,12 +14,18 @@
 
 Project Status: **BETA-version**, **Active Development**
 
+## How to try
+
+Download latest version for your platform. Unpack and run (single executable file). It will print address to open browser in console.
+
+Program will create database file and config in same folder.
+
 ## Dependencies
 
-* https://github.com/mitoteam/mttools
-* https://github.com/mitoteam/dhtml
-* https://github.com/mitoteam/dhtmlform
-* https://github.com/mitoteam/mbr
+* [mitoteam/mttools](https://github.com/mitoteam/mttools)
+* [mitoteam/dhtml](https://github.com/mitoteam/dhtml)
+* [mitoteam/dhtmlform](https://github.com/mitoteam/dhtmlform)
+* [mitoteam/mbr](https://github.com/mitoteam/mbr)
 
-* https://github.com/mitoteam/goapp
-* https://github.com/mitoteam/mtweb
+* [mitoteam/goapp](https://github.com/mitoteam/goapp)
+* [mitoteam/mtweb](https://github.com/mitoteam/mtweb)
