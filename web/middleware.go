@@ -3,6 +3,7 @@ package web
 import (
 	"net/http"
 
+	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mbr"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mttools"
@@ -16,10 +17,16 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		mttools.AssertNotNil(ctx, "not in MbrContext")
 
 		session := Session(r)
-		user := model.LoadUser(mttools.AnyToInt64OrZero(session.Values["userID"]))
+		sessionId := ""
+		if sessionIdValue, ok := session.Values[sessionIdField]; ok {
+			sessionId = mttools.AnyToString(sessionIdValue)
+		}
+
+		goapp.PreQuery[model.User]().Where("session_id = ?", sessionId)
+		user := goapp.FirstO[model.User]()
 
 		if user == nil {
-			url := mbr.Url(RootCtl.Login) + "?destination=" + r.RequestURI
+			url := mbr.Url(RootCtl.Login, "destination", r.RequestURI)
 			http.Redirect(w, r, url, http.StatusSeeOther)
 			// do not call other handlers
 		} else {

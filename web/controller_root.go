@@ -146,7 +146,7 @@ func (c *RootController) Logout() mbr.Route {
 		PathPattern: "/logout",
 		HandleF: func(ctx *mbr.MbrContext) any {
 			session := Session(ctx.Request())
-			delete(session.Values, "userID")
+			delete(session.Values, sessionIdField)
 			err := session.Save(ctx.Request(), ctx.Writer())
 
 			if err != nil {

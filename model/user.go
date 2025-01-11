@@ -11,6 +11,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const ROOT_USER_ID = 1
+
 const (
 	USER_ROLE_ADMIN = 1
 )
@@ -23,10 +25,21 @@ type User struct {
 	PasswordHash []byte
 	IsActive     bool
 	LastLogin    *time.Time
+	SessionId    string // random string to store in cookie instead of user ID
 }
 
 func init() {
 	goapp.DbSchema.AddModel(reflect.TypeFor[User]())
+}
+
+// Create and return user
+func NewUser() *User {
+	user := &User{
+		IsActive:  true,
+		SessionId: mttools.RandomString(20),
+	}
+
+	return user
 }
 
 func LoadUser(id any) *User {
@@ -76,17 +89,14 @@ func AuthorizeUser(username, password string) *User {
 }
 
 func InitializeRootUser(initialPassword string) error {
-	rootUser := LoadUser(1)
+	rootUser := LoadUser(ROOT_USER_ID)
 
 	if rootUser == nil {
 		//root user not found, create one
-		rootUser = &User{
-			UserName:    "root",
-			DisplayName: "Root User",
-			IsActive:    true,
-		}
-
-		rootUser.ID = 1
+		rootUser = NewUser()
+		rootUser.UserName = "root"
+		rootUser.DisplayName = "Root User"
+		rootUser.ID = ROOT_USER_ID
 		rootUser.SetPassword(initialPassword)
 
 		if !goapp.SaveObject(rootUser) {

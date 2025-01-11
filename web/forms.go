@@ -17,6 +17,7 @@ var formLogin = &dhtmlform.FormHandler{
 		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
 			dhtmlbs.NewFloatingTextInput("username").Label("Username").Require(),
 			dhtmlbs.NewFloatingPasswordInput("password").Label("Password").Require(),
+
 			mtweb.NewIconSubmitBtn("arrow-right-to-bracket", "Sign In"),
 		))
 	},
@@ -31,12 +32,12 @@ var formLogin = &dhtmlform.FormHandler{
 
 			if user == nil {
 				session := Session(ctx.Request())
-				delete(session.Values, "userID") //remove old value if it was set
+				delete(session.Values, sessionIdField) //remove old value if it was set
 				session.Save(ctx.Request(), ctx.Writer())
 
 				fd.SetError("", "User not found or wrong password given")
 			} else {
-				fd.SetParam("userID", user.ID)
+				fd.SetParam(sessionIdField, user.SessionId)
 			}
 		}
 	},
@@ -44,7 +45,7 @@ var formLogin = &dhtmlform.FormHandler{
 		ctx := fd.GetParam("MbrContext").(*mbr.MbrContext)
 		session := Session(ctx.Request())
 
-		session.Values["userID"] = fd.GetParam("userID").(int64)
+		session.Values[sessionIdField] = fd.GetParam(sessionIdField).(string)
 		session.Save(ctx.Request(), ctx.Writer())
 	},
 }

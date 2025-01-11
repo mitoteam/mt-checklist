@@ -99,9 +99,10 @@ func (c *AdminController) UserEdit() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/users/{user_id}/edit",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			user := goapp.LoadOrCreateO[model.User](p.ctx.Request().PathValue("user_id"))
+			user := goapp.LoadO[model.User](p.ctx.Request().PathValue("user_id"))
 
 			if user == nil {
+				user = model.NewUser()
 				p.Title("New user")
 			} else {
 				p.Title("Edit user: " + user.DisplayName)

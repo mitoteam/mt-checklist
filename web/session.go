@@ -9,6 +9,7 @@ import (
 
 var sessionStore *sessions.CookieStore
 var sessionName = "mt-checklist"
+var sessionIdField = "sessionId"
 
 func Session(r *http.Request) *sessions.Session {
 	if sessionStore == nil {
