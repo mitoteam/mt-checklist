@@ -49,16 +49,6 @@ func (c *RootController) Home() mbr.Route {
 			if p.User().IsAdmin() {
 				cards_list.Add(
 					dhtmlbs.NewCard().Header(mtweb.Icon("cog").Label("System management")).Body(c.renderManagement()),
-				).Add(
-					dhtmlbs.NewCard().Header(mtweb.Icon("vial").Label("Experiment")).
-						Body(
-							dhtml.Div().Text("Html renderer ").
-								Append(dhtml.NewLink(mbr.Url(RootCtl.Experiment)).Label("experiment")).Text(" link."),
-						).
-						Body(
-							dhtml.Div().Text("Confirm link ").Append(dhtml.NewConfirmLink("/experiment", "Are you sure?").Label("experiment")),
-						).
-						Body(dhtml.Div().Text("Forms ").Append(dhtml.NewLink("/form").Label("experiment")).Text(" link.")),
 				)
 			}
 
@@ -95,7 +85,7 @@ func (c *RootController) renderManagement() (out dhtml.HtmlPiece) {
 		dhtml.Div().Append(
 			dhtml.Div().Append(
 				dhtml.NewLink(mbr.Url(AdminCtl.Checklists)).Label(mtweb.Icon(iconChecklist).Label("Checklists")),
-			).Append(" (administer)"),
+			).Append(" (manage)"),
 		),
 	)
 
@@ -171,21 +161,4 @@ func (c *RootController) MyAccount() mbr.Route {
 	route.With(AuthMiddleware)
 
 	return route
-}
-
-func (c *RootController) Experiment() mbr.Route {
-	return mbr.Route{
-		PathPattern: "/experiment",
-		HandleF:     func(ctx *mbr.MbrContext) any { return mtweb.BuildExperimentHtml() },
-	}
-}
-
-func (c *RootController) TestForm() mbr.Route {
-	return mbr.Route{
-		PathPattern: "/form",
-		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			p.Title("Form!").Main(mtweb.ExperimentFormHandler.Render(p.FormContext()))
-			return nil
-		}),
-	}
 }
