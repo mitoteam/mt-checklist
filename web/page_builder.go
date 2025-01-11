@@ -190,11 +190,25 @@ func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 func (p *PageBuilder) renderFooter() (out dhtml.HtmlPiece) {
 	out.Append(dhtml.Div().Class("region-footer border bg-light p-3 mt-3").Append(
 		dhtmlbs.NewJustifiedLR().
-			L(fmt.Sprintf("%s v.%s", app.App.AppName, app.App.Version)).
+			L(
+				fmt.Sprintf("%s v.%s", app.App.AppName, app.App.Version),
+				dhtml.Span().Class("small text-muted ms-2").Append(
+					mtweb.Icon(mtweb.IconTimestamp).Label(app.App.BuildTime),
+				),
+				dhtml.Div().Append(
+					dhtml.NewLink("https://github.com/mitoteam/mt-checklist").Label(
+						dhtml.UnsafeText("<img alt=\"GitHub Release\" src=\"https://img.shields.io/github/v/release/mitoteam/mt-checklist?style=flat-square&logo=github&label=latest%20version\">"),
+					),
+				),
+			).
 			R(
-				dhtml.Div().Class("small text-muted").
-					Text("by ").
-					Append(dhtml.NewLink("https://www.mito-team.com").Label("MiTo Team").Target("blank")),
+				dhtml.Div().Class("small text-end").Append(
+					"by ",
+					dhtml.NewLink("https://www.mito-team.com").Label("MiTo Team").Target("blank"),
+				),
+				dhtml.Div().Class("small text-muted text-end").Append(
+					"Making world better since 2005",
+				),
 			),
 	))
 	return out
