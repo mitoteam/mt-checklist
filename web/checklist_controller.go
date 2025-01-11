@@ -88,7 +88,7 @@ func (c *ChecklistController) Checklist() mbr.Route {
 
 					card := dhtmlbs.NewCard().
 						Header(header).
-						Body(renderChecklistItemBody(item))
+						Body(renderChecklistItemBody(item, p.User()))
 
 					if status == model.ITEM_STATUS_GREEN {
 						card.Class("border-success").BodyClass("bg-success-subtle")

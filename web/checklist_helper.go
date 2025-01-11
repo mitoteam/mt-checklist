@@ -1,18 +1,27 @@
 package web
 
 import (
+	"slices"
+
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
 
-func renderChecklistItemBody(item *model.ChecklistItem) (out dhtml.HtmlPiece) {
+func renderChecklistItemBody(item *model.ChecklistItem, user *model.User) (out dhtml.HtmlPiece) {
 	if item.DoneByID != nil {
 		out.Append(dhtml.Div().Append(mtweb.Icon(iconUser).Label(item.GetDoneBy().GetDisplayName())))
 		out.Append(mtweb.NewTimestamp(*item.DoneAt).Icon("square-check"))
 	} else {
-		out.Append(dhtml.Div().Append(mtweb.Icon(iconUser).Label(item.GetResponsible().GetDisplayName())))
+		iconName := iconUser
+		if item.GetStatus(user) == model.ITEM_STATUS_YELLOW {
+			iconName = "triangle-exclamation"
+		}
+
+		respOut := dhtml.Piece(mtweb.Icon(iconName).Label(item.GetResponsible().GetDisplayName()))
+
+		out.Append(dhtml.Div().Append(respOut))
 	}
 
 	if item.Body != "" {
@@ -41,36 +50,10 @@ func renderChecklistItemBody(item *model.ChecklistItem) (out dhtml.HtmlPiece) {
 }
 
 func orderedChecklistItems(cl *model.Checklist, user *model.User) (list []*model.ChecklistItem) {
-	oriList := cl.Items()
-	list = make([]*model.ChecklistItem, 0, len(oriList))
-
-	// available items first
-	for _, item := range oriList {
-		if item.GetStatus(user) == model.ITEM_STATUS_NORMAL {
-			list = append(list, item)
-		}
-	}
-
-	// warning items next
-	for _, item := range oriList {
-		if item.GetStatus(user) == model.ITEM_STATUS_YELLOW {
-			list = append(list, item)
-		}
-	}
-
-	// unavailable items next
-	for _, item := range oriList {
-		if item.GetStatus(user) == model.ITEM_STATUS_RED {
-			list = append(list, item)
-		}
-	}
-
-	// done items finally
-	for _, item := range oriList {
-		if item.GetStatus(user) == model.ITEM_STATUS_GREEN {
-			list = append(list, item)
-		}
-	}
+	list = slices.Clone(cl.Items())
+	slices.SortStableFunc(list, func(a, b *model.ChecklistItem) int {
+		return a.GetStatus(user) - b.GetStatus(user)
+	})
 
 	return list
 }
