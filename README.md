@@ -10,10 +10,9 @@
 [![GitHub downloads](https://img.shields.io/github/downloads/mitoteam/mt-checklist/total)](https://github.com/mitoteam/mt-checklist/releases)
 [![Build&Tests](https://github.com/mitoteam/mt-checklist/actions/workflows/go.yml/badge.svg)](https://github.com/mitoteam/mt-checklist/actions/workflows/go.yml)
 
-MiTo Team Checklists Manager
-https://www.mito-team.com
+[MiTo Team](https://www.mito-team.com) Checklists Manager
 
-Project Status: **Active Development**
+Project Status: **BETA-version**, **Active Development**
 
 ## Dependencies
 
