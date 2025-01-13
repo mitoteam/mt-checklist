@@ -24,7 +24,7 @@ jobs:
       run: |
         VERSION=$(cat VERSION)
         echo "MT_VERSION=$VERSION" >> "$GITHUB_ENV"
-        echo "Release of v$MT_VERSION" >> $GITHUB_STEP_SUMMARY
+        echo "Release of v$VERSION" >> $GITHUB_STEP_SUMMARY
 
     - name: Set up Go
       uses: actions/setup-go@v5
