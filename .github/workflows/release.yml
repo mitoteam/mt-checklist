@@ -1,13 +1,10 @@
 name: Release
 
 on:
-  release: 
-    types: 
-      - created
   workflow_dispatch:
 
 jobs:
-  build:
+  BuildAndRelease:
     runs-on: ubuntu-latest
     steps:
     - name: Set env
@@ -35,10 +32,13 @@ jobs:
     - name: Release with Notes
       uses: softprops/action-gh-release@v1
       with:
+        draft: true
+        tag_name: v2.0.2-beta
+        make_latest: true
         files: |
-          dist/mt-checklist-{$GITHUB_REF_NAME}-beta-linux32.7z
-          dist/mt-checklist-{$GITHUB_REF_NAME}-beta-linux64.7z
-          dist/mt-checklist-{$GITHUB_REF_NAME}-beta-win32.7z
-          dist/mt-checklist-{$GITHUB_REF_NAME}-beta-win64.7z
+          dist/mt-checklist-{{$GITHUB_REF_NAME}}-linux32.7z
+          dist/mt-checklist-{{$GITHUB_REF_NAME}}-linux64.7z
+          dist/mt-checklist-{{$GITHUB_REF_NAME}}-win32.7z
+          dist/mt-checklist-{{$GITHUB_REF_NAME}}-win64.7z
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
