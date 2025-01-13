@@ -16,6 +16,9 @@ import (
 type PageBuilder struct {
 	ctx *mbr.MbrContext
 
+	//url to set as default redirect fo form context if no "destination" GET param was given
+	formRedirectUrl string
+
 	// "title" = H1 page title
 	// "main" = main content
 	regions dhtml.NamedHtmlPieces
@@ -87,9 +90,18 @@ func (p *PageBuilder) FormContext() *dhtmlform.FormContext {
 	//default redirect from "destination" query parameter
 	if destination := p.ctx.Request().URL.Query().Get("destination"); destination != "" {
 		fc.SetRedirect(destination)
+	} else if p.formRedirectUrl != "" {
+		fc.SetRedirect(p.formRedirectUrl)
 	}
 
 	return fc
+}
+
+// Sets default redirect fo form context (if "destination" GET parameter is not given)
+func (p *PageBuilder) DefaultFormRedirect(routeRef any, args ...any) *PageBuilder {
+	p.formRedirectUrl = mbr.Url(routeRef, args...)
+
+	return p
 }
 
 // Performs redirect to passed route
