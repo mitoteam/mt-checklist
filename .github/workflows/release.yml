@@ -54,4 +54,4 @@ jobs:
 
     - name: Version url
       run: |
-        echo "Version v$VERSION page ${{ steps.release.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+        echo "Version v${{ env.MT_VERSION }} page ${{ steps.release.outputs.url }}" >> $GITHUB_STEP_SUMMARY
