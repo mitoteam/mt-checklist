@@ -14,6 +14,12 @@
 
 Project Status: **BETA-version**, **Active Development**
 
+## About
+
+Simple **self-hosted** checklists manager. Only you own your data.
+
+![screenshot](graphics/screenshot.png)
+
 ## How to try
 
 * Download latest version for your platform and unpack it (single executable file).
