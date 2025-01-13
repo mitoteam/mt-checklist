@@ -17,6 +17,9 @@ jobs:
     - name: Checking out all submodules to the tip of a branch
       run: git submodule foreach --recursive git checkout main
 
+    - name: Version number
+      run: echo "MT_VERSION=2.0.2-beta" >> "$GITHUB_ENV"
+
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
@@ -33,12 +36,12 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         draft: true
-        tag_name: v2.0.2-beta
+        tag_name: $MT_VERSION
         make_latest: true
         files: |
-          dist/mt-checklist-{{$GITHUB_REF_NAME}}-linux32.7z
-          dist/mt-checklist-{{$GITHUB_REF_NAME}}-linux64.7z
-          dist/mt-checklist-{{$GITHUB_REF_NAME}}-win32.7z
+          dist/mt-checklist-{{$MT_VERSION}}-linux32.7z
+          dist/mt-checklist-{{$MT_VERSION}}-linux64.7z
+          dist/mt-checklist-{{$MT_VERSION}}-win32.7z
           dist/mt-checklist-{{$GITHUB_REF_NAME}}-win64.7z
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
