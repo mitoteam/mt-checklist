@@ -16,11 +16,21 @@ Project Status: **BETA-version**, **Active Development**
 
 ## How to try
 
-Download latest version for your platform. Unpack and run (single executable file). It will print address to open browser in console.
+* Download latest version for your platform and unpack it (single executable file).
+* Run `mt-checklist init` to create default settings file.
+* Open `.settings.yml` and adjust options if you need.
+* Run `mt-checklist run`. It will print address to open browser in console. Program will create database file `data.db` in same folder.
 
-Program will create database file and config in same folder.
+You can use `mt-checklist install` under Linux to install it as a daemon.
 
-## Dependencies
+## Upgrade
+
+* Download new version.
+* Stop program or daemon.
+* Replace executable with newer version.
+* Start it again (it will perform all upgrades automatically).
+
+## Development Dependencies
 
 * [mitoteam/mttools](https://github.com/mitoteam/mttools)
 * [mitoteam/dhtml](https://github.com/mitoteam/dhtml)
