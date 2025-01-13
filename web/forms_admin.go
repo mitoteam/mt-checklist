@@ -231,15 +231,23 @@ var formAdminChecklist = &dhtmlform.FormHandler{
 	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
 		cl := fd.GetArg("Checklist").(*model.Checklist)
 
-		container := dhtml.Div().Class("border bg-light p-3").Append(
-			dhtml.RenderValue(
-				"Created By",
-				dhtml.Piece(cl.GetCreatedBy().GetDisplayName()).Append(
-					mtweb.NewTimestamp(cl.CreatedAt).SmallMuted(),
+		container := dhtml.Div().Class("border bg-light p-3")
+
+		if cl.ID != 0 {
+			container.Append(
+				dhtml.RenderValue(
+					"Created By",
+					dhtml.Piece(cl.GetCreatedBy().GetDisplayName()).Append(
+						mtweb.NewTimestamp(cl.CreatedAt).SmallMuted(),
+					),
 				),
-			),
+			)
+		}
+
+		container.Append(
 			dhtmlbs.NewTextInput("name").Label("Name").Default(cl.Name).Require(),
 			dhtmlbs.NewTextarea("description").Label("Description").Default(cl.Description),
+
 			mtweb.NewDefaultSubmitBtn(),
 		)
 
