@@ -1,6 +1,9 @@
 name: Release
 
 on:
+  push:
+    branches: [main]
+    paths: [VERSION]
   workflow_dispatch:
 
 jobs:
@@ -17,10 +20,12 @@ jobs:
     - name: Checking out all submodules to the tip of a branch
       run: git submodule foreach --recursive git checkout main
 
-    - name: Set version number
+    - name: Set and show version number
       run: |
         VERSION=$(cat VERSION)
         echo "MT_VERSION=$VERSION" >> "$GITHUB_ENV"
+        echo "${{ env.MT_VERSION }}"
+        echo "Release of v${{ env.MT_VERSION }}" >> $GITHUB_STEP_SUMMARY
 
     - name: Set up Go
       uses: actions/setup-go@v5
