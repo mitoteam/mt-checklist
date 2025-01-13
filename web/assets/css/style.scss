@@ -15,7 +15,7 @@ body {
 
 //override Bootstrap's font-weight: bolder; - it is too bold in Roboto.
 .fw-bolder, b, strong, th, label.form-label {
-  font-weight: 500;
+  font-weight: 500 !important;
 }
 
 // space between form items

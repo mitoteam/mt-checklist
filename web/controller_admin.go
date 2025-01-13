@@ -217,7 +217,8 @@ func (c *AdminController) TemplateEdit() mbr.Route {
 				p.Title("Edit template: " + t.Name)
 			}
 
-			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.Templates)).SetArg("Template", t)
+			p.DefaultFormRedirect(AdminCtl.Templates)
+			fc := p.FormContext().SetArg("Template", t)
 
 			p.Main(formAdminTemplate.Render(fc))
 
@@ -272,7 +273,9 @@ func (c *AdminController) TemplateItemsList() mbr.Route {
 			).Main(
 				dhtml.RenderValue(
 					"Template",
-					dhtml.NewLink(mbr.Url(AdminCtl.TemplateEdit, "template_id", t.ID)).Label(mtweb.Icon(iconTemplate).Label(t.Name)),
+					dhtml.NewLink(
+						mbr.Url(AdminCtl.TemplateEdit, "template_id", t.ID, "destination", mbr.Url(AdminCtl.TemplateItemsList, "template_id", t.ID)),
+					).Label(mtweb.Icon(iconTemplate).Label(t.Name)),
 				).Class("mb-3"),
 			)
 
@@ -288,8 +291,11 @@ func (c *AdminController) TemplateItemsList() mbr.Route {
 				row := table.NewRow()
 
 				//caption and body
-				cellOut := dhtml.Piece(dhtml.Div().Class("fw-bold mb-1").Append(item.Caption))
-				cellOut.Append(dhtml.Div().Class("small text-prewrap").Append(item.Body))
+				cellOut := dhtml.Piece(dhtml.Div().Class("fw-bolder").Append(item.Caption))
+
+				if item.Body != "" {
+					cellOut.Append(dhtml.Div().Class("mt-1", "mt-no-last-p-margin small").Append(MdEngine.ToDhtml(item.Body)))
+				}
 				row.Cell(cellOut)
 
 				//responsible
