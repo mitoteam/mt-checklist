@@ -22,7 +22,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			sessionId = mttools.AnyToString(sessionIdValue)
 		}
 
-		goapp.PreQuery[model.User]().Where("session_id = ?", sessionId)
+		goapp.PreQuery[model.User]().Where("is_active", 1).Where("session_id = ?", sessionId)
 		user := goapp.FirstO[model.User]()
 
 		if user == nil {

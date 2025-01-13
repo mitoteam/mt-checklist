@@ -72,7 +72,7 @@ func (u *User) IsAdmin() bool {
 }
 
 func AuthorizeUser(username, password string) *User {
-	goapp.PreQuery[User]().Where("user_name", username)
+	goapp.PreQuery[User]().Where("is_active", 1).Where("user_name", username)
 	user := goapp.FirstO[User]()
 
 	if user != nil { //found
