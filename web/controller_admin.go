@@ -416,7 +416,11 @@ func (c *AdminController) TemplateCreateChecklist() mbr.Route {
 
 			checklist := createChecklistFromTemplate(template, p.User())
 
-			p.RedirectRoute(AdminCtl.ChecklistEdit, "checklist_id", checklist.ID)
+			p.RedirectRoute(
+				AdminCtl.ChecklistEdit,
+				"checklist_id", checklist.ID,
+				"destination", mbr.Url(ChecklistCtl.ViewChecklist, "checklist_id", checklist.ID),
+			)
 
 			return nil
 		}),
@@ -474,7 +478,7 @@ func (c *AdminController) Checklists() mbr.Route {
 				var actions dhtml.HtmlPiece
 
 				actions.Append(
-					mtweb.NewIconBtn(mbr.Url(ChecklistCtl.Checklist, "checklist_id", cl.ID), iconView, nil).
+					mtweb.NewIconBtn(mbr.Url(ChecklistCtl.ViewChecklist, "checklist_id", cl.ID), iconView, nil).
 						Class("btn-sm px-1").Title("View checklist"),
 				)
 				actions.Append(mtweb.NewEditBtn(mbr.Url(AdminCtl.ChecklistEdit, "checklist_id", cl.ID)))
@@ -503,7 +507,8 @@ func (c *AdminController) ChecklistEdit() mbr.Route {
 				p.Title("Edit checklist: " + cl.Name)
 			}
 
-			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.Checklists)).SetArg("Checklist", cl)
+			p.DefaultFormRedirect(AdminCtl.Checklists)
+			fc := p.FormContext().SetArg("Checklist", cl)
 			p.Main(formAdminChecklist.Render(fc))
 
 			return nil

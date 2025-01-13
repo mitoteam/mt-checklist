@@ -100,7 +100,7 @@ func (c *RootController) renderActiveChecklists() (out dhtml.HtmlPiece) {
 	for _, cl := range list {
 		if cl.IsActive() {
 			div.Append(
-				mtweb.NewIconBtn(mbr.Url(ChecklistCtl.Checklist, "checklist_id", cl.ID), iconChecklist, cl.Name),
+				mtweb.NewIconBtn(mbr.Url(ChecklistCtl.ViewChecklist, "checklist_id", cl.ID), iconChecklist, cl.Name),
 			)
 		}
 	}

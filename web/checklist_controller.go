@@ -29,7 +29,7 @@ func (c *RootController) Checklist() mbr.Route {
 }
 
 // checklist page
-func (c *ChecklistController) Checklist() mbr.Route {
+func (c *ChecklistController) ViewChecklist() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
@@ -126,7 +126,7 @@ func (c *ChecklistController) ChecklistItemDone() mbr.Route {
 
 			goapp.SaveObject(item)
 
-			p.RedirectRoute(ChecklistCtl.Checklist, "checklist_id", cl.ID)
+			p.RedirectRoute(ChecklistCtl.ViewChecklist, "checklist_id", cl.ID)
 
 			return nil
 		}),
