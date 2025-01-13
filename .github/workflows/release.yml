@@ -10,7 +10,7 @@ jobs:
   BuildAndRelease:
     runs-on: ubuntu-latest
     steps:
-    - name: Set env
+    - name: Set environment variables
       run: echo "TERM=linux" >> "$GITHUB_ENV"
 
     - uses: actions/checkout@v4
@@ -38,7 +38,7 @@ jobs:
     - name: Build binaries
       run: make
 
-    - name: Release with Notes
+    - name: Create GitHub Release
       id: release
       uses: softprops/action-gh-release@v1
       with:
@@ -49,6 +49,7 @@ jobs:
           dist/mt-checklist-${{ env.MT_VERSION }}-linux64.7z
           dist/mt-checklist-${{ env.MT_VERSION }}-win32.7z
           dist/mt-checklist-${{ env.MT_VERSION }}-win64.7z
+          dist/checksums.sha256
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
