@@ -39,6 +39,7 @@ jobs:
       run: make
 
     - name: Release with Notes
+      id: release
       uses: softprops/action-gh-release@v1
       with:
         draft: true
@@ -50,3 +51,7 @@ jobs:
           dist/mt-checklist-${{ env.MT_VERSION }}-win64.7z
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Version url
+      run: |
+        echo "Version v$VERSION page ${{ steps.release.outputs.url }}" >> $GITHUB_STEP_SUMMARY
