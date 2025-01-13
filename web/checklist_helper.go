@@ -39,7 +39,7 @@ func renderChecklistItemBody(item *model.ChecklistItem, user *model.User) (out d
 		}
 
 		depsOut.Append(
-			dhtml.Div().Append(mtweb.Icon(mtweb.IconNameNo).Label("Unresolved:").ElementClass("fw-bold text-danger")),
+			dhtml.Div().Append(mtweb.Icon(mtweb.FaIconNo).Label("Unresolved:").ElementClass("fw-bold text-danger")),
 			depsList,
 		)
 

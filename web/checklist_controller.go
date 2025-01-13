@@ -66,7 +66,7 @@ func (c *ChecklistController) ViewChecklist() mbr.Route {
 
 					var captionOut dhtml.HtmlPiece
 					if status == model.ITEM_STATUS_RED {
-						captionOut.Append(mtweb.Icon(mtweb.IconNameNo).Class("me-1"))
+						captionOut.Append(mtweb.Icon(mtweb.FaIconNo).Class("me-1"))
 					} else if status == model.ITEM_STATUS_YELLOW {
 						captionOut.Append(mtweb.Icon("triangle-exclamation").Class("me-1"))
 					}

@@ -41,7 +41,7 @@ func (c *RootController) Home() mbr.Route {
 				dhtmlbs.NewCard().Header(mtweb.Icon(iconChecklist).Label("Active checklists")).
 					Body(c.renderActiveChecklists()),
 			).Add(
-				dhtmlbs.NewCard().Header(mtweb.Icon("user-check").Label("My issues")).Body("Some content"),
+				dhtmlbs.NewCard().Header(mtweb.Icon("user-check").Label("My issues")).Body(c.renderMyIssues()),
 			).Add(
 				dhtmlbs.NewCard().Header(mtweb.Icon("chart-simple").Label("Statistics")).Body(c.renderStatistics()),
 			)
@@ -59,6 +59,14 @@ func (c *RootController) Home() mbr.Route {
 
 	route.With(AuthMiddleware) //for home page only
 	return route
+}
+
+func (c *RootController) renderMyIssues() (out dhtml.HtmlPiece) {
+	out.Append(
+		mtweb.Icon(mtweb.FaIconDevMode).Label("TBD").Title("to be done"),
+	)
+
+	return out
 }
 
 func (c *RootController) renderStatistics() (out dhtml.HtmlPiece) {

@@ -35,7 +35,7 @@ func (root *RootController) AdminSubroutes() mbr.Route {
 // toolbar helper
 func (c *AdminController) renderToolbar() *mtweb.BtnPanelElement {
 	return mtweb.NewBtnPanel().Class("mb-3").AddIconBtn(
-		mbr.Url(RootCtl.Home), iconHome, "Home",
+		mbr.Url(RootCtl.Home), mtweb.FaIconHome, "Home",
 	)
 }
 
@@ -478,7 +478,7 @@ func (c *AdminController) Checklists() mbr.Route {
 				var actions dhtml.HtmlPiece
 
 				actions.Append(
-					mtweb.NewIconBtn(mbr.Url(ChecklistCtl.ViewChecklist, "checklist_id", cl.ID), iconView, nil).
+					mtweb.NewIconBtn(mbr.Url(ChecklistCtl.ViewChecklist, "checklist_id", cl.ID), mtweb.FaIconView, nil).
 						Class("btn-sm px-1").Title("View checklist"),
 				)
 				actions.Append(mtweb.NewEditBtn(mbr.Url(AdminCtl.ChecklistEdit, "checklist_id", cl.ID)))
