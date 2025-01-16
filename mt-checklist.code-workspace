@@ -9,10 +9,6 @@
 			"path": "internal/goapp"
 		},
 		{
-			"name": "mttools",
-			"path": "pkg/mttools"
-		},
-		{
 			"name": "mtweb",
 			"path": "internal/mtweb"
 		},

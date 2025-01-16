@@ -1,7 +1,6 @@
 go 1.23
 
 use .
-use ./pkg/mttools
 use ./pkg/dhtml
 use ./pkg/dhtmlform
 use ./pkg/dhtmlbs
