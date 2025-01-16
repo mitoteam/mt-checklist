@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/mitoteam/dhtmlform"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mt-checklist/model"
 )
@@ -30,6 +31,9 @@ func DoPreRun() (err error) {
 	if err = model.InitializeRootUser(App.AppSettings.(*AppSettingsType).InitialRootPassword); err != nil {
 		return err
 	}
+
+	// start forms data expiration handler
+	dhtmlform.StartFormDataExpirationHandler(App.BaseContext)
 
 	//experiment: migrate old data
 	//MySqlMigrate()
