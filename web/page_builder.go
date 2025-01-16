@@ -7,6 +7,7 @@ import (
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/dhtmlbs"
 	"github.com/mitoteam/dhtmlform"
+	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mbr"
 	"github.com/mitoteam/mt-checklist/app"
 	"github.com/mitoteam/mt-checklist/model"
@@ -164,7 +165,7 @@ func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 
 	header_left := dhtml.Div().
 		Append(dhtml.Div().Append(dhtml.NewLink(mbr.Url(RootCtl.Home)).Label(app.App.AppName).Class("text-decoration-none"))).
-		Append(dhtml.Div().Class("small text-muted").Append("v." + app.App.Version))
+		Append(dhtml.Div().Class("small text-muted").Append("v" + app.App.Version))
 
 	header_right := dhtml.Div().Class("text-end")
 
@@ -203,7 +204,7 @@ func (p *PageBuilder) renderFooter() (out dhtml.HtmlPiece) {
 	out.Append(dhtml.Div().Class("region-footer border bg-light p-3 mt-3").Append(
 		dhtmlbs.NewJustifiedLR().
 			L(
-				fmt.Sprintf("%s v.%s", app.App.AppName, app.App.Version),
+				fmt.Sprintf("%s v%s", app.App.AppName, app.App.Version),
 				dhtml.Span().Class("small text-muted ms-2").Append(
 					mtweb.Icon(mtweb.IconTimestamp).Label(app.App.BuildTime),
 				),
@@ -218,9 +219,7 @@ func (p *PageBuilder) renderFooter() (out dhtml.HtmlPiece) {
 					"by ",
 					dhtml.NewLink("https://www.mito-team.com").Label("MiTo Team").Target("blank"),
 				),
-				dhtml.Div().Class("small text-muted text-end").Append(
-					"Making world better since 2005",
-				),
+				dhtml.Div().Class("small text-muted text-end").Append(goapp.MOTTO),
 			),
 	))
 	return out
