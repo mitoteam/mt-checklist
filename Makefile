@@ -1,6 +1,6 @@
 # Set up variables
 EXECUTABLE_NAME := mt-checklist
-SUBMODULES := ./pkg/mttools ./pkg/dhtml ./pkg/dhtmlform ./pkg/dhtmlbs ./pkg/mbr ./internal/mtweb
+SUBMODULES := ./pkg/dhtml ./pkg/dhtmlform ./pkg/dhtmlbs ./pkg/mbr ./internal/mtweb
 
 #do the job
 include internal/goapp/Makefile.inc.mk
