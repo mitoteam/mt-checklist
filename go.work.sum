@@ -149,6 +149,7 @@ github.com/mattn/go-sqlite3 v1.14.16 h1:yOQRA0RpS5PFz/oikGwBEqvAWhWg5ufRz4ETLjwp
 github.com/mattn/go-sqlite3 v1.14.16/go.mod h1:2eHXhiwb8IkHr+BDWZGa96P6+rkvnG63S2DGjv9HUNg=
 github.com/memcachier/mc v2.0.1+incompatible h1:s8EDz0xrJLP8goitwZOoq1vA/sm0fPS4X3KAF0nyhWQ=
 github.com/memcachier/mc v2.0.1+incompatible/go.mod h1:7bkvFE61leUBvXz+yxsOnGBQSZpBSPIMUQSmmSHvuXc=
+github.com/mitoteam/dhtmlbs v0.9.1-beta/go.mod h1:cAag36BsNJQwzacEJfI9lNr4N9FPL4yg3zYh0UQY1Bg=
 github.com/mitoteam/mttools v0.0.0-20241128155109-524c9d282ee0/go.mod h1:17btl1/umcluP1WJwHzPyQ8PD5vVyGRPZzVHbvoGNvI=
 github.com/mitoteam/mttools v0.0.0-20241212142256-24377b33afdb/go.mod h1:pgReIWU3E5FzIcyzB1JqPYIvsszInvFosMsd5v+qK00=
 github.com/mitoteam/mttools v1.0.0/go.mod h1:pgReIWU3E5FzIcyzB1JqPYIvsszInvFosMsd5v+qK00=
@@ -357,7 +358,7 @@ modernc.org/ccgo/v3 v3.16.15/go.mod h1:yT7B+/E2m43tmMOT51GMoM98/MtHIcQQSleGnddkU
 modernc.org/ccgo/v3 v3.17.0 h1:o3OmOqx4/OFnl4Vm3G8Bgmqxnvxnh0nbxeT5p/dWChA=
 modernc.org/ccgo/v3 v3.17.0/go.mod h1:Sg3fwVpmLvCUTaqEUjiBDAvshIaKDB0RXaf+zgqFu8I=
 modernc.org/ccgo/v4 v4.0.0-20230827202736-8661c3d9955b/go.mod h1:/akHR5EF8jcGu98UNYVwz45iMTr/7g9n/toQoK8ASlQ=
-modernc.org/ccgo/v4 v4.23.12/go.mod h1:vdN4h2WR5aEoNondUx26K7G8X+nuBscYnAEWSRmN2/0=
+modernc.org/ccgo/v4 v4.23.15/go.mod h1:nJX30dks/IWuBOnVa7VRii9Me4/9TZ1SC9GNtmARTy0=
 modernc.org/ccorpus v1.11.6 h1:J16RXiiqiCgua6+ZvQot4yUuUy8zxgqbqEEUuGPlISk=
 modernc.org/ccorpus v1.11.6/go.mod h1:2gEUTrWqdpH2pXsmTM1ZkjeSrUWDpjMu2T6m29L/ErQ=
 modernc.org/ccorpus2 v1.5.1 h1:y/aCOKCHsBy2cAemkZnsuQq/a0eXuf4TTLBNKaiZKso=
@@ -367,6 +368,7 @@ modernc.org/ebnf v1.1.0/go.mod h1:CNIo7vuji3SyjIP/VhEumIKlAguC1g64mcdk/+VJW/w=
 modernc.org/ebnfutil v1.1.0/go.mod h1:hdAyhM1jZSq9ygKhEeYgerbagyuLxyxzXcakBPyNqUI=
 modernc.org/fileutil v1.1.2/go.mod h1:HdjlliqRHrMAI4nVOvvpYVzVgvRSK7WnoCiG0GUWJNo=
 modernc.org/gc/v2 v2.3.0/go.mod h1:wzN5dK1AzVGoH6XOzc3YZ+ey/jPgYHLuVckd62P0GYU=
+modernc.org/gc/v2 v2.6.2/go.mod h1:YgIahr1ypgfe7chRuJi2gD7DBQiKSLMPgBQe9oIiito=
 modernc.org/gc/v3 v3.0.0-20240107210532-573471604cb6/go.mod h1:Qz0X07sNOR1jWYCrJMEnbW/X55x206Q7Vt4mz6/wHp4=
 modernc.org/gc/v3 v3.0.0-20241004144649-1aea3fae8852/go.mod h1:Qz0X07sNOR1jWYCrJMEnbW/X55x206Q7Vt4mz6/wHp4=
 modernc.org/httpfs v1.0.6 h1:AAgIpFZRXuYnkjftxTAZwMIiwEqAfk8aVB2/oA6nAeM=

@@ -41,6 +41,7 @@ You can use `mt-checklist install` under Linux to install it as a daemon.
 * [mitoteam/mttools](https://github.com/mitoteam/mttools)
 * [mitoteam/dhtml](https://github.com/mitoteam/dhtml)
 * [mitoteam/dhtmlform](https://github.com/mitoteam/dhtmlform)
+* [mitoteam/dhtmlbs](https://github.com/mitoteam/dhtmlbs)
 * [mitoteam/mbr](https://github.com/mitoteam/mbr)
 
 * [mitoteam/goapp](https://github.com/mitoteam/goapp)

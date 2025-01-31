@@ -5,21 +5,21 @@ go 1.23
 require (
 	github.com/go-chi/chi/v5 v5.2.0
 	github.com/mitoteam/dhtml v0.9.1-beta
-	github.com/mitoteam/dhtmlbs v0.9.0-beta
+	github.com/mitoteam/dhtmlbs v0.9.1-beta
 	github.com/mitoteam/dhtmlform v0.9.0-beta
-	github.com/mitoteam/goapp v0.0.0-20250116133521-b8d410357854
+	github.com/mitoteam/goapp v0.0.0-20250116150752-135567485724
 	github.com/mitoteam/mbr v0.9.0-beta
 	github.com/mitoteam/mttools v1.0.4
-	github.com/mitoteam/mtweb v0.0.0-20250113131454-1edc85b2011f
+	github.com/mitoteam/mtweb v0.0.0-20250116142658-7060075e6d32
 	gorm.io/gorm v1.25.12
 )
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/alitto/pond v1.9.2 // indirect
-	github.com/bytedance/sonic v1.12.7 // indirect
+	github.com/bytedance/sonic v1.12.8 // indirect
 	github.com/bytedance/sonic/loader v0.2.3 // indirect
-	github.com/cloudwego/base64x v0.1.4 // indirect
+	github.com/cloudwego/base64x v0.1.5 // indirect
 	github.com/drhodes/golorem v0.0.0-20220328165741-da82e5b29246 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/elliotchance/orderedmap/v2 v2.7.0 // indirect
@@ -33,7 +33,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.24.0 // indirect
 	github.com/go-sql-driver/mysql v1.8.1
-	github.com/goccy/go-json v0.10.4 // indirect
+	github.com/goccy/go-json v0.10.5 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/context v1.1.2 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
@@ -51,19 +51,19 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/spf13/cobra v1.8.1 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	github.com/yuin/goldmark v1.7.8
 	golang.org/x/arch v0.13.0 // indirect
 	golang.org/x/crypto v0.32.0
-	golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8 // indirect
+	golang.org/x/exp v0.0.0-20250128182459-e0ece0dbea4c // indirect
 	golang.org/x/net v0.34.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
-	google.golang.org/protobuf v1.36.3 // indirect
+	google.golang.org/protobuf v1.36.4 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	modernc.org/libc v1.61.8 // indirect
+	modernc.org/libc v1.61.10 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.8.2 // indirect
 	modernc.org/sqlite v1.34.5 // indirect
