@@ -204,7 +204,7 @@ func (p *PageBuilder) renderFooter() (out dhtml.HtmlPiece) {
 	out.Append(dhtml.Div().Class("region-footer border bg-light p-3 mt-3").Append(
 		dhtmlbs.NewJustifiedLR().
 			L(
-				fmt.Sprintf("%s v%s", app.App.AppName, app.App.Version),
+				fmt.Sprintf("This instance: v%s", app.App.Version),
 				dhtml.Span().Class("small text-muted ms-2").Append(
 					mtweb.Icon(mtweb.IconTimestamp).Label(app.App.BuildTime),
 				),
@@ -213,10 +213,18 @@ func (p *PageBuilder) renderFooter() (out dhtml.HtmlPiece) {
 						dhtml.UnsafeText("<img alt=\"GitHub Release\" src=\"https://img.shields.io/github/v/release/mitoteam/mt-checklist?style=flat-square&logo=github&label=latest%20version\">"),
 					),
 				),
+				dhtml.Div().Class("mt-1").Append(
+					mtweb.NewSmBtn(
+						"https://github.com/mitoteam/mt-checklist/issues/new?template=bug_report.md", "bug",
+					).Label(dhtml.Span().Class("ms-1").Append("Report a Bug")).Target("blank"),
+					mtweb.NewSmBtn(
+						"https://github.com/mitoteam/mt-checklist/issues/new?template=feature_request.md", "lightbulb-on",
+					).Label(dhtml.Span().Class("ms-1").Append("Suggest a Feature")).Target("blank"),
+				),
 			).
 			R(
 				dhtml.Div().Class("small text-end").Append(
-					"by ",
+					app.App.AppName+" by ",
 					dhtml.NewLink("https://www.mito-team.com").Label("MiTo Team").Target("blank"),
 				),
 				dhtml.Div().Class("small text-muted text-end").Append(goapp.MOTTO),

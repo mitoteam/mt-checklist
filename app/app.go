@@ -11,7 +11,7 @@ var App *goapp.AppBase
 func InitApp() *goapp.AppBase {
 	App = goapp.NewAppBase(defaultSettings)
 
-	App.AppName = "MiTo Team Checklist"
+	App.AppName = "MT Checklist"
 	App.ExecutableName = "mt-checklist"
 	App.LongDescription = `Checklists management system`
 
