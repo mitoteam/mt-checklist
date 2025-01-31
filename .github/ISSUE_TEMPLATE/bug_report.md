@@ -7,9 +7,7 @@ assignees: ''
 
 ---
 
-**Describe the bug**
-
-Useful info:
+Describe the bug:
 
 - Steps to reproduce wrong behavior.
 - A clear and concise description of what you expected to happen instead.
