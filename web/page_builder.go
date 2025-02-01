@@ -164,8 +164,12 @@ func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 	header := dhtml.Div().Class("region-header border bg-light p-3 mb-3").Attribute("role", "header")
 
 	header_left := dhtml.Div().
-		Append(dhtml.Div().Append(dhtml.NewLink(mbr.Url(RootCtl.Home)).Label(app.App.AppName).Class("text-decoration-none"))).
-		Append(dhtml.Div().Class("small text-muted").Append("v" + app.App.Version))
+		Append(dhtml.Div().Append(dhtml.NewLink(mbr.Url(RootCtl.Home)).Label(app.Options.SiteName()).Class("text-decoration-none")))
+
+	motto := app.Options.SiteMotto()
+	if motto != "" {
+		header_left.Append(dhtml.Div().Class("small text-muted").Append(motto))
+	}
 
 	header_right := dhtml.Div().Class("text-end")
 
