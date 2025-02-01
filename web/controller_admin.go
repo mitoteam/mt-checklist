@@ -708,3 +708,34 @@ func (c *AdminController) ChecklistItemDependencies() mbr.Route {
 		}),
 	}
 }
+
+// ====================== options management ===================
+
+func (c *AdminController) Options() mbr.Route {
+	return mbr.Route{
+		PathPattern: "/options",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			p.Title("Options")
+
+			table := mtweb.NewTable().Header("Option").Header("Value")
+
+			//name
+			row := table.NewRow()
+			cellOut := dhtml.Piece(dhtml.Div().Class("fw-bold").Append("Site Name"))
+			cellOut.Append(dhtml.Div().Class("small text-muted").Append("To display in header."))
+			row.Cell(cellOut)
+			row.Cell(app.Options.SiteName())
+
+			//motto
+			row = table.NewRow()
+			cellOut = dhtml.Piece(dhtml.Div().Class("fw-bold").Append("Motto"))
+			cellOut.Append(dhtml.Div().Class("small text-muted").Append("Small sentence under site name. Leave empty to hide at all."))
+			row.Cell(cellOut)
+			row.Cell(app.Options.SiteMotto())
+
+			p.Main(table)
+
+			return nil
+		}),
+	}
+}

@@ -194,7 +194,7 @@ func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {
 		header_right.Append(
 			dhtml.Div().Class("text-muted").
 				Append(icon).
-				Append(dhtml.NewLink(mbr.Url(RootCtl.MyAccount, "destination", "/")).Label(mtweb.Icon("cog"))),
+				Append(dhtml.NewLink(mbr.Url(RootCtl.MyAccount, "destination", "/")).Label(mtweb.Icon(mtweb.FaIconOptions))),
 		)
 	}
 
