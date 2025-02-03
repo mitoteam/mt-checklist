@@ -117,7 +117,7 @@ func (p *PageBuilder) String() string {
 func (p *PageBuilder) render() (out *dhtml.HtmlPiece) {
 	document := dhtml.NewHtmlDocument()
 
-	var head_title = app.App.AppName
+	var head_title = app.Options.SiteName()
 
 	title := p.regions.Get("title")
 	if !title.IsEmpty() {
