@@ -711,11 +711,15 @@ func (c *AdminController) ChecklistItemDependencies() mbr.Route {
 
 // ====================== options management ===================
 
-func (c *AdminController) Options() mbr.Route {
+func (c *AdminController) OptionsList() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/options",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			p.Title("Options")
+			p.Title("Options").Main(
+				mtweb.NewBtnPanel().AddIconBtn(
+					mbr.Url(AdminCtl.OptionsEdit), mtweb.FaIconEdit, "Edit options",
+				),
+			)
 
 			table := mtweb.NewTable().Header("Option").Header("Value")
 
@@ -734,6 +738,18 @@ func (c *AdminController) Options() mbr.Route {
 			row.Cell(app.Options.SiteMotto())
 
 			p.Main(table)
+
+			return nil
+		}),
+	}
+}
+
+func (c *AdminController) OptionsEdit() mbr.Route {
+	return mbr.Route{
+		PathPattern: "/options/edit",
+		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
+			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.OptionsList))
+			p.Main(formAdminOptions.Render(fc))
 
 			return nil
 		}),

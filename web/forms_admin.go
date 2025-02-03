@@ -353,3 +353,17 @@ var formAdminChecklistItemDeps = &dhtmlform.FormHandler{
 		})
 	},
 }
+
+var formAdminOptions = &dhtmlform.FormHandler{
+	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
+		formBody.Append(dhtml.Div().Class("border bg-light p-3").Append(
+			dhtmlbs.NewTextInput("site_name").Label("Site Name").Default(app.Options.SiteName()).Require(),
+			dhtmlbs.NewTextInput("site_motto").Label("Site Motto").Default(app.Options.SiteMotto()),
+			mtweb.NewDefaultSubmitBtn(),
+		))
+	},
+	SubmitF: func(fd *dhtmlform.FormData) {
+		app.Options.SetSiteName(fd.GetValue("site_name").(string))
+		app.Options.SetSiteMotto(fd.GetValue("site_motto").(string))
+	},
+}

@@ -85,7 +85,7 @@ func (c *RootController) renderStatistics() (out dhtml.HtmlPiece) {
 func (c *RootController) renderManagement() (out dhtml.HtmlPiece) {
 	out.Append(
 		dhtml.Div().Append(
-			dhtml.NewLink(mbr.Url(AdminCtl.Options)).Label(mtweb.Icon(mtweb.FaIconOptions).Label("Options")),
+			dhtml.NewLink(mbr.Url(AdminCtl.OptionsList)).Label(mtweb.Icon(mtweb.FaIconOptions).Label("Options")),
 		),
 	).Append(
 		dhtml.Div().Append(
