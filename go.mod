@@ -2,6 +2,10 @@ module github.com/mitoteam/mt-checklist
 
 go 1.24
 
+//DEV versions of modules
+//replace github.com/mitoteam/mttools => ../mttools
+
+
 require (
 	github.com/go-chi/chi/v5 v5.2.1
 	github.com/mitoteam/dhtml v0.9.1-beta
