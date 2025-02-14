@@ -5,13 +5,12 @@ go 1.24
 //DEV versions of modules
 //replace github.com/mitoteam/mttools => ../mttools
 
-
 require (
 	github.com/go-chi/chi/v5 v5.2.1
 	github.com/mitoteam/dhtml v0.9.1-beta
 	github.com/mitoteam/dhtmlbs v0.9.1-beta
 	github.com/mitoteam/dhtmlform v0.9.0-beta
-	github.com/mitoteam/goapp v1.0.1
+	github.com/mitoteam/goapp v1.0.5
 	github.com/mitoteam/mbr v0.9.0-beta
 	github.com/mitoteam/mttools v1.0.5
 	github.com/mitoteam/mtweb v0.0.0-20250201053949-5ee2664a512b
@@ -70,5 +69,5 @@ require (
 	modernc.org/libc v1.61.13 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.8.2 // indirect
-	modernc.org/sqlite v1.34.5 // indirect
+	modernc.org/sqlite v1.35.0 // indirect
 )
