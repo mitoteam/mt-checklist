@@ -10,17 +10,17 @@ require (
 	github.com/mitoteam/dhtml v0.9.1-beta
 	github.com/mitoteam/dhtmlbs v0.9.1-beta
 	github.com/mitoteam/dhtmlform v0.9.0-beta
-	github.com/mitoteam/goapp v1.0.5
+	github.com/mitoteam/goapp v1.0.6
 	github.com/mitoteam/mbr v0.9.0-beta
-	github.com/mitoteam/mttools v1.0.5
-	github.com/mitoteam/mtweb v0.0.0-20250201053949-5ee2664a512b
+	github.com/mitoteam/mttools v1.0.7
+	github.com/mitoteam/mtweb v0.0.0-20250224092644-8b15822d2a10
 	gorm.io/gorm v1.25.12
 )
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/alitto/pond v1.9.2 // indirect
-	github.com/bytedance/sonic v1.12.8 // indirect
+	github.com/bytedance/sonic v1.12.9 // indirect
 	github.com/bytedance/sonic/loader v0.2.3 // indirect
 	github.com/cloudwego/base64x v0.1.5 // indirect
 	github.com/drhodes/golorem v0.0.0-20220328165741-da82e5b29246 // indirect
@@ -34,8 +34,8 @@ require (
 	github.com/glebarez/sqlite v1.11.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.24.0 // indirect
-	github.com/go-sql-driver/mysql v1.8.1
+	github.com/go-playground/validator/v10 v10.25.0 // indirect
+	github.com/go-sql-driver/mysql v1.9.0
 	github.com/goccy/go-json v0.10.5 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/context v1.1.2 // indirect
@@ -53,14 +53,14 @@ require (
 	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
-	github.com/spf13/cobra v1.8.1 // indirect
+	github.com/spf13/cobra v1.9.1 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	github.com/yuin/goldmark v1.7.8
 	golang.org/x/arch v0.14.0 // indirect
-	golang.org/x/crypto v0.33.0
-	golang.org/x/exp v0.0.0-20250210185358-939b2ce775ac // indirect
+	golang.org/x/crypto v0.34.0
+	golang.org/x/exp v0.0.0-20250218142911-aa4b98e5adaa // indirect
 	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
