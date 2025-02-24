@@ -37,6 +37,12 @@ func (c *ChecklistController) ViewChecklist() mbr.Route {
 
 			p.Title(cl.Name)
 
+			/// toolbar
+			p.Main(
+				mtweb.NewBtnPanel().Class("mb-3").
+					AddIconBtn(mbr.Url(ChecklistCtl.ViewChecklist, "checklist_id", cl.ID), mtweb.FaIconReload, "Reload"),
+			)
+
 			/// INFO and DESCRIPTION
 			descriptionOut := dhtml.Div().Class("mb-3")
 			descriptionOut.Append(
