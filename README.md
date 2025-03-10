@@ -36,6 +36,12 @@ You can use `mt-checklist install` under Linux to install it as a daemon.
 * Replace executable with newer version.
 * Start it again (it will perform all upgrades automatically).
 
+## Interested?
+
+[Let us know](mailto:checklist@mito-team.com)! It is a good motivation to improve project.
+
+Have requests or ideas? Share it by [creating](https://github.com/mitoteam/mt-checklist/issues/new/choose) an issue.
+
 ## Development Dependencies
 
 * [mitoteam/mttools](https://github.com/mitoteam/mttools)
