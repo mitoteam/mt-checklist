@@ -65,6 +65,36 @@ func (c *ChecklistController) ViewChecklist() mbr.Route {
 
 			/// ITEMS
 			if len(cl.Items()) > 0 {
+				/// no assigned tasks notice
+				var hasActiveTasks, hasUserTasks bool
+				for _, item := range cl.Items() {
+					if !item.IsDone() {
+						hasActiveTasks = true
+
+						if item.ResponsibleID == p.User().ID {
+							hasUserTasks = true
+						}
+					}
+
+					if hasActiveTasks && hasUserTasks {
+						break // already found what we looked for
+					}
+				}
+
+				if hasActiveTasks && !hasUserTasks {
+					p.Main(
+						dhtml.Div().Class("mb-3").Append(
+							dhtmlbs.NewCard().Class("border-success").BodyClass("bg-success-subtle").
+								Header(mtweb.Icon(iconUser).Label(p.User().DisplayName).ElementClass("fw-bold")).
+								Body(
+									mtweb.Icon(iconAllDone).Class("fw-bold").
+										Label("All done! No more active tasks in this checklist assigned to you."),
+								),
+						),
+					)
+				}
+
+				// cards with tasks
 				cardList := dhtmlbs.NewCardList().Class("row-cols-1", "row-cols-lg-2", "row-cols-xxl-3")
 
 				for _, item := range orderedChecklistItems(cl, p.User()) {
