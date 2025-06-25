@@ -6,7 +6,7 @@ go 1.24
 //replace github.com/mitoteam/mttools => ../mttools
 
 require (
-	github.com/go-chi/chi/v5 v5.2.1
+	github.com/go-chi/chi/v5 v5.2.2
 	github.com/mitoteam/dhtml v0.9.1-beta
 	github.com/mitoteam/dhtmlbs v0.9.1-beta
 	github.com/mitoteam/dhtmlform v0.9.0-beta
