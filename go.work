@@ -1,9 +1,15 @@
-go 1.25
+go 1.25.0
 
 use .
+
 use ./pkg/dhtml
+
 use ./pkg/dhtmlform
+
 use ./pkg/dhtmlbs
+
 use ./pkg/mbr
+
 use ./internal/mtweb
+
 use ./internal/goapp
