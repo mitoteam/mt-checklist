@@ -40,7 +40,7 @@ jobs:
 
     - name: Create GitHub Release
       id: release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       with:
         draft: true
         tag_name: "v${{ env.MT_VERSION }}"
