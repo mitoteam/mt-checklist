@@ -1,6 +1,5 @@
 # mt-checklist
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/mitoteam/mt-checklist)](https://goreportcard.com/report/github.com/mitoteam/mt-checklist)
 ![GitHub](https://img.shields.io/github/license/mitoteam/mt-checklist)
 [![GitHub Version](https://img.shields.io/github/v/release/mitoteam/mt-checklist?logo=github)](https://github.com/mitoteam/mt-checklist)
 [![GitHub Release Date](https://img.shields.io/github/release-date/mitoteam/mt-checklist)](https://github.com/mitoteam/mt-checklist/releases)
