@@ -55,6 +55,7 @@ func (c *AdminController) Users() mbr.Route {
 			table := dhtml.NewTable().Class("table table-hover table-sm").
 				Header("Username").
 				Header("Display name").
+				Header("Auth method").
 				Header("Active").
 				Header("Admin").
 				Header("Last Login").
@@ -65,6 +66,7 @@ func (c *AdminController) Users() mbr.Route {
 
 				row.Cell(user.UserName)
 				row.Cell(user.DisplayName)
+				row.Cell(model.AuthModeLabel(user.AuthMode))
 				row.Cell(mtweb.IconYesNo(user.IsActive))
 				row.Cell(mtweb.IconYesNo(user.IsAdmin()))
 

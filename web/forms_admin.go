@@ -2,6 +2,7 @@ package web
 
 import (
 	"slices"
+	"strconv"
 
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/dhtmlbs"
@@ -16,10 +17,16 @@ import (
 var formAdminUserEdit = &dhtmlform.FormHandler{
 	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
 		user := fd.GetArg("User").(*model.User)
+		authModeSelect := dhtmlbs.NewSelect("auth_mode")
+		for _, authMode := range model.AuthModeOptions() {
+			authModeSelect.Option(strconv.Itoa(authMode.Value), authMode.Label)
+		}
+		authModeSelect.Label("Authentication method").Default(user.AuthMode)
 
 		container := dhtml.Div().Class("border bg-light p-3").Append(
 			dhtmlbs.NewTextInput("username").Label("Username").Require().Default(user.UserName),
 			dhtmlbs.NewTextInput("displayname").Label("Display name").Default(user.DisplayName),
+			authModeSelect,
 			dhtmlbs.NewCheckbox("is_active").Label("Active").Default(user.IsActive).Note("Uncheck to disable sign-in"),
 			mtweb.NewDefaultSubmitBtn(),
 		)
@@ -31,12 +38,19 @@ var formAdminUserEdit = &dhtmlform.FormHandler{
 		if len(fd.GetValue("displayname").(string)) == 0 {
 			fd.SetControlValue("displayname", fd.GetValue("username"))
 		}
+
+		authModeValue, ok := mttools.AnyToInt64Ok(fd.GetValue("auth_mode"))
+		if !ok || !model.IsValidAuthMode(int(authModeValue)) {
+			fd.SetError("auth_mode", "Select a valid authentication method")
+		}
 	},
 	SubmitF: func(fd *dhtmlform.FormData) {
 		user := fd.GetArg("User").(*model.User)
 
 		user.UserName = fd.GetValue("username").(string)
 		user.DisplayName = fd.GetValue("displayname").(string)
+		authModeValue, _ := mttools.AnyToInt64Ok(fd.GetValue("auth_mode"))
+		user.AuthMode = int(authModeValue)
 		user.IsActive = fd.GetValue("is_active").(bool)
 
 		goapp.SaveObject(user)

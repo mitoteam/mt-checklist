@@ -17,11 +17,49 @@ const (
 	USER_ROLE_ADMIN = 1
 )
 
+const (
+	AuthModeLocal = iota
+)
+
+type AuthModeOption struct {
+	Value int
+	Label string
+}
+
+var authModeOptions = [...]AuthModeOption{
+	{Value: AuthModeLocal, Label: "Local"},
+}
+
+func AuthModeOptions() []AuthModeOption {
+	return append([]AuthModeOption(nil), authModeOptions[:]...)
+}
+
+func IsValidAuthMode(value int) bool {
+	for _, option := range authModeOptions {
+		if option.Value == value {
+			return true
+		}
+	}
+
+	return false
+}
+
+func AuthModeLabel(value int) string {
+	for _, option := range authModeOptions {
+		if option.Value == value {
+			return option.Label
+		}
+	}
+
+	return "Unknown"
+}
+
 type User struct {
 	goapp.BaseModel
 
 	UserName     string `gorm:"uniqueIndex"`
 	DisplayName  string
+	AuthMode     int `gorm:"not null;default:0"`
 	PasswordHash []byte
 	IsActive     bool
 	LastLogin    *time.Time
@@ -35,6 +73,7 @@ func init() {
 // Create and return user
 func NewUser() *User {
 	user := &User{
+		AuthMode:  AuthModeLocal,
 		IsActive:  true,
 		SessionId: mttools.RandomString(20),
 	}
@@ -51,8 +90,12 @@ func (u *User) SetPassword(password string) {
 }
 
 func (u *User) CheckPassword(password string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
-	return err == nil
+	if u.AuthMode == AuthModeLocal {
+		err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
+		return err == nil
+	}
+
+	return false //unknown auth mode, reject password authentication
 }
 
 func (u *User) GetDisplayName() string {
@@ -71,7 +114,7 @@ func (u *User) IsAdmin() bool {
 	return u.HasRole(USER_ROLE_ADMIN)
 }
 
-func AuthorizeUser(username, password string) *User {
+func AuthenticateUser(username, password string) *User {
 	goapp.PreQuery[User]().Where("is_active", 1).Where("user_name", username)
 	user := goapp.FirstO[User]()
 
@@ -96,6 +139,7 @@ func InitializeRootUser(initialPassword string) error {
 		rootUser = NewUser()
 		rootUser.UserName = "root"
 		rootUser.DisplayName = "Root User"
+		rootUser.AuthMode = AuthModeLocal
 		rootUser.ID = ROOT_USER_ID
 		rootUser.SetPassword(initialPassword)
 

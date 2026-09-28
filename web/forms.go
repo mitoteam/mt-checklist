@@ -26,7 +26,7 @@ var formLogin = &dhtmlform.FormHandler{
 			username := fd.GetValue("username").(string)
 			password := fd.GetValue("password").(string)
 
-			user := model.AuthorizeUser(username, password)
+			user := model.AuthenticateUser(username, password)
 
 			ctx := fd.GetParam("MbrContext").(*mbr.MbrContext)
 
