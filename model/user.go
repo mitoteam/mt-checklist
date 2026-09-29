@@ -19,6 +19,7 @@ const (
 
 const (
 	AuthModeLocal = iota
+	AuthModeLDAP
 )
 
 type AuthModeOption struct {
@@ -28,6 +29,7 @@ type AuthModeOption struct {
 
 var authModeOptions = [...]AuthModeOption{
 	{Value: AuthModeLocal, Label: "Local"},
+	{Value: AuthModeLDAP, Label: "LDAP"},
 }
 
 func AuthModeOptions() []AuthModeOption {
@@ -90,12 +92,8 @@ func (u *User) SetPassword(password string) {
 }
 
 func (u *User) CheckPassword(password string) bool {
-	if u.AuthMode == AuthModeLocal {
-		err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
-		return err == nil
-	}
-
-	return false //unknown auth mode, reject password authentication
+	err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
+	return err == nil
 }
 
 func (u *User) GetDisplayName() string {
@@ -112,23 +110,6 @@ func (u *User) HasRole(role int) bool {
 
 func (u *User) IsAdmin() bool {
 	return u.HasRole(USER_ROLE_ADMIN)
-}
-
-func AuthenticateUser(username, password string) *User {
-	goapp.PreQuery[User]().Where("is_active", 1).Where("user_name", username)
-	user := goapp.FirstO[User]()
-
-	if user != nil { //found
-		if user.CheckPassword(password) {
-			user.LastLogin = mttools.Ptr(time.Now()) //update last login time
-
-			goapp.SaveObject(user)
-
-			return user
-		}
-	}
-
-	return nil
 }
 
 func InitializeRootUser(initialPassword string) error {

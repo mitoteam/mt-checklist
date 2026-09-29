@@ -50,6 +50,9 @@ var formAdminUserEdit = &dhtmlform.FormHandler{
 		user.UserName = fd.GetValue("username").(string)
 		user.DisplayName = fd.GetValue("displayname").(string)
 		authModeValue, _ := mttools.AnyToInt64Ok(fd.GetValue("auth_mode"))
+		if int(authModeValue) != model.AuthModeLocal {
+			user.PasswordHash = nil
+		}
 		user.AuthMode = int(authModeValue)
 		user.IsActive = fd.GetValue("is_active").(bool)
 
@@ -59,6 +62,12 @@ var formAdminUserEdit = &dhtmlform.FormHandler{
 
 var formAdminUserPassword = &dhtmlform.FormHandler{
 	RenderF: func(formBody *dhtml.HtmlPiece, fd *dhtmlform.FormData) {
+		user := fd.GetArg("User").(*model.User)
+		if user.AuthMode != model.AuthModeLocal {
+			formBody.Append(dhtml.Div().Class("alert alert-info").Append("LDAP users do not have a local password"))
+			return
+		}
+
 		container := dhtml.Div().Class("border bg-light p-3").Append(
 			dhtmlbs.NewPasswordInput("password1").Label("Password"),
 			dhtmlbs.NewPasswordInput("password2").Label("Confirmation"),
@@ -68,6 +77,12 @@ var formAdminUserPassword = &dhtmlform.FormHandler{
 		formBody.Append(container)
 	},
 	ValidateF: func(fd *dhtmlform.FormData) {
+		user := fd.GetArg("User").(*model.User)
+		if user.AuthMode != model.AuthModeLocal {
+			fd.SetError("", "LDAP users do not have a local password")
+			return
+		}
+
 		password1 := fd.GetValue("password1").(string)
 		password2 := fd.GetValue("password2").(string)
 
@@ -81,6 +96,9 @@ var formAdminUserPassword = &dhtmlform.FormHandler{
 	},
 	SubmitF: func(fd *dhtmlform.FormData) {
 		user := fd.GetArg("User").(*model.User)
+		if user.AuthMode != model.AuthModeLocal {
+			return
+		}
 
 		user.SetPassword(fd.GetValue("password1").(string))
 

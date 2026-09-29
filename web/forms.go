@@ -8,6 +8,7 @@ import (
 	"github.com/mitoteam/dhtmlform"
 	"github.com/mitoteam/goapp"
 	"github.com/mitoteam/mbr"
+	"github.com/mitoteam/mt-checklist/app"
 	"github.com/mitoteam/mt-checklist/model"
 	"github.com/mitoteam/mtweb"
 )
@@ -26,7 +27,7 @@ var formLogin = &dhtmlform.FormHandler{
 			username := fd.GetValue("username").(string)
 			password := fd.GetValue("password").(string)
 
-			user := model.AuthenticateUser(username, password)
+			user, authErr := app.AuthenticateUser(username, password)
 
 			ctx := fd.GetParam("MbrContext").(*mbr.MbrContext)
 
@@ -35,7 +36,11 @@ var formLogin = &dhtmlform.FormHandler{
 				delete(session.Values, sessionIdField) //remove old value if it was set
 				session.Save(ctx.Request(), ctx.Writer())
 
-				fd.SetError("", "User not found or wrong password given")
+				if authErr != nil {
+					fd.SetError("", authErr.Error())
+				} else {
+					fd.SetError("", "User not found or wrong password given")
+				}
 			} else {
 				fd.SetParam(sessionIdField, user.SessionId)
 			}
@@ -56,15 +61,24 @@ var formMyAccount = &dhtmlform.FormHandler{
 
 		container := dhtml.Div().Class("border bg-light p-3").Append(
 			dhtmlbs.NewTextInput("displayname").Label("Display name").
-				Default(user.DisplayName).Note("empty = use username: "+user.UserName),
-			dhtmlbs.NewPasswordInput("password1").Label("Password").Note("empty = do not change"),
-			dhtmlbs.NewPasswordInput("password2").Label("Password confirmation"),
-			mtweb.NewDefaultSubmitBtn(),
+				Default(user.DisplayName).Note("empty = use username: " + user.UserName),
 		)
+		if user.AuthMode == model.AuthModeLocal {
+			container.Append(
+				dhtmlbs.NewPasswordInput("password1").Label("Password").Note("empty = do not change"),
+				dhtmlbs.NewPasswordInput("password2").Label("Password confirmation"),
+			)
+		}
+		container.Append(mtweb.NewDefaultSubmitBtn())
 
 		formBody.Append(container)
 	},
 	ValidateF: func(fd *dhtmlform.FormData) {
+		user := fd.GetParam("User").(*model.User)
+		if user.AuthMode != model.AuthModeLocal {
+			return
+		}
+
 		password1 := strings.TrimSpace(fd.GetValue("password1").(string))
 		password2 := strings.TrimSpace(fd.GetValue("password2").(string))
 
@@ -81,9 +95,11 @@ var formMyAccount = &dhtmlform.FormHandler{
 	SubmitF: func(fd *dhtmlform.FormData) {
 		user := fd.GetParam("User").(*model.User)
 
-		password := strings.TrimSpace(fd.GetValue("password1").(string))
-		if password != "" {
-			user.SetPassword(password)
+		if user.AuthMode == model.AuthModeLocal {
+			password := strings.TrimSpace(fd.GetValue("password1").(string))
+			if password != "" {
+				user.SetPassword(password)
+			}
 		}
 
 		user.DisplayName = fd.GetValue("displayname").(string)

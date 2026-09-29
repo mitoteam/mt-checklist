@@ -79,10 +79,14 @@ func (c *AdminController) Users() mbr.Route {
 				var actions dhtml.HtmlPiece
 
 				actions.Append(mtweb.NewEditBtn(mbr.Url(AdminCtl.UserEdit, "user_id", user.ID)))
-				actions.Append(
-					dhtmlbs.NewBtn().Class("btn-sm p-1").Href(mbr.Url(AdminCtl.UserPassword, "user_id", user.ID)).
-						Title("Change password").Label(mtweb.Icon("key")),
-				)
+
+				if user.AuthMode == model.AuthModeLocal {
+					actions.Append(
+						dhtmlbs.NewBtn().Class("btn-sm p-1").Href(mbr.Url(AdminCtl.UserPassword, "user_id", user.ID)).
+							Title("Change password").Label(mtweb.Icon("key")),
+					)
+				}
+
 				actions.Append(mtweb.NewDeleteBtn(mbr.Url(AdminCtl.UserDelete, "user_id", user.ID), ""))
 
 				row.Cell(actions)
@@ -124,6 +128,19 @@ func (c *AdminController) UserPassword() mbr.Route {
 		PathPattern: "/users/{user_id}/password",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
 			user := goapp.LoadOMust[model.User](p.ctx.Request().PathValue("user_id"))
+
+			if user.AuthMode != model.AuthModeLocal {
+				//p.RedirectRoute(AdminCtl.Users)
+				p.Main(
+					mtweb.RenderError(
+						fmt.Sprintf(
+							"Authentication mode set to %s, password can be set only for Local authentication",
+							model.AuthModeLabel(user.AuthMode),
+						),
+					),
+				)
+				return nil
+			}
 
 			p.Title("User password: " + user.DisplayName)
 
