@@ -15,7 +15,16 @@ Project Status: **BETA-version**, **Active Development**
 
 ## About
 
-Simple **self-hosted** checklists manager. Only you own your data.
+Simple **self-hosted** checklists manager. Only you own your data (which are stored in simple SQLite database).
+
+Features:
+
+* Create checklists template with tasks to do (For example **"New version release"** with tasks like "_build binaries_", "_build installer_", "_prepare blog post with changelog_", "_upload binaries to Downloads_" and so on). You can create checklists from this template many times.
+* Tasks in checklist can be assigned to different users. Task in checklist can depend on each other (example: building installer required binaries to be built first).
+* Create checklist for template and execute it. It shows tasks to do for current user in white, tasks assigned to other users in yellow and tasks blocked by other tasks in red. After all tasks are done checklist is considered to be finished.
+* Local authentication by password and LDAP authentication supported.
+
+## Example screenshot
 
 ![screenshot](graphics/screenshot.png)
 
