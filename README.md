@@ -11,7 +11,7 @@
 
 [MiTo Team](https://www.mito-team.com) Checklists Manager
 
-Project Status: **BETA-version**, **Active Development**
+Project Status: **Release Candidate**, **Active Development**
 
 ## About
 
