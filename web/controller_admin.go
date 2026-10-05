@@ -105,7 +105,7 @@ func (c *AdminController) UserEdit() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/users/{user_id}/edit",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			user := goapp.LoadO[model.User](p.ctx.Request().PathValue("user_id"))
+			user := goapp.LoadO[model.User](p.Ctx.Request().PathValue("user_id"))
 
 			if user == nil {
 				user = model.NewUser()
@@ -127,7 +127,7 @@ func (c *AdminController) UserPassword() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/users/{user_id}/password",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			user := goapp.LoadOMust[model.User](p.ctx.Request().PathValue("user_id"))
+			user := goapp.LoadOMust[model.User](p.Ctx.Request().PathValue("user_id"))
 
 			if user.AuthMode != model.AuthModeLocal {
 				//p.RedirectRoute(AdminCtl.Users)
@@ -157,12 +157,12 @@ func (c *AdminController) UserPassword() mbr.Route {
 func (c *AdminController) UserDelete() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/users/{user_id}/delete",
-		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			goapp.DeleteObject(goapp.LoadOMust[model.User](p.ctx.Request().PathValue("user_id")))
-			p.RedirectRoute(AdminCtl.Users)
+		HandleF: func(ctx *mbr.MbrContext) any {
+			goapp.DeleteObject(goapp.LoadOMust[model.User](ctx.Request().PathValue("user_id")))
+			ctx.RedirectRoute(http.StatusFound, AdminCtl.Users)
 
 			return nil
-		}),
+		},
 	}
 }
 
@@ -228,7 +228,7 @@ func (c *AdminController) TemplateEdit() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/edit",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			t := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
+			t := goapp.LoadOrCreateO[model.Template](p.Ctx.Request().PathValue("template_id"))
 
 			if t == nil {
 				p.Title("New template")
@@ -250,7 +250,7 @@ func (c *AdminController) TemplateRenumber() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/renumber",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			t := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
+			t := goapp.LoadOrCreateO[model.Template](p.Ctx.Request().PathValue("template_id"))
 
 			p.Title("Renumber template items: " + t.Name)
 
@@ -267,11 +267,11 @@ func (c *AdminController) TemplateRenumber() mbr.Route {
 func (c *AdminController) TemplateDelete() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/delete",
-		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			goapp.DeleteObject(goapp.LoadOMust[model.Template](p.ctx.Request().PathValue("template_id")))
-			p.RedirectRoute(AdminCtl.Templates)
+		HandleF: func(ctx *mbr.MbrContext) any {
+			goapp.DeleteObject(goapp.LoadOMust[model.Template](ctx.Request().PathValue("template_id")))
+			ctx.RedirectRoute(http.StatusFound, AdminCtl.Templates)
 			return nil
-		}),
+		},
 	}
 }
 
@@ -279,7 +279,7 @@ func (c *AdminController) TemplateItemsList() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/items",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			t := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
+			t := goapp.LoadOrCreateO[model.Template](p.Ctx.Request().PathValue("template_id"))
 
 			p.Title("Checklist template items").Main(
 				c.renderTemplatesToolbar().
@@ -364,8 +364,8 @@ func (c *AdminController) TemplateItemEdit() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/item/{item_id}/edit",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			t := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
-			item := goapp.LoadOrCreateO[model.TemplateItem](p.ctx.Request().PathValue("item_id"))
+			t := goapp.LoadOrCreateO[model.Template](p.Ctx.Request().PathValue("template_id"))
+			item := goapp.LoadOrCreateO[model.TemplateItem](p.Ctx.Request().PathValue("item_id"))
 
 			if item.ID == 0 {
 				p.Title("New item")
@@ -394,8 +394,8 @@ func (c *AdminController) TemplateItemDependencies() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/item/{item_id}/deps",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			t := goapp.LoadOMust[model.Template](p.ctx.Request().PathValue("template_id"))
-			item := goapp.LoadOMust[model.TemplateItem](p.ctx.Request().PathValue("item_id"))
+			t := goapp.LoadOMust[model.Template](p.Ctx.Request().PathValue("template_id"))
+			item := goapp.LoadOMust[model.TemplateItem](p.Ctx.Request().PathValue("item_id"))
 
 			mttools.AssertEqual(item.TemplateID, t.ID)
 			p.Title("Item dependencies: " + item.Caption)
@@ -413,36 +413,38 @@ func (c *AdminController) TemplateItemDependencies() mbr.Route {
 func (c *AdminController) TemplateItemDelete() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/item/{item_id}/delete",
-		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			t := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
-			item := goapp.LoadOrCreateO[model.TemplateItem](p.ctx.Request().PathValue("item_id"))
+		HandleF: func(ctx *mbr.MbrContext) any {
+			t := goapp.LoadOrCreateO[model.Template](ctx.Request().PathValue("template_id"))
+			item := goapp.LoadOrCreateO[model.TemplateItem](ctx.Request().PathValue("item_id"))
 
 			mttools.AssertEqual(item.TemplateID, t.ID)
 			goapp.DeleteObject(item)
 
-			p.RedirectRoute(AdminCtl.TemplateItemsList, "template_id", t.ID)
+			ctx.RedirectRoute(http.StatusFound, AdminCtl.TemplateItemsList, "template_id", t.ID)
 
 			return nil
-		}),
+		},
 	}
 }
 
 func (c *AdminController) TemplateCreateChecklist() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template/{template_id}/create-checklist",
-		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			template := goapp.LoadOrCreateO[model.Template](p.ctx.Request().PathValue("template_id"))
+		HandleF: func(ctx *mbr.MbrContext) any {
+			template := goapp.LoadOrCreateO[model.Template](ctx.Request().PathValue("template_id"))
 
-			checklist := createChecklistFromTemplate(template, p.User())
+			user := ctx.Get("User").(*model.User) //current user
+			checklist := createChecklistFromTemplate(template, user)
 
-			p.RedirectRoute(
+			ctx.RedirectRoute(
+				http.StatusFound,
 				AdminCtl.ChecklistEdit,
 				"checklist_id", checklist.ID,
 				"destination", mbr.Url(ChecklistCtl.ViewChecklist, "checklist_id", checklist.ID),
 			)
 
 			return nil
-		}),
+		},
 	}
 }
 
@@ -518,7 +520,7 @@ func (c *AdminController) ChecklistEdit() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/checklist/{checklist_id}/edit",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			cl := goapp.LoadOrCreateO[model.Checklist](p.ctx.Request().PathValue("checklist_id"))
+			cl := goapp.LoadOrCreateO[model.Checklist](p.Ctx.Request().PathValue("checklist_id"))
 
 			if cl.ID == 0 {
 				p.Title("New checklist")
@@ -539,8 +541,8 @@ func (c *AdminController) ChecklistDelete() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/checklist/{checklist_id}/delete",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			goapp.DeleteObject(model.LoadChecklist(p.ctx.Request().PathValue("checklist_id")))
-			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.Checklists)
+			goapp.DeleteObject(model.LoadChecklist(p.Ctx.Request().PathValue("checklist_id")))
+			p.Ctx.RedirectRoute(http.StatusFound, AdminCtl.Checklists)
 
 			return nil
 		}),
@@ -551,7 +553,7 @@ func (c *AdminController) ChecklistItemsList() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/checklist/{checklist_id}/items",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			cl := model.LoadChecklist(p.ctx.Request().PathValue("checklist_id"))
+			cl := model.LoadChecklist(p.Ctx.Request().PathValue("checklist_id"))
 
 			p.Title("Checklist Items: " + cl.Name).Main(
 				c.renderChecklistsToolbar().
@@ -646,8 +648,8 @@ func (c *AdminController) ChecklistItemEdit() mbr.Route {
 		PathPattern: "/checklist/{checklist_id}/item/{item_id}/edit",
 		Method:      "GET POST",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			cl := model.LoadChecklist(p.ctx.Request().PathValue("checklist_id"))
-			item := goapp.LoadOrCreateO[model.ChecklistItem](p.ctx.Request().PathValue("item_id"))
+			cl := model.LoadChecklist(p.Ctx.Request().PathValue("checklist_id"))
+			item := goapp.LoadOrCreateO[model.ChecklistItem](p.Ctx.Request().PathValue("item_id"))
 
 			if item.ID == 0 {
 				//new item
@@ -672,17 +674,17 @@ func (c *AdminController) ChecklistItemDelete() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/checklist/{checklist_id}/item/{item_id}/delete",
 		Method:      "GET",
-		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			cl := model.LoadChecklist(p.ctx.Request().PathValue("checklist_id"))
-			item := goapp.LoadOrCreateO[model.ChecklistItem](p.ctx.Request().PathValue("item_id"))
+		HandleF: func(ctx *mbr.MbrContext) any {
+			cl := model.LoadChecklist(ctx.Request().PathValue("checklist_id"))
+			item := goapp.LoadOrCreateO[model.ChecklistItem](ctx.Request().PathValue("item_id"))
 
 			mttools.AssertEqual(item.ChecklistID, cl.ID)
 			goapp.DeleteObject(item)
 
-			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.ChecklistItemsList, "checklist_id", cl.ID)
+			ctx.RedirectRoute(http.StatusFound, AdminCtl.ChecklistItemsList, "checklist_id", cl.ID)
 
 			return nil
-		}),
+		},
 	}
 }
 
@@ -690,9 +692,9 @@ func (c *AdminController) ChecklistItemUndone() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/checklist/{checklist_id}/item/{item_id}/undone",
 		Method:      "GET",
-		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			cl := model.LoadChecklist(p.ctx.Request().PathValue("checklist_id"))
-			item := goapp.LoadOrCreateO[model.ChecklistItem](p.ctx.Request().PathValue("item_id"))
+		HandleF: func(ctx *mbr.MbrContext) any {
+			cl := model.LoadChecklist(ctx.Request().PathValue("checklist_id"))
+			item := goapp.LoadOrCreateO[model.ChecklistItem](ctx.Request().PathValue("item_id"))
 
 			mttools.AssertEqual(item.ChecklistID, cl.ID)
 
@@ -701,10 +703,10 @@ func (c *AdminController) ChecklistItemUndone() mbr.Route {
 			item.DoneComment = ""
 			goapp.SaveObject(item)
 
-			p.ctx.RedirectRoute(http.StatusFound, AdminCtl.ChecklistItemsList, "checklist_id", cl.ID)
+			ctx.RedirectRoute(http.StatusFound, AdminCtl.ChecklistItemsList, "checklist_id", cl.ID)
 
 			return nil
-		}),
+		},
 	}
 }
 
@@ -712,8 +714,8 @@ func (c *AdminController) ChecklistItemDependencies() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/checklist/{checklist_id}/item/{item_id}/deps",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			cl := goapp.LoadOMust[model.Checklist](p.ctx.Request().PathValue("checklist_id"))
-			item := goapp.LoadOMust[model.ChecklistItem](p.ctx.Request().PathValue("item_id"))
+			cl := goapp.LoadOMust[model.Checklist](p.Ctx.Request().PathValue("checklist_id"))
+			item := goapp.LoadOMust[model.ChecklistItem](p.Ctx.Request().PathValue("item_id"))
 
 			mttools.AssertEqual(item.ChecklistID, cl.ID)
 			p.Title("Item dependencies: " + item.Caption)

@@ -2,7 +2,6 @@ package web
 
 import (
 	"fmt"
-	"net/http"
 
 	"github.com/mitoteam/dhtml"
 	"github.com/mitoteam/dhtmlbs"
@@ -15,81 +14,72 @@ import (
 )
 
 type PageBuilder struct {
-	ctx *mbr.MbrContext
+	mtweb.PageBuilderBase
+
+	// Regions:
+	// "title" = H1 page title
+	// "main" = main content
 
 	//url to set as default redirect fo form context if no "destination" GET param was given
 	formRedirectUrl string
-
-	// "title" = H1 page title
-	// "main" = main content
-	regions dhtml.NamedHtmlPieces
 }
 
 func PageBuilderRouteHandler(buildPageF func(*PageBuilder) any) func(ctx *mbr.MbrContext) any {
 	return func(ctx *mbr.MbrContext) any {
+		// set up page builder
 		p := &PageBuilder{
-			regions: dhtml.NewNamedHtmlPieces(),
-			ctx:     ctx,
+			PageBuilderBase: mtweb.NewPageBuilderBase(ctx),
 		}
 
+		p.BuildHeadTitleF = func() string {
+			title := app.Options.SiteName()
+
+			if p.GetTitle() != "" {
+				title = p.GetTitle() + " | " + title
+			}
+
+			return title
+		}
+
+		p.RenderF = p.render
+
+		// render page content
 		out := buildPageF(p)
 
-		if err, ok := out.(error); ok {
+		if err, ok := out.(error); ok { // error happen, return it as-is
 			return err
-		}
-
-		if p.ctx.IsRedirect() {
+		} else if p.Ctx.IsRedirect() { //redirect is already set, so we don't need to return content
 			return nil
-		} else if p.HasMain() {
-			ctx.Writer().Header().Add("Content-Type", "text/html;charset=utf-8")
-			return p.String()
-		} else {
-			ctx.Writer().Header().Add("Content-Type", "text/plain;charset=utf-8")
-			return out
+		} else { // render the page as html
+			html, err := p.Render()
+
+			if err != nil {
+				return err
+			}
+
+			return html
 		}
 	}
 }
 
 func (p *PageBuilder) User() (user *model.User) {
-	if v, ok := p.ctx.GetOk("User"); ok {
+	if v, ok := p.Ctx.GetOk("User"); ok {
 		user = v.(*model.User)
 	}
 
 	return user
 }
 
-func (p *PageBuilder) Title(v any) *PageBuilder {
-	p.regions.Add("title", v)
-	return p
-}
-
-func (p *PageBuilder) GetTitle() *dhtml.HtmlPiece {
-	return p.regions.Get("title")
-}
-
-func (p *PageBuilder) Main(v any) *PageBuilder {
-	p.regions.Add("main", v)
-	return p
-}
-
-func (p *PageBuilder) GetMain() *dhtml.HtmlPiece {
-	return p.regions.Get("main")
-}
-
-func (p *PageBuilder) HasMain() bool {
-	return !p.regions.IsEmpty("main")
-}
-
 // Builds new dhtml.FormContext to be used with form builder
 func (p *PageBuilder) FormContext() *dhtmlform.FormContext {
-	fc := dhtmlform.NewFormContext(p.ctx.Writer(), p.ctx.Request())
+	fc := dhtmlform.NewFormContext(p.Ctx.Writer(), p.Ctx.Request())
 
 	// some useful for every form things
-	fc.SetParam("MbrContext", p.ctx)
+	fc.SetParam("MbrContext", p.Ctx)
 	fc.SetParam("User", p.User())
 
 	//default redirect from "destination" query parameter
-	if destination := p.ctx.Request().URL.Query().Get("destination"); destination != "" {
+	if destination := p.Ctx.Request().URL.Query().Get("destination"); destination != "" {
 		fc.SetRedirect(destination)
 	} else if p.formRedirectUrl != "" {
 		fc.SetRedirect(p.formRedirectUrl)
@@ -105,32 +95,9 @@ func (p *PageBuilder) DefaultFormRedirect(routeRef any, args ...any) *PageBuilde
 	return p
 }
 
-// Performs redirect to passed route
-func (p *PageBuilder) RedirectRoute(routeRef any, args ...any) {
-	p.ctx.RedirectRoute(http.StatusFound, routeRef, args...)
-}
-
-func (p *PageBuilder) String() string {
-	return p.render().String()
-}
-
-func (p *PageBuilder) render() (out *dhtml.HtmlPiece) {
-	document := dhtml.NewHtmlDocument()
-
-	var head_title = app.Options.SiteName()
-
-	title := p.regions.Get("title")
-	if !title.IsEmpty() {
-		head_title = title.String() + " | " + head_title
-	}
-
-	document.
-		Charset("utf-8").
-		Title(head_title).
+func (p *PageBuilder) render() error {
+	document := p.GetDocument().
 		Icon("/favicon.ico").
-		Stylesheet("/assets/vendor/bootstrap.min.css").
-		Stylesheet("/assets/vendor/fontawesome.min.css").
-		Stylesheet("/assets/vendor/regular.min.css").
 		Stylesheet("/assets/css/style.css")
 
 	container := dhtml.Div().Class("container my-3")
@@ -138,8 +105,8 @@ func (p *PageBuilder) render() (out *dhtml.HtmlPiece) {
 	container.Append(p.renderHeader())
 
 	// H1 page title
-	if !title.IsEmpty() {
-		container.Append(dhtml.NewTag("h1").Append(title))
+	if p.GetTitle() != "" {
+		container.Append(dhtml.NewTag("h1").Append(p.GetTitle()))
 	}
 
 	container.Append(dhtml.Div().Class("region-main").Append(p.GetMain()))
@@ -150,12 +117,9 @@ func (p *PageBuilder) render() (out *dhtml.HtmlPiece) {
 
 	//scripts
 	document.Body().
-		Append(dhtml.NewTag("script").Attribute("src", "/assets/vendor/bootstrap.bundle.min.js")).
-		//time for vue has not come yet
-		//Append(dhtml.NewTag("script").Attribute("src", "/assets/vendor/vue.global.prod.js")).
 		Append(dhtml.NewTag("script").Attribute("src", "/assets/script.min.js"))
 
-	return dhtml.Piece(document)
+	return nil
 }
 
 func (p *PageBuilder) renderHeader() (out dhtml.HtmlPiece) {

@@ -1,6 +1,7 @@
 package web
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/mitoteam/dhtml"
@@ -33,7 +34,7 @@ func (c *ChecklistController) ViewChecklist() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			cl := model.LoadChecklist(p.ctx.Request().PathValue("checklist_id"))
+			cl := model.LoadChecklist(p.Ctx.Request().PathValue("checklist_id"))
 
 			p.Title(cl.Name)
 
@@ -151,20 +152,21 @@ func (c *ChecklistController) ViewChecklist() mbr.Route {
 func (c *ChecklistController) ChecklistItemDone() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/item/{item_id}/done",
-		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			cl := model.LoadChecklist(p.ctx.Request().PathValue("checklist_id"))
-			item := goapp.LoadOrCreateO[model.ChecklistItem](p.ctx.Request().PathValue("item_id"))
+		HandleF: func(ctx *mbr.MbrContext) any {
+			cl := model.LoadChecklist(ctx.Request().PathValue("checklist_id"))
+			item := goapp.LoadOrCreateO[model.ChecklistItem](ctx.Request().PathValue("item_id"))
 
 			mttools.AssertEqual(item.ChecklistID, cl.ID)
 
 			item.DoneAt = mttools.Ptr(time.Now())
-			item.DoneByID = &p.User().ID //current user
+			user := ctx.Get("User").(*model.User) //current user
+			item.DoneByID = &user.ID
 
 			goapp.SaveObject(item)
 
-			p.RedirectRoute(ChecklistCtl.ViewChecklist, "checklist_id", cl.ID)
+			ctx.RedirectRoute(http.StatusFound, ChecklistCtl.ViewChecklist, "checklist_id", cl.ID)
 
 			return nil
-		}),
+		},
 	}
 }
