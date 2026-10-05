@@ -25,6 +25,9 @@ func init() {
 	RootCtl.With(middleware.Recoverer)
 }
 
+// Add standard mtweb assets route
+func (c *RootController) MtWebAssets() mbr.Route { return mtweb.AssetsRoute }
+
 func (c *RootController) Assets() mbr.Route {
 	return mbr.Route{PathPattern: "/assets", StaticFS: webAssetsFS}
 }
