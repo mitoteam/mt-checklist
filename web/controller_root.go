@@ -60,7 +60,7 @@ func (c *RootController) Home() mbr.Route {
 		}),
 	}
 
-	route.With(AuthMiddleware) //for home page only
+	route.With(AuthMiddleware) //force authentication for home page
 	return route
 }
 
@@ -140,7 +140,7 @@ func (c *RootController) Login() mbr.Route {
 			if user == nil {
 				p.Main(formLogin.Render(p.FormContext()))
 			} else {
-				p.Main("Already authenticated")
+				p.Main(mtweb.RenderInfo("Already authenticated"))
 			}
 
 			return nil
@@ -175,7 +175,7 @@ func (c *RootController) MyAccount() mbr.Route {
 		}),
 	}
 
-	route.With(AuthMiddleware)
+	route.With(AuthMiddleware) //force authentication
 
 	return route
 }

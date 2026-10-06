@@ -28,7 +28,7 @@ func init() {
 }
 
 // base path fo all admin routes
-func (root *RootController) AdminSubroutes() mbr.Route {
+func (root *RootController) AdminSubcontroller() mbr.Route {
 	return mbr.Route{PathPattern: "/admin", ChildController: AdminCtl}
 }
 

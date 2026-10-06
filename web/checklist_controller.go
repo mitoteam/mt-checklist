@@ -25,7 +25,7 @@ func init() {
 }
 
 // base route for ChecklistController
-func (c *RootController) Checklist() mbr.Route {
+func (c *RootController) ChecklistSubcontroller() mbr.Route {
 	return mbr.Route{PathPattern: "/checklist/{checklist_id}", ChildController: ChecklistCtl}
 }
 
