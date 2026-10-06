@@ -114,7 +114,8 @@ func (c *AdminController) UserEdit() mbr.Route {
 				p.Title("Edit user: " + user.DisplayName)
 			}
 
-			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.Users)).
+			fc := p.NewFormContext().
+				SetRedirect(mbr.Url(AdminCtl.Users)).
 				SetArg("User", user)
 
 			p.Main(formAdminUserEdit.Render(fc))
@@ -144,7 +145,7 @@ func (c *AdminController) UserPassword() mbr.Route {
 
 			p.Title("User password: " + user.DisplayName)
 
-			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.Users)).
+			fc := p.NewFormContext().SetRedirect(mbr.Url(AdminCtl.Users)).
 				SetArg("User", user)
 
 			p.Main(formAdminUserPassword.Render(fc))
@@ -236,8 +237,9 @@ func (c *AdminController) TemplateEdit() mbr.Route {
 				p.Title("Edit template: " + t.Name)
 			}
 
-			p.DefaultFormRedirect(AdminCtl.Templates)
-			fc := p.FormContext().SetArg("Template", t)
+			fc := p.NewFormContext().
+				SetArg("Template", t).
+				SetRedirect(mbr.Url(AdminCtl.Templates))
 
 			p.Main(formAdminTemplate.Render(fc))
 
@@ -254,7 +256,7 @@ func (c *AdminController) TemplateRenumber() mbr.Route {
 
 			p.Title("Renumber template items: " + t.Name)
 
-			fc := p.FormContext().SetArg("Template", t).
+			fc := p.NewFormContext().SetArg("Template", t).
 				SetRedirect(mbr.Url(AdminCtl.TemplateItemsList, "template_id", t.ID))
 
 			p.Main(formAdminTemplateRenumber.Render(fc))
@@ -380,7 +382,8 @@ func (c *AdminController) TemplateItemEdit() mbr.Route {
 				p.Title("Edit item: " + item.Caption)
 			}
 
-			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.TemplateItemsList, "template_id", t.ID)).
+			fc := p.NewFormContext().
+				SetRedirect(mbr.Url(AdminCtl.TemplateItemsList, "template_id", t.ID)).
 				SetArg("Item", item)
 
 			p.Main(formAdminChecklistTemplateItem.Render(fc))
@@ -400,7 +403,8 @@ func (c *AdminController) TemplateItemDependencies() mbr.Route {
 			mttools.AssertEqual(item.TemplateID, t.ID)
 			p.Title("Item dependencies: " + item.Caption)
 
-			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.TemplateItemsList, "template_id", t.ID)).
+			fc := p.NewFormContext().
+				SetRedirect(mbr.Url(AdminCtl.TemplateItemsList, "template_id", t.ID)).
 				SetArg("Item", item)
 
 			p.Main(formAdminChecklistTemplateItemDeps.Render(fc))
@@ -528,8 +532,10 @@ func (c *AdminController) ChecklistEdit() mbr.Route {
 				p.Title("Edit checklist: " + cl.Name)
 			}
 
-			p.DefaultFormRedirect(AdminCtl.Checklists)
-			fc := p.FormContext().SetArg("Checklist", cl)
+			fc := p.NewFormContext().
+				SetArg("Checklist", cl).
+				SetRedirect(mbr.Url(AdminCtl.Checklists))
+
 			p.Main(formAdminChecklist.Render(fc))
 
 			return nil
@@ -662,7 +668,9 @@ func (c *AdminController) ChecklistItemEdit() mbr.Route {
 				mttools.AssertEqual(item.ChecklistID, cl.ID)
 			}
 
-			fc := p.FormContext().SetArg("Item", item).SetRedirect(mbr.Url(AdminCtl.ChecklistItemsList, "checklist_id", cl.ID))
+			fc := p.NewFormContext().
+				SetArg("Item", item).
+				SetRedirect(mbr.Url(AdminCtl.ChecklistItemsList, "checklist_id", cl.ID))
 			p.Main(formAdminChecklistItem.Render(fc))
 
 			return nil
@@ -720,7 +728,8 @@ func (c *AdminController) ChecklistItemDependencies() mbr.Route {
 			mttools.AssertEqual(item.ChecklistID, cl.ID)
 			p.Title("Item dependencies: " + item.Caption)
 
-			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.ChecklistItemsList, "checklist_id", cl.ID)).
+			fc := p.NewFormContext().
+				SetRedirect(mbr.Url(AdminCtl.ChecklistItemsList, "checklist_id", cl.ID)).
 				SetArg("Item", item)
 
 			p.Main(formAdminChecklistItemDeps.Render(fc))
@@ -769,7 +778,8 @@ func (c *AdminController) OptionsEdit() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/options/edit",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			fc := p.FormContext().SetRedirect(mbr.Url(AdminCtl.OptionsList))
+			fc := p.NewFormContext().
+				SetRedirect(mbr.Url(AdminCtl.OptionsList))
 			p.Main(formAdminOptions.Render(fc))
 
 			return nil

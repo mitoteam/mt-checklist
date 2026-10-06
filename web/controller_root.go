@@ -138,7 +138,7 @@ func (c *RootController) Login() mbr.Route {
 			user := p.User()
 
 			if user == nil {
-				p.Main(formLogin.Render(p.FormContext()))
+				p.Main(formLogin.Render(p.NewFormContext()))
 			} else {
 				p.Main(mtweb.RenderInfo("Already authenticated"))
 			}
@@ -170,7 +170,7 @@ func (c *RootController) MyAccount() mbr.Route {
 	route := mbr.Route{
 		PathPattern: "/account",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			p.Main(formMyAccount.Render(p.FormContext()))
+			p.Main(formMyAccount.Render(p.NewFormContext()))
 			return nil
 		}),
 	}

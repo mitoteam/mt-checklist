@@ -15,13 +15,6 @@ import (
 
 type PageBuilder struct {
 	mtweb.PageBuilderBase
-
-	// Regions:
-	// "title" = H1 page title
-	// "main" = main content
-
-	//url to set as default redirect fo form context if no "destination" GET param was given
-	formRedirectUrl string
 }
 
 func PageBuilderRouteHandler(buildPageF func(*PageBuilder) any) func(ctx *mbr.MbrContext) any {
@@ -70,29 +63,14 @@ func (p *PageBuilder) User() (user *model.User) {
 	return user
 }
 
-// Builds new dhtml.FormContext to be used with form builder
-func (p *PageBuilder) FormContext() *dhtmlform.FormContext {
-	fc := dhtmlform.NewFormContext(p.Ctx.Writer(), p.Ctx.Request())
+// "override" NewFormContext to make additional data available to form builder
+func (p *PageBuilder) NewFormContext() *dhtmlform.FormContext {
+	fc := p.PageBuilderBase.NewFormContext()
 
-	// some useful for every form things
-	fc.SetParam("MbrContext", p.Ctx)
+	// make current use available to form builder
 	fc.SetParam("User", p.User())
 
-	//default redirect from "destination" query parameter
-	if destination := p.Ctx.Request().URL.Query().Get("destination"); destination != "" {
-		fc.SetRedirect(destination)
-	} else if p.formRedirectUrl != "" {
-		fc.SetRedirect(p.formRedirectUrl)
-	}
-
 	return fc
-}
-
-// Sets default redirect fo form context (if "destination" GET parameter is not given)
-func (p *PageBuilder) DefaultFormRedirect(routeRef any, args ...any) *PageBuilder {
-	p.formRedirectUrl = mbr.Url(routeRef, args...)
-
-	return p
 }
 
 func (p *PageBuilder) render() error {
