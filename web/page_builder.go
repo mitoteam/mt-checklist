@@ -17,7 +17,7 @@ type PageBuilder struct {
 	mtweb.PageBuilderBase
 }
 
-func PageBuilderRouteHandler(buildPageF func(*PageBuilder) any) func(ctx *mbr.MbrContext) any {
+func PageBuilderRouteHandler(buildPageF func(*PageBuilder) any) mbr.RouterHandleFunc {
 	return func(ctx *mbr.MbrContext) any {
 		// set up page builder
 		p := &PageBuilder{
