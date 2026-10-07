@@ -10,13 +10,13 @@ require (
 	github.com/go-ldap/ldap/v3 v3.4.14
 	github.com/go-sql-driver/mysql v1.10.1
 	github.com/gorilla/sessions v1.4.0
-	github.com/mitoteam/dhtml v0.9.1-beta
-	github.com/mitoteam/dhtmlbs v0.9.1-beta
-	github.com/mitoteam/dhtmlform v0.9.0-beta
-	github.com/mitoteam/goapp v1.0.10
-	github.com/mitoteam/mbr v0.9.0-beta
+	github.com/mitoteam/dhtml v0.9.4-rc
+	github.com/mitoteam/dhtmlbs v0.9.2-beta
+	github.com/mitoteam/dhtmlform v0.9.2-beta
+	github.com/mitoteam/goapp v1.0.11
+	github.com/mitoteam/mbr v0.9.2-rc
 	github.com/mitoteam/mttools v1.0.9
-	github.com/mitoteam/mtweb v0.0.0-20250224092644-8b15822d2a10
+	github.com/mitoteam/mtweb v0.0.0-20261007150918-e7d7ee1f628c
 	github.com/yuin/goldmark v1.8.6
 	golang.org/x/crypto v0.57.0
 	gorm.io/gorm v1.31.2
@@ -43,7 +43,7 @@ require (
 	github.com/go-playground/locales v0.14.2 // indirect
 	github.com/go-playground/universal-translator v0.18.2 // indirect
 	github.com/go-playground/validator/v10 v10.30.5 // indirect
-	github.com/goccy/go-json v0.11.1 // indirect
+	github.com/goccy/go-json v0.11.2 // indirect
 	github.com/goccy/go-yaml v1.19.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/context v1.1.2 // indirect
@@ -57,7 +57,7 @@ require (
 	github.com/mattn/go-isatty v0.0.24 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/ncruces/go-strftime v1.0.0 // indirect
+	github.com/ncruces/go-strftime v1.1.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.4.3 // indirect
 	github.com/quic-go/qpack v0.6.0 // indirect
 	github.com/quic-go/quic-go v0.63.0 // indirect
@@ -66,9 +66,9 @@ require (
 	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.3.2 // indirect
-	go.mongodb.org/mongo-driver/v2 v2.9.1 // indirect
+	go.mongodb.org/mongo-driver/v2 v2.9.2 // indirect
 	golang.org/x/arch v0.31.0 // indirect
-	golang.org/x/exp v0.0.0-20260908205506-85c1c2202aba // indirect
+	golang.org/x/exp v0.0.0-20261005173118-76772065c9b0 // indirect
 	golang.org/x/net v0.59.0 // indirect
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
@@ -77,5 +77,5 @@ require (
 	modernc.org/libc v1.77.1 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.12.1 // indirect
-	modernc.org/sqlite v1.60.0 // indirect
+	modernc.org/sqlite v1.60.1 // indirect
 )
