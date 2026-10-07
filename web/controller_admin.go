@@ -180,12 +180,13 @@ func (c *AdminController) Templates() mbr.Route {
 	return mbr.Route{
 		PathPattern: "/template",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
-			p.Title("Checklist templates").Main(
-				c.renderToolbar().
-					AddIconBtn(
-						mbr.Url(AdminCtl.TemplateEdit, "template_id", 0), "plus", "Create template",
-					),
-			)
+			p.Title("Checklist templates").
+				Main(
+					c.renderToolbar().
+						AddIconBtn(
+							mbr.Url(AdminCtl.TemplateEdit, "template_id", 0), "plus", "Create template",
+						),
+				)
 
 			table := mtweb.NewTable().EmptyLabel("no checklist templates created yet").
 				Header("Template Name").
