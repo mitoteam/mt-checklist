@@ -52,7 +52,10 @@ func (c *AdminController) Users() mbr.Route {
 					),
 			)
 
-			table := dhtml.NewTable().Class("table table-hover table-sm").
+			table := mtweb.NewTable().
+				CountTitle("Users count")
+
+			table.
 				Header("Username").
 				Header("Display name").
 				Header("Auth method").
@@ -91,8 +94,6 @@ func (c *AdminController) Users() mbr.Route {
 
 				row.Cell(actions)
 			}
-
-			p.Main(mtweb.RenderTableCount(table, "Users count"))
 
 			p.Main(table)
 
@@ -188,7 +189,11 @@ func (c *AdminController) Templates() mbr.Route {
 						),
 				)
 
-			table := mtweb.NewTable().EmptyLabel("no checklist templates created yet").
+			table := mtweb.NewTable().
+				CountTitle("Templates count")
+
+			table.
+				EmptyLabel("no checklist templates created yet").
 				Header("Template Name").
 				Header("Checklist Name").
 				Header("Items").
@@ -218,7 +223,6 @@ func (c *AdminController) Templates() mbr.Route {
 				row.Cell(actions)
 			}
 
-			p.Main(mtweb.RenderTableCount(table, "Templates count"))
 			p.Main(table)
 
 			return nil
@@ -301,7 +305,11 @@ func (c *AdminController) TemplateItemsList() mbr.Route {
 				).Class("mb-3"),
 			)
 
-			table := dhtml.NewTable().Class("table table-hover table-sm").EmptyLabel("no items added yet").
+			table := mtweb.NewTable().
+				CountTitle("Template items count")
+
+			table.
+				EmptyLabel("no items added yet").
 				Header("Caption / Body").
 				Header("Responsible").
 				Header("Depends").
@@ -355,7 +363,6 @@ func (c *AdminController) TemplateItemsList() mbr.Route {
 				row.Cell(actions)
 			}
 
-			p.Main(mtweb.RenderTableCount(table, "Template items count"))
 			p.Main(table)
 
 			return nil
@@ -474,6 +481,9 @@ func (c *AdminController) Checklists() mbr.Route {
 			)
 
 			table := mtweb.NewTable().
+				CountTitle("Checklists count")
+
+			table.
 				Header("Active").
 				Header("Name").
 				Header("Description").
@@ -513,7 +523,6 @@ func (c *AdminController) Checklists() mbr.Route {
 				row.Cell(actions)
 			}
 
-			p.Main(mtweb.RenderTableCount(table, "Checklists count"))
 			p.Main(table)
 
 			return nil
@@ -572,6 +581,9 @@ func (c *AdminController) ChecklistItemsList() mbr.Route {
 			)
 
 			table := mtweb.NewTable().
+				CountTitle("Checklist items count")
+
+			table.
 				Header("Caption / Body").
 				Header("Responsible").
 				Header("Done").
@@ -642,7 +654,6 @@ func (c *AdminController) ChecklistItemsList() mbr.Route {
 				row.Cell(actions)
 			}
 
-			p.Main(mtweb.RenderTableCount(table, "Checklist items count"))
 			p.Main(table)
 
 			return nil
