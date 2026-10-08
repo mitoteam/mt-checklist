@@ -7,13 +7,13 @@ go 1.27.0
 
 require (
 	github.com/go-chi/chi/v5 v5.3.2
-	github.com/go-ldap/ldap/v3 v3.4.14
+	github.com/go-ldap/ldap/v3 v3.4.15
 	github.com/go-sql-driver/mysql v1.10.1
 	github.com/gorilla/sessions v1.4.0
-	github.com/mitoteam/dhtml v0.9.4-rc
+	github.com/mitoteam/dhtml v0.9.5-rc
 	github.com/mitoteam/dhtmlbs v0.9.2-beta
 	github.com/mitoteam/dhtmlform v0.9.2-beta
-	github.com/mitoteam/goapp v1.0.11
+	github.com/mitoteam/goapp v1.0.12
 	github.com/mitoteam/mbr v0.9.2-rc
 	github.com/mitoteam/mttools v1.0.9
 	github.com/mitoteam/mtweb v0.0.0-20261007150918-e7d7ee1f628c
@@ -32,7 +32,7 @@ require (
 	github.com/cloudwego/base64x v0.1.7 // indirect
 	github.com/drhodes/golorem v0.0.0-20220328165741-da82e5b29246 // indirect
 	github.com/dustin/go-humanize v1.1.0 // indirect
-	github.com/elliotchance/orderedmap/v2 v2.7.0 // indirect
+	github.com/elliotchance/orderedmap/v3 v3.1.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.15 // indirect
 	github.com/gin-contrib/sessions v1.1.2 // indirect
 	github.com/gin-contrib/sse v1.1.2 // indirect
@@ -68,7 +68,7 @@ require (
 	github.com/ugorji/go/codec v1.3.2 // indirect
 	go.mongodb.org/mongo-driver/v2 v2.9.2 // indirect
 	golang.org/x/arch v0.31.0 // indirect
-	golang.org/x/exp v0.0.0-20261005173118-76772065c9b0 // indirect
+	golang.org/x/exp v0.0.0-20261007192929-f45ad48fbe92 // indirect
 	golang.org/x/net v0.59.0 // indirect
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
