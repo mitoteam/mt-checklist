@@ -7,7 +7,7 @@
 [![GitHub contributors](https://img.shields.io/github/contributors-anon/mitoteam/mt-checklist)](https://github.com/mitoteam/mt-checklist/graphs/contributors)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/mitoteam/mt-checklist)](https://github.com/mitoteam/mt-checklist/commits)
 [![GitHub downloads](https://img.shields.io/github/downloads/mitoteam/mt-checklist/total)](https://github.com/mitoteam/mt-checklist/releases)
-[![Build&Tests](https://github.com/mitoteam/mt-checklist/actions/workflows/go.yml/badge.svg)](https://github.com/mitoteam/mt-checklist/actions/workflows/go.yml)
+[![Build&Tests](https://github.com/mitoteam/mt-checklist/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/mitoteam/mt-checklist/actions/workflows/build-and-test.yml)
 
 [MiTo Team](https://www.mito-team.com) Checklists Manager
 
