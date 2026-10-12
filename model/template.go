@@ -107,7 +107,7 @@ func (item *TemplateItem) DependenciesList() []*TemplateItemDependency {
 
 // ======================= item dependencies ============================
 type TemplateItemDependency struct {
-	goapp.DbModel // no ID field
+	goapp.EmptyBaseModel // without ID field
 
 	//this item
 	TemplateItemID int64         `gorm:"not null;index"`

@@ -226,7 +226,7 @@ func (item *ChecklistItem) GetStatus(user *User) int {
 // ====================== checklist item deps ================================
 
 type ChecklistItemDependency struct {
-	goapp.DbModel // no ID field
+	goapp.EmptyBaseModel // without ID field
 
 	//this item
 	ChecklistItemID int64          `gorm:"not null;index"`
