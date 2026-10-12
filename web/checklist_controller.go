@@ -96,7 +96,7 @@ func (c *ChecklistController) ViewChecklist() mbr.Route {
 				}
 
 				// cards with tasks
-				cardList := dhtmlbs.NewCardList().Class("row-cols-1", "row-cols-lg-2", "row-cols-xxl-3")
+				cardList := dhtmlbs.NewGridCards().Class("row-cols-1", "row-cols-lg-2", "row-cols-xxl-3")
 
 				for _, item := range orderedChecklistItems(cl, p.User()) {
 					status := item.GetStatus(p.User())
