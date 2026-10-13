@@ -24,9 +24,6 @@ func PageBuilderRouteHandler(buildPageF func(*PageBuilder) any) mbr.RouterHandle
 			PageBuilderBase: mtweb.NewPageBuilderBase(ctx),
 		}
 
-		// add bootstrap minified CSS
-		p.BootstrapDistCss()
-
 		p.BuildHeadTitleF = func() string {
 			title := app.Options.SiteName()
 
