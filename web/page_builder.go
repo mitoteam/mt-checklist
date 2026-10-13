@@ -24,6 +24,9 @@ func PageBuilderRouteHandler(buildPageF func(*PageBuilder) any) mbr.RouterHandle
 			PageBuilderBase: mtweb.NewPageBuilderBase(ctx),
 		}
 
+		// add bootstrap minified CSS
+		p.BootstrapDistCss()
+
 		p.BuildHeadTitleF = func() string {
 			title := app.Options.SiteName()
 
@@ -78,6 +81,9 @@ func (p *PageBuilder) render() error {
 		Icon("/favicon.ico").
 		Stylesheet("/assets/css/style.css")
 
+	//scripts
+	document.Script("/assets/script.min.js")
+
 	container := dhtml.Div().Class("container my-3")
 
 	container.Append(p.renderHeader())
@@ -92,10 +98,6 @@ func (p *PageBuilder) render() error {
 	container.Append(p.renderFooter())
 
 	document.Body().Append(container)
-
-	//scripts
-	document.Body().
-		Append(dhtml.NewTag("script").Attribute("src", "/assets/script.min.js"))
 
 	return nil
 }
