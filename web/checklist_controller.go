@@ -1,7 +1,6 @@
 package web
 
 import (
-	"net/http"
 	"time"
 
 	"github.com/mitoteam/dhtml"
@@ -164,7 +163,7 @@ func (c *ChecklistController) ChecklistItemDone() mbr.Route {
 
 			goapp.SaveObject(item)
 
-			ctx.RedirectRoute(http.StatusFound, ChecklistCtl.ViewChecklist, "checklist_id", cl.ID)
+			ctx.RedirectRoute(ChecklistCtl.ViewChecklist, "checklist_id", cl.ID)
 
 			return nil
 		},

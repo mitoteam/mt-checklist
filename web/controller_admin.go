@@ -2,7 +2,6 @@ package web
 
 import (
 	"fmt"
-	"net/http"
 	"time"
 
 	"github.com/mitoteam/dhtml"
@@ -161,7 +160,7 @@ func (c *AdminController) UserDelete() mbr.Route {
 		PathPattern: "/users/{user_id}/delete",
 		HandleF: func(ctx *mbr.MbrContext) any {
 			goapp.DeleteObject(goapp.LoadOMust[model.User](ctx.Request().PathValue("user_id")))
-			ctx.RedirectRoute(http.StatusFound, AdminCtl.Users)
+			ctx.RedirectRoute(AdminCtl.Users)
 
 			return nil
 		},
@@ -276,7 +275,7 @@ func (c *AdminController) TemplateDelete() mbr.Route {
 		PathPattern: "/template/{template_id}/delete",
 		HandleF: func(ctx *mbr.MbrContext) any {
 			goapp.DeleteObject(goapp.LoadOMust[model.Template](ctx.Request().PathValue("template_id")))
-			ctx.RedirectRoute(http.StatusFound, AdminCtl.Templates)
+			ctx.RedirectRoute(AdminCtl.Templates)
 			return nil
 		},
 	}
@@ -432,7 +431,7 @@ func (c *AdminController) TemplateItemDelete() mbr.Route {
 			mttools.AssertEqual(item.TemplateID, t.ID)
 			goapp.DeleteObject(item)
 
-			ctx.RedirectRoute(http.StatusFound, AdminCtl.TemplateItemsList, "template_id", t.ID)
+			ctx.RedirectRoute(AdminCtl.TemplateItemsList, "template_id", t.ID)
 
 			return nil
 		},
@@ -449,7 +448,6 @@ func (c *AdminController) TemplateCreateChecklist() mbr.Route {
 			checklist := createChecklistFromTemplate(template, user)
 
 			ctx.RedirectRoute(
-				http.StatusFound,
 				AdminCtl.ChecklistEdit,
 				"checklist_id", checklist.ID,
 				"destination", mbr.Url(ChecklistCtl.ViewChecklist, "checklist_id", checklist.ID),
@@ -558,7 +556,7 @@ func (c *AdminController) ChecklistDelete() mbr.Route {
 		PathPattern: "/checklist/{checklist_id}/delete",
 		HandleF: PageBuilderRouteHandler(func(p *PageBuilder) any {
 			goapp.DeleteObject(model.LoadChecklist(p.Ctx.Request().PathValue("checklist_id")))
-			p.Ctx.RedirectRoute(http.StatusFound, AdminCtl.Checklists)
+			p.Ctx.RedirectRoute(AdminCtl.Checklists)
 
 			return nil
 		}),
@@ -701,7 +699,7 @@ func (c *AdminController) ChecklistItemDelete() mbr.Route {
 			mttools.AssertEqual(item.ChecklistID, cl.ID)
 			goapp.DeleteObject(item)
 
-			ctx.RedirectRoute(http.StatusFound, AdminCtl.ChecklistItemsList, "checklist_id", cl.ID)
+			ctx.RedirectRoute(AdminCtl.ChecklistItemsList, "checklist_id", cl.ID)
 
 			return nil
 		},
@@ -723,7 +721,7 @@ func (c *AdminController) ChecklistItemUndone() mbr.Route {
 			item.DoneComment = ""
 			goapp.SaveObject(item)
 
-			ctx.RedirectRoute(http.StatusFound, AdminCtl.ChecklistItemsList, "checklist_id", cl.ID)
+			ctx.RedirectRoute(AdminCtl.ChecklistItemsList, "checklist_id", cl.ID)
 
 			return nil
 		},
